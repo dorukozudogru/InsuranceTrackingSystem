@@ -1,0 +1,15 @@
+﻿@model SigortaTakipSistemi.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<body>
+    <form asp-action="Register" asp-controller="Account" method="post">
+        <div asp-validation-summary="All"></div>
+        <input type="text" asp-for="@Model.Email" /><br />
+        <input type="password" asp-for="@Model.Password" /><br />
+        <input type="submit" value="Save" />
+    </form>
+
+</body>

@@ -1,0 +1,14 @@
+﻿@model SigortaTakipSistemi.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<body>
+    <form asp-action="Login" asp-controller="Account" method="post">
+        <div asp-validation-summary="All"></div>
+        <input type="text" asp-for="@Model.Email" /><br />
+        <input type="password" asp-for="@Model.Password" /><br />
+        <input type="submit" value="Login" />
+    </form>
+</body>

@@ -1,0 +1,70 @@
+﻿@model SigortaTakipSistemi.Models.Insurances
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Insurance</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Brand" class="control-label"></label>
+                <input asp-for="Brand" class="form-control" />
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LicencePlate" class="control-label"></label>
+                <input asp-for="LicencePlate" class="form-control" />
+                <span asp-validation-for="LicencePlate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsurancePolicyId" class="control-label"></label>
+                <select asp-for="InsurancePolicyId" class="form-control" asp-items='@ViewBag.InsurancePolicies'></select>
+                <span asp-validation-for="InsurancePolicyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsurancePolicyNumber" class="control-label"></label>
+                <input asp-for="InsurancePolicyNumber" class="form-control" />
+                <span asp-validation-for="InsurancePolicyNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsuranceCompanyId" class="control-label"></label>
+                <select asp-for="InsuranceCompanyId" class="form-control" asp-items='@ViewBag.InsuranceCompanies'></select>
+                <span asp-validation-for="InsuranceCompanyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsuranceStartDate" class="control-label"></label>
+                <input asp-for="InsuranceStartDate" class="form-control" />
+                <span asp-validation-for="InsuranceStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsuranceFinishDate" class="control-label"></label>
+                <input asp-for="InsuranceFinishDate" class="form-control" />
+                <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
