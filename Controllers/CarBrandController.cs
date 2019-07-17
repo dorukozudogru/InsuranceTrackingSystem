@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SigortaTakipSistemi.Models;
 
 namespace SigortaTakipSistemi.Controllers
 {
+    [Authorize]
     public class CarBrandController : Controller
     {
         private readonly IdentityContext _context;
@@ -20,7 +19,7 @@ namespace SigortaTakipSistemi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CarBrands.ToListAsync());
+            return View(await _context.CarBrands.OrderBy(x => x.Name).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -126,15 +125,27 @@ namespace SigortaTakipSistemi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var carBrands = await _context.CarBrands.FindAsync(id);
-            _context.CarBrands.Remove(carBrands);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var hasAnyInsurance = await _context.Insurances
+                .FirstOrDefaultAsync(m => m.CarModel.CarBrandId == id);
+
+            if (hasAnyInsurance == null)
+            {
+                var carBrands = await _context.CarBrands.FindAsync(id);
+                _context.CarBrands.Remove(carBrands);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            throw new TaskCanceledException("Bu markaya ait sigorta kayıtları bulunmaktadır.");
         }
 
         private bool CarBrandsExists(int id)
         {
             return _context.CarBrands.Any(e => e.Id == id);
+        }
+
+        public ActionResult GetCarBrands()
+        {
+            return Json(_context.CarBrands.OrderBy(x => x.Name).ToList());
         }
     }
 }

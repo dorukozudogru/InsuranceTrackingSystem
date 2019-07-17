@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,13 +14,17 @@ namespace SigortaTakipSistemi.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [DisplayName("Model Adı")]
         public string Name { get; set; }
 
         [Required]
         [ForeignKey(nameof(CarBrands))]
         public int CarBrandId { get; set; }
         [NotMapped]
+        [DisplayName("Marka Adı")]
         public string CarBrandName { get; set; }
         public virtual CarBrands CarBrand { get; set; }
+
+        public virtual List<Insurances> Insurances { get; set; }
     }
 }

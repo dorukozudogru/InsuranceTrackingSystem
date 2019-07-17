@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,12 +12,16 @@ namespace SigortaTakipSistemi.Models
         [Key]
         public Guid Id { get; set; }
 
+        [Required]
+        [DisplayName("E-Posta")]
         public string Email { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
+        [DisplayName("Şifre")]
         public string Password { get; set; }
 
-        [Display(Name = "Beni Hatırla")]
+        [DisplayName("Beni Hatırla")]
         public bool RememberMe { get; set; }
 
         public string ReturnUrl { get; set; }

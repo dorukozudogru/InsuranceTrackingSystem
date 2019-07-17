@@ -1,14 +1,13 @@
 ﻿@model SigortaTakipSistemi.Models.CarModels
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Model Ekle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>CarModels</h4>
+<h1>Model Ekle</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -19,18 +18,15 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CarBrandId" class="control-label"></label>
+                <label asp-for="CarBrandName" class="control-label"></label>
                 <select asp-for="CarBrandId" class ="form-control" asp-items="ViewBag.CarBrandId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Ekle" class="btn btn-primary" />
+                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

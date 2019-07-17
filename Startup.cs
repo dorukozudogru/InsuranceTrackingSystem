@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SigortaTakipSistemi.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Globalization;
+using System.Collections.Generic;
+using SigortaTakipSistemi.Services;
 
 namespace SigortaTakipSistemi
 {
@@ -23,11 +26,18 @@ namespace SigortaTakipSistemi
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddHostedService<CheckInsuranceFinishDate>();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("tr-TR");
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("tr-TR") };
+                options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("tr-TR") };
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -54,7 +64,7 @@ namespace SigortaTakipSistemi
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/account/login";
-                options.LogoutPath = "/account/log-out";
+                options.LogoutPath = "/account/logout";
                 options.AccessDeniedPath = "/account/access-denied";
                 options.SlidingExpiration = true;
                 options.Cookie = new CookieBuilder
@@ -71,7 +81,9 @@ namespace SigortaTakipSistemi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+                //app.UseDeveloperExceptionPage();
             }
             else
             {

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SigortaTakipSistemi.Models;
 
 namespace SigortaTakipSistemi.Controllers
 {
+    [Authorize]
     public class InsuranceCompanyController : Controller
     {
         private readonly IdentityContext _context;
@@ -20,7 +19,7 @@ namespace SigortaTakipSistemi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.InsuranceCompanies.ToListAsync());
+            return View(await _context.InsuranceCompanies.OrderBy(x => x.Name).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -126,10 +125,17 @@ namespace SigortaTakipSistemi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var insuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
-            _context.InsuranceCompanies.Remove(insuranceCompany);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var hasAnyInsurance = await _context.Insurances
+                .FirstOrDefaultAsync(m => m.InsuranceCompanyId == id);
+
+            if (hasAnyInsurance == null)
+            {
+                var insuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
+                _context.InsuranceCompanies.Remove(insuranceCompany);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            throw new TaskCanceledException("Bu şirkete ait sigorta kayıtları bulunmaktadır.");
         }
 
         private bool InsuranceCompanyExists(int id)
