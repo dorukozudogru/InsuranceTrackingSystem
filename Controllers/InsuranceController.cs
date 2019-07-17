@@ -11,9 +11,13 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace SigortaTakipSistemi.Controllers
 {
+    [Authorize]
     public class InsuranceController : Controller
     {
         private readonly IdentityContext _context;
@@ -25,13 +29,30 @@ namespace SigortaTakipSistemi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances);
-            foreach (var insurance in _context.Insurances)
-            {
-                insurance.InsurancePolicyName = GetInsurancePoliciesById(insurance.InsurancePolicyId).Name;
-                insurance.InsuranceCompanyName = GetInsuranceCompaniesById(insurance.InsuranceCompanyId).Name;
-            }
-            return View(await _context.Insurances.ToListAsync());
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == true));
+
+            return View(await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == true)
+                .ToListAsync());
+        }
+
+        public async Task<IActionResult> PassiveInsurances()
+        {
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == false));
+
+            return View(await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == false)
+                .ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -42,9 +63,12 @@ namespace SigortaTakipSistemi.Controllers
             }
 
             var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            insurance.InsurancePolicyName = GetInsurancePoliciesById(insurance.InsurancePolicyId).Name;
-            insurance.InsuranceCompanyName = GetInsuranceCompaniesById(insurance.InsuranceCompanyId).Name;
 
             if (insurance == null)
             {
@@ -56,8 +80,9 @@ namespace SigortaTakipSistemi.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.InsurancePolicies = new SelectList(GetInsurancePolicies().ToList(),"Id","Name");
-            ViewBag.InsuranceCompanies = new SelectList(GetInsuranceCompanies().ToList(), "Id", "Name");
+            ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies, "Id", "Name");
+            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies, "Id", "Name");
+            ViewBag.Customers = new SelectList(_context.Customers, "Id", "FullName");
             return View();
         }
 
@@ -67,6 +92,12 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (ModelState.IsValid)
             {
+                insurance.InsuranceBonus = InsuranceBonusCalculation(insurance.InsuranceAmount, _context.InsurancePolicies.FirstOrDefault(pn => pn.Id == insurance.InsurancePolicyId).Name);
+                insurance.CreatedBy = GetLoggedUserId();
+
+                insurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
+                insurance.CarModel.CarBrandId = _context.CarBrands.FirstOrDefault(x => x.Name == insurance.CarModel.CarBrand.Name).Id;
+
                 _context.Add(insurance);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -81,14 +112,25 @@ namespace SigortaTakipSistemi.Controllers
                 return NotFound();
             }
 
-            var insurance = await _context.Insurances.FindAsync(id);
-            ViewBag.InsurancePolicies = new SelectList(GetInsurancePolicies().ToList(), "Id", "Name");
-            ViewBag.InsuranceCompanies = new SelectList(GetInsuranceCompanies().ToList(), "Id", "Name");
+            var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (insurance == null)
             {
                 return NotFound();
             }
+
+            ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies, "Id", "Name");
+            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies, "Id", "Name");
+            ViewBag.Customers = new SelectList(_context.Customers, "Id", "FullName");
+            ViewBag.CarBrands = new SelectList(_context.CarBrands, "Id", "Name");
+            ViewBag.CarModels = new SelectList(_context.CarModels, "Name", "Name");
+
             return View(insurance);
         }
 
@@ -105,6 +147,11 @@ namespace SigortaTakipSistemi.Controllers
             {
                 try
                 {
+                    insurance.UpdatedBy = GetLoggedUserId();
+
+                    insurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
+                    //insurance.CarModel.CarBrandId = _context.CarBrands.FirstOrDefault(x => x.Name == insurance.CarModel.CarBrand.Name).Id;
+
                     _context.Update(insurance);
                     await _context.SaveChangesAsync();
                 }
@@ -132,7 +179,13 @@ namespace SigortaTakipSistemi.Controllers
             }
 
             var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             insurance.InsurancePolicyName = GetInsurancePoliciesById(insurance.InsurancePolicyId).Name;
             insurance.InsuranceCompanyName = GetInsuranceCompaniesById(insurance.InsuranceCompanyId).Name;
 
@@ -149,20 +202,18 @@ namespace SigortaTakipSistemi.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var insurance = await _context.Insurances.FindAsync(id);
-            _context.Insurances.Remove(insurance);
+
+            insurance.IsActive = false;
+            insurance.DeletedBy = GetLoggedUserId();
+
+            _context.Update(insurance);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InsuranceExists(int id)
+        public bool InsuranceExists(int id)
         {
             return _context.Insurances.Any(e => e.Id == id);
-        }
-
-        public async Task<IActionResult> InsuranceDateController()
-        {
-            //Son 20 gün kala notification göndericek.
-            throw new NotImplementedException();
         }
 
         [Route("insurance/insurance-export")]
@@ -178,11 +229,21 @@ namespace SigortaTakipSistemi.Controllers
         public MemoryStream ExportInsurance(List<Insurances> items)
         {
             var stream = new System.IO.MemoryStream();
+
+            items = _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .ToList();
+
+
             using (var p = new ExcelPackage(stream))
             {
                 var ws = p.Workbook.Worksheets.Add("Insurances");
 
-                using (var range = ws.Cells[1, 1, 1, 5])
+                using (var range = ws.Cells[1, 1, 1, 14])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -190,24 +251,42 @@ namespace SigortaTakipSistemi.Controllers
                     range.Style.Font.Color.SetColor(Color.White);
                 }
 
-                ws.Cells[1, 1].Value = "Marka";
-                ws.Cells[1, 2].Value = "Model";
-                ws.Cells[1, 3].Value = "Plaka";
-                ws.Cells[1, 4].Value = "Sigorta Başlama Tarihi";
-                ws.Cells[1, 5].Value = "Sigorta Bitiş Tarihi";
+                ws.Cells[1, 1].Value = "Poliçe Tipi";
+                ws.Cells[1, 2].Value = "Poliçe Numarası";
+                ws.Cells[1, 3].Value = "Sigorta Firması";
+                ws.Cells[1, 4].Value = "Marka";
+                ws.Cells[1, 5].Value = "Model";
+                ws.Cells[1, 6].Value = "Plaka";
+                ws.Cells[1, 7].Value = "Müşteri Adı Soyadı";
+                ws.Cells[1, 8].Value = "Müşteri Telefonu";
+                ws.Cells[1, 9].Value = "Müşteri E-Postası";
+                ws.Cells[1, 10].Value = "Poliçe Başlama Tarihi";
+                ws.Cells[1, 11].Value = "Poliçe Bitiş Tarihi";
+                ws.Cells[1, 12].Value = "Poliçe Tutarı";
+                ws.Cells[1, 13].Value = "Poliçe Primi";
+                ws.Cells[1, 14].Value = "Sıfır/Yenileme";
 
-                ws.Column(4).Style.Numberformat.Format = "dd-mmmm-yyyy";
-                ws.Column(5).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(10).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(11).Style.Numberformat.Format = "dd-mmmm-yyyy";
 
                 ws.Row(1).Style.Font.Bold = true;
 
                 for (int c = 2; c < items.Count + 2; c++)
                 {
-                    ws.Cells[c, 1].Value = items[c - 2].Brand;
-                    ws.Cells[c, 2].Value = items[c - 2].Model;
-                    ws.Cells[c, 3].Value = items[c - 2].LicencePlate;
-                    ws.Cells[c, 4].Value = items[c - 2].InsuranceStartDate;
-                    ws.Cells[c, 5].Value = items[c - 2].InsuranceFinishDate;
+                    ws.Cells[c, 1].Value = items[c - 2].InsurancePolicy.Name;
+                    ws.Cells[c, 2].Value = items[c - 2].InsurancePolicyNumber;
+                    ws.Cells[c, 3].Value = items[c - 2].InsuranceCompany.Name;
+                    ws.Cells[c, 4].Value = items[c - 2].CarModel.CarBrand.Name;
+                    ws.Cells[c, 5].Value = items[c - 2].CarModel.Name;
+                    ws.Cells[c, 6].Value = items[c - 2].LicencePlate;
+                    ws.Cells[c, 7].Value = items[c - 2].Customer.FullName;
+                    ws.Cells[c, 8].Value = items[c - 2].Customer.Phone;
+                    ws.Cells[c, 9].Value = items[c - 2].Customer.Email;
+                    ws.Cells[c, 10].Value = items[c - 2].InsuranceStartDate;
+                    ws.Cells[c, 11].Value = items[c - 2].InsuranceFinishDate;
+                    ws.Cells[c, 12].Value = items[c - 2].InsuranceAmount;
+                    ws.Cells[c, 13].Value = items[c - 2].InsuranceBonus;
+                    ws.Cells[c, 14].Value = items[c - 2].InsuranceType == 0 ? "SIFIR" : "YENİLEME";
                 }
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
                 ws.Cells["A1:I" + items.Count + 2].AutoFilter = true;
@@ -217,24 +296,46 @@ namespace SigortaTakipSistemi.Controllers
             return stream;
         }
 
-        public IOrderedQueryable<InsurancePolicies> GetInsurancePolicies()
-        {
-            return _context.InsurancePolicies.OrderBy(x => x.Name);
-        }
-
         public InsurancePolicies GetInsurancePoliciesById(int Id)
         {
             return _context.InsurancePolicies.FirstOrDefault(x => x.Id == Id);
         }
 
-        public IOrderedQueryable<InsuranceCompanies> GetInsuranceCompanies()
-        {
-            return _context.InsuranceCompanies.OrderBy(x => x.Name);
-        }
-
         public InsuranceCompanies GetInsuranceCompaniesById(int Id)
         {
             return _context.InsuranceCompanies.FirstOrDefault(x => x.Id == Id);
+        }
+
+        public string GetLoggedUserId()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        public double InsuranceBonusCalculation(double amount, string insurancePolicy)
+        {
+            double bonus = 0.0;
+
+            if (insurancePolicy.ToUpper(new CultureInfo("tr-TR")) == "DASK")
+            {
+                bonus = (amount * 25) / 100;
+            }
+            else if (insurancePolicy.ToUpper(new CultureInfo("tr-TR")) == "TRAFİK")
+            {
+                bonus = (amount * 10) / 100;
+            }
+            else if (insurancePolicy.ToUpper(new CultureInfo("tr-TR")) == "KASKO")
+            {
+                bonus = (amount * 14.5) / 100;
+            }
+            else if (insurancePolicy.ToUpper(new CultureInfo("tr-TR")) == "İŞYERİ")
+            {
+                bonus = (amount * 25) / 100;
+            }
+            else if (insurancePolicy.ToUpper(new CultureInfo("tr-TR")) == "TEHLİKELİ MADDELER")
+            {
+                bonus = (amount * 10) / 100;
+            }
+            return bonus;
         }
 
         private class FakeSession
@@ -258,6 +359,5 @@ namespace SigortaTakipSistemi.Controllers
             public byte[] Buffer { get; set; }
 
         }
-
     }
 }

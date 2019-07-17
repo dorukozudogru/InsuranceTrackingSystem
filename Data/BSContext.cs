@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SigortaTakipSistemi.Models;
-
 
 namespace SigortaTakipSistemi.Models
 {
@@ -19,12 +12,14 @@ namespace SigortaTakipSistemi.Models
 
         public DbSet<Insurances> Insurances { get; set; }
 
-        public DbSet<SigortaTakipSistemi.Models.InsurancePolicies> InsurancePolicies { get; set; }
+        public DbSet<InsurancePolicies> InsurancePolicies { get; set; }
 
-        public DbSet<SigortaTakipSistemi.Models.InsuranceCompanies> InsuranceCompanies { get; set; }
+        public DbSet<InsuranceCompanies> InsuranceCompanies { get; set; }
 
-        public DbSet<SigortaTakipSistemi.Models.CarBrands> CarBrands { get; set; }
+        public DbSet<CarBrands> CarBrands { get; set; }
 
-        public DbSet<SigortaTakipSistemi.Models.CarModels> CarModels { get; set; }
+        public DbSet<CarModels> CarModels { get; set; }
+
+        public DbSet<Customers> Customers { get; set; }
     }
 }

@@ -6,6 +6,8 @@ namespace SigortaTakipSistemi.Models
     {
         public string RequestId { get; set; }
 
+        public string RequestMessage { get; set; }
+
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }

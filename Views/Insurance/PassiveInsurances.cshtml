@@ -10,19 +10,14 @@
 <form method="post" enctype="multipart/form-data">
     <div>
         <div class="col-md-6">
-            <a class="btn btn-success" asp-action="Create">Yeni Oluştur</a>
             <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllInsurances">Dışa Aktar</a>
         </div>
     </div>
 </form>
 <br />
-<input type="text" class="input-group-text input-group" id="search" onkeyup="searchFunc()" placeholder="Search for names..">
-<table class="table table-bordered" id="insurances" data-toggle="table">
+<table class="table table-bordered" data-toggle="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Customer.FullName)
             </th>
@@ -66,9 +61,6 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Customer.FullName)
                 </td>
@@ -114,25 +106,3 @@
         }
     </tbody>
 </table>
-
-<script>
-    function searchFunc() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("search");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("insurances");
-        tr = table.getElementsByTagName("tr");
-
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-</script>

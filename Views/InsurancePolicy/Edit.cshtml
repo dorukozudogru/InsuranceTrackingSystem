@@ -1,13 +1,12 @@
 ﻿@model SigortaTakipSistemi.Models.InsurancePolicies
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Poliçe Türünü Güncelle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>Poliçe Türünü Güncelle</h1>
 
-<h4>InsurancePolicy</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,14 +19,11 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
+                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

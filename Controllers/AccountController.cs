@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SigortaTakipSistemi.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
+using System.Security.Claims;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -10,53 +11,14 @@ namespace SigortaTakipSistemi.Controllers
     {
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly SignInManager<AppIdentityUser> _signInManager;
+        private readonly IdentityContext _context;
 
-        public AccountController(UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager)
+        public AccountController(UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager, IdentityContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
-
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.LoginViewModel.ToListAsync());
-        //}
-
-        //public async Task<IActionResult> Details(Guid? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var loginViewModel = await _context.LoginViewModel
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (loginViewModel == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(loginViewModel);
-        //}
-
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,Username,Password,RememberMe,ReturnUrl")] LoginViewModel loginViewModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        loginViewModel.Id = Guid.NewGuid();
-        //        _context.Add(loginViewModel);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(loginViewModel);
-        //}
 
         //public async Task<IActionResult> Edit(Guid? id)
         //{
@@ -147,14 +109,6 @@ namespace SigortaTakipSistemi.Controllers
             return View(model);
         }
 
-        [Route("account/dashboard")]
-        public IActionResult Dashboard()
-        {
-            LoginViewModel model = new LoginViewModel();
-            model.Email = this.User.Claims.FirstOrDefault().Subject.Name;
-            return View(model);
-        }
-
         [HttpPost]
         [Route("account/register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -188,30 +142,44 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("account/login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-            if (result.Succeeded)
-            {
-                return Redirect("~/account/dashboard");
-            }
+            var result = await _signInManager.PasswordSignInAsync("", "", false, true);
 
+            if (model.Email == null && model.Password == null)
+            {
+#if DEBUG
+                model = new LoginViewModel
+                {
+                    Email = "doruk@d.com",
+                    Password = "QWEqwe.1"
+                };
+                result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+                return Redirect("~/Insurance");
+#endif
+            }
+            if (ModelState.IsValid)
+            {
+                result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+                if (result.Succeeded)
+                {
+                    return Redirect("~/Insurance");
+                }
+                else
+                {
+                    ViewBag.LoginError = "E-Posta veya Şifre hatalı girildi. Lütfen tekrar deneyiniz.";
+                }
+            }
             return View(model);
         }
 
-        [Route("account/log-out")]
+        [Route("account/logout")]
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
             return Redirect("~/account/login");
         }
-
-        [Route("account/access-denied")]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
     }
 }

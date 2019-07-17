@@ -1,27 +1,26 @@
 ﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SigortaTakipSistemi.Models;
 
 namespace SigortaTakipSistemi.Controllers
 {
     [Authorize]
-    public class CarModelController : Controller
+    public class CustomerController : Controller
     {
         private readonly IdentityContext _context;
 
-        public CarModelController(IdentityContext context)
+        public CustomerController(IdentityContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            var identityContext = _context.CarModels.Include(c => c.CarBrand);
-            return View(await identityContext.OrderBy(x => x.CarBrandId).ToListAsync());
+            return View(await _context.Customers.Where(c => c.IsActive == true).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -31,35 +30,34 @@ namespace SigortaTakipSistemi.Controllers
                 return NotFound();
             }
 
-            var carModels = await _context.CarModels
-                .Include(c => c.CarBrand)
+            var customers = await _context.Customers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carModels == null)
+            if (customers == null)
             {
                 return NotFound();
             }
 
-            return View(carModels);
+            return View(customers);
         }
 
         public IActionResult Create()
         {
-            ViewData["CarBrandId"] = new SelectList(_context.CarBrands, "Id", "Name");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CarModels carModels)
+        public async Task<IActionResult> Create(Customers customers)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carModels);
+                customers.CreatedBy = GetLoggedUserId();
+
+                _context.Add(customers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarBrandId"] = new SelectList(_context.CarBrands, "Id", "Name", carModels.CarBrandId);
-            return View(carModels);
+            return View(customers);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -69,20 +67,19 @@ namespace SigortaTakipSistemi.Controllers
                 return NotFound();
             }
 
-            var carModels = await _context.CarModels.FindAsync(id);
-            if (carModels == null)
+            var customers = await _context.Customers.FindAsync(id);
+            if (customers == null)
             {
                 return NotFound();
             }
-            ViewData["CarBrandId"] = new SelectList(_context.CarBrands, "Id", "Name", carModels.CarBrandId);
-            return View(carModels);
+            return View(customers);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CarModels carModels)
+        public async Task<IActionResult> Edit(int id, Customers customers)
         {
-            if (id != carModels.Id)
+            if (id != customers.Id)
             {
                 return NotFound();
             }
@@ -91,12 +88,14 @@ namespace SigortaTakipSistemi.Controllers
             {
                 try
                 {
-                    _context.Update(carModels);
+                    customers.UpdatedBy = GetLoggedUserId();
+
+                    _context.Update(customers);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarModelsExists(carModels.Id))
+                    if (!CustomersExists(customers.Id))
                     {
                         return NotFound();
                     }
@@ -107,8 +106,7 @@ namespace SigortaTakipSistemi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarBrandId"] = new SelectList(_context.CarBrands, "Id", "Name", carModels.CarBrandId);
-            return View(carModels);
+            return View(customers);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -118,15 +116,14 @@ namespace SigortaTakipSistemi.Controllers
                 return NotFound();
             }
 
-            var carModels = await _context.CarModels
-                .Include(c => c.CarBrand)
+            var customers = await _context.Customers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carModels == null)
+            if (customers == null)
             {
                 return NotFound();
             }
 
-            return View(carModels);
+            return View(customers);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -134,26 +131,30 @@ namespace SigortaTakipSistemi.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hasAnyInsurance = await _context.Insurances
-                .FirstOrDefaultAsync(m => m.CarModelId == id);
-            
+                .FirstOrDefaultAsync(m => m.CustomerId == id);
+
             if (hasAnyInsurance == null)
             {
-                var carModels = await _context.CarModels.FindAsync(id);
-                _context.CarModels.Remove(carModels);
+                var customers = await _context.Customers.FindAsync(id);
+
+                customers.DeletedBy = GetLoggedUserId();
+                customers.IsActive = false;
+
+                _context.Update(customers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            throw new TaskCanceledException("Bu modele ait sigorta kayıtları bulunmaktadır.");
+            throw new TaskCanceledException("Bu müşteriye ait sigorta kayıtları bulunmaktadır.");
         }
 
-        private bool CarModelsExists(int id)
+        private bool CustomersExists(int id)
         {
-            return _context.CarModels.Any(e => e.Id == id);
+            return _context.Customers.Any(e => e.Id == id);
+        }
+        public string GetLoggedUserId()
+        {
+            return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
-        public ActionResult GetCarModelsById(int Id)
-        {
-            return Json(_context.CarModels.Where(x => x.CarBrandId == Id).OrderBy(x => x.Name).ToList());
-        }
     }
 }

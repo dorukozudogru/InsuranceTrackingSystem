@@ -1,27 +1,34 @@
 ﻿@model SigortaTakipSistemi.Models.Insurances
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Poliçe Ekle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>Insurance</h4>
+<h1>Poliçe Ekle</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CreatedAt" value="@DateTime.Now" />
+            <input type="hidden" asp-for="InsuranceLastMailDate" value="@DateTime.MinValue" />
+            <input type="hidden" asp-for="IsActive" value="@true" />
             <div class="form-group">
-                <label asp-for="Brand" class="control-label"></label>
-                <input asp-for="Brand" class="form-control" />
-                <span asp-validation-for="Brand" class="text-danger"></span>
+                <label asp-for="Customer" class="control-label"></label>
+                <select asp-for="CustomerId" class="form-control" asp-items='@ViewBag.Customers'></select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
-                <span asp-validation-for="Model" class="text-danger"></span>
+                <label asp-for="CarModel.CarBrand" class="control-label"></label>
+                <select id="Brand" asp-for="CarModel.CarBrand.Name" class="form-control"></select>
+                <span asp-validation-for="CarModel.CarBrand.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CarModel" class="control-label"></label>
+                <select id="Model" asp-for="CarModel.Name" class="form-control"></select>
+                <span asp-validation-for="CarModel.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LicencePlate" class="control-label"></label>
@@ -54,16 +61,50 @@
                 <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için "." kullanınız.)</strong></label>
+                <input asp-for="InsuranceAmount" class="form-control" />
+                <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsuranceType" class="control-label"></label>
+                <select asp-for="InsuranceType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsuranceTypeEnum>()"></select>
+                <span asp-validation-for="InsuranceType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Ekle" class="btn btn-primary" />
+                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script>
+            function brandLoad() {
+                $('#Brand').html('');
+                $.getJSON('@Url.Action("GetCarBrands", "CarBrand")', function (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        $("#Brand").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+                    }
+                    showValue(result[0].id);
+                })
+            }
+            window.onload = brandLoad;
+        
+            $("#Brand").on("change", function (e) {
+                showValue(e.target.selectedOptions[0].id);
+            })
+
+            function showValue(brandId)
+            {
+                $('#Model').html('');
+                $.getJSON('@Url.Action("GetCarModelsById", "CarModel")' + "?Id=" + brandId, function (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        $("#Model").append("<option id='" + result[i].id + "'>" + result[i].name + "</option>")
+                    }
+                })
+            }
+        </script>
+    }
 }

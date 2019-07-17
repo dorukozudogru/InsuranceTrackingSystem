@@ -1,15 +1,26 @@
 ﻿@model SigortaTakipSistemi.Models.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Kayıt Ol";
 }
 
-<body>
-    <form asp-action="Register" asp-controller="Account" method="post">
-        <div asp-validation-summary="All"></div>
-        <input type="text" asp-for="@Model.Email" /><br />
-        <input type="password" asp-for="@Model.Password" /><br />
-        <input type="submit" value="Save" />
-    </form>
+<h1>Kayıt Ol</h1>
+<hr />
 
-</body>
+<form asp-action="Register" asp-controller="Account">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <p>Hesabınız var mı? <a href="login">Buradan</a> giriş yapın.</p>
+    <div class="form-group">
+        <input type="submit" value="Kayıt Ol" class="btn btn-primary" />
+    </div>
+</form>
