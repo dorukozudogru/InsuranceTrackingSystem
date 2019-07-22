@@ -212,6 +212,47 @@ namespace SigortaTakipSistemi.Migrations
                     b.ToTable("CarModels");
                 });
 
+            modelBuilder.Entity("SigortaTakipSistemi.Models.Customers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CitizenshipNo")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime?>("DeletedAt");
+
+                    b.Property<string>("DeletedBy");
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Other");
+
+                    b.Property<string>("Phone")
+                        .IsRequired();
+
+                    b.Property<string>("Surname")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("SigortaTakipSistemi.Models.InsuranceCompanies", b =>
                 {
                     b.Property<int>("Id")
@@ -246,20 +287,27 @@ namespace SigortaTakipSistemi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Brand")
-                        .IsRequired();
+                    b.Property<int>("CarModelId");
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<int>("CreatedBy");
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<int>("CustomerId");
 
                     b.Property<DateTime?>("DeletedAt");
 
-                    b.Property<int?>("DeletedBy");
+                    b.Property<string>("DeletedBy");
+
+                    b.Property<double>("InsuranceAmount");
+
+                    b.Property<double>("InsuranceBonus");
 
                     b.Property<int>("InsuranceCompanyId");
 
                     b.Property<DateTime>("InsuranceFinishDate");
+
+                    b.Property<DateTime?>("InsuranceLastMailDate");
 
                     b.Property<int>("InsurancePolicyId");
 
@@ -268,17 +316,22 @@ namespace SigortaTakipSistemi.Migrations
 
                     b.Property<DateTime>("InsuranceStartDate");
 
-                    b.Property<string>("LicencePlate")
-                        .IsRequired();
+                    b.Property<byte>("InsuranceType");
 
-                    b.Property<string>("Model")
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("LicencePlate")
                         .IsRequired();
 
                     b.Property<DateTime?>("UpdatedAt");
 
-                    b.Property<int?>("UpdatedBy");
+                    b.Property<string>("UpdatedBy");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarModelId");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("InsuranceCompanyId");
 
@@ -342,6 +395,16 @@ namespace SigortaTakipSistemi.Migrations
 
             modelBuilder.Entity("SigortaTakipSistemi.Models.Insurances", b =>
                 {
+                    b.HasOne("SigortaTakipSistemi.Models.CarModels", "CarModel")
+                        .WithMany("Insurances")
+                        .HasForeignKey("CarModelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SigortaTakipSistemi.Models.Customers", "Customer")
+                        .WithMany("Insurances")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("SigortaTakipSistemi.Models.InsuranceCompanies", "InsuranceCompany")
                         .WithMany("Insurances")
                         .HasForeignKey("InsuranceCompanyId")

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SigortaTakipSistemi.Models.ViewModels;
 
 namespace SigortaTakipSistemi.Models
 {
@@ -21,5 +22,7 @@ namespace SigortaTakipSistemi.Models
         public DbSet<CarModels> CarModels { get; set; }
 
         public DbSet<Customers> Customers { get; set; }
+
+        public DbSet<SigortaTakipSistemi.Models.ViewModels.ReportViewModel> ReportViewModel { get; set; }
     }
 }

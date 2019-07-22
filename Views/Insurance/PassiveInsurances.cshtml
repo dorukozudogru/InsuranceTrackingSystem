@@ -1,108 +1,129 @@
 ﻿@model IEnumerable<SigortaTakipSistemi.Models.Insurances>
 
 @{
-    ViewData["Title"] = "Poliçeler";
+    ViewData["Title"] = "Pasif Poliçeler";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Poliçeler</h1>
 
-<form method="post" enctype="multipart/form-data">
-    <div>
-        <div class="col-md-6">
-            <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllInsurances">Dışa Aktar</a>
+<div class="content-wrapper">
+    <section class="content">
+        <h3>
+            <i class="glyphicon glyphicon-folder-close"></i>&nbsp;Pasif Poliçeler
+        </h3>
+        <form method="post" enctype="multipart/form-data">
+            <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllPassiveInsurances">Dışa Aktar</a>
+        </form>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        <table id="allTables" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Id)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Customer.FullName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CarModel.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.LicencePlate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePolicyName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceCompanyName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceStartDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceFinishDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceAmount)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceBonus)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceType)
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Id)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Customer.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CarModel.CarBrand.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CarModel.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LicencePlate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePolicy.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePolicyNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceCompany.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceStartDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceFinishDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceAmount) ₺
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceBonus) ₺
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceType)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id">Güncelle</a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@item.Id">Detaylar</a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="Revoke" asp-route-id="@item.Id">Aktif Yap</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>
-<br />
-<table class="table table-bordered" data-toggle="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CarModel.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LicencePlate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsurancePolicyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsuranceCompanyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsuranceStartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsuranceFinishDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsuranceAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsuranceBonus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.InsuranceType)
-            </th>
-            <th>Aksiyonlar</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CarModel.CarBrand.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CarModel.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LicencePlate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsurancePolicy.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsurancePolicyNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceCompany.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceStartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceFinishDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceAmount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceBonus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceType)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Güncelle</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Detaylar</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Pasif Yap</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    </section>
+</div>

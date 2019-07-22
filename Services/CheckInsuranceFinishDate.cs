@@ -47,7 +47,7 @@ namespace SigortaTakipSistemi.Services
                                                 .Include(cb => cb.CarModel.CarBrand)
                                                 .Include(pn => pn.InsurancePolicy)
                                                 .Include(pc => pc.InsuranceCompany)
-                                                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-30) <= DateTime.Now && i.InsuranceLastMailDate.Value.Date != DateTime.Today).ToList();
+                                                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-30) <= DateTime.Now && i.InsuranceLastMailDate.Value.Date != DateTime.Today && i.InsuranceFinishDate >= DateTime.Now).ToList();
                 var emailUsers = _context.Users.ToList();
 
                 foreach (var insurance in dueTimeInsurances)
@@ -90,7 +90,7 @@ namespace SigortaTakipSistemi.Services
                                insurance.InsurancePolicyNumber,
                                insurance.InsuranceStartDate.Date,
                                insurance.InsuranceFinishDate.Date);
-            smtp.Send(msg);
+            //smtp.Send(msg);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

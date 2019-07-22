@@ -1,59 +1,65 @@
 ﻿@model SigortaTakipSistemi.Models.Customers
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Müşteriyi Güncelle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Müşteriyi Güncelle</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="CreatedAt" />
-            <input type="hidden" asp-for="CreatedBy" />
-            <input type="hidden" asp-for="UpdatedAt" value="@DateTime.Now" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Müşteriyi Güncelle
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-4">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="CreatedAt" />
+                            <input type="hidden" asp-for="CreatedBy" />
+                            <input type="hidden" asp-for="UpdatedAt" value="@DateTime.Now" />
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Surname" class="control-label"></label>
+                                <input asp-for="Surname" class="form-control" />
+                                <span asp-validation-for="Surname" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="CitizenshipNo" class="control-label"></label>
+                                <input asp-for="CitizenshipNo" class="form-control" />
+                                <span asp-validation-for="CitizenshipNo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Phone" class="control-label"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Other" class="control-label"></label>
+                                <input asp-for="Other" class="form-control" />
+                                <span asp-validation-for="Other" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Kaydet" class="btn btn-primary" />
+                                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Surname" class="control-label"></label>
-                <input asp-for="Surname" class="form-control" />
-                <span asp-validation-for="Surname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CitizenshipNo" class="control-label"></label>
-                <input asp-for="CitizenshipNo" class="form-control" />
-                <span asp-validation-for="CitizenshipNo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Other" class="control-label"></label>
-                <input asp-for="Other" class="form-control" />
-                <span asp-validation-for="Other" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
-                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
-            </div>
-        </form>
-    </div>
+        </div>
+    </section>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

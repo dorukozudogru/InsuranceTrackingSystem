@@ -1,30 +1,52 @@
-﻿@model SigortaTakipSistemi.Models.LoginViewModel
+﻿@model SigortaTakipSistemi.Models.ViewModels.LoginViewModel
 
 @{
     ViewData["Title"] = "Giriş Yap";
+    Layout = null;
 }
 
-<h1>Giriş Yap</h1>
-<hr />
-
-<form asp-action="Login" asp-controller="Account">
-    @if (ViewBag.LoginError != null)
-    {
-        <h5 class="alert alert-danger">@ViewBag.LoginError</h5>
-    }
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Banaz Sigorta | Giriş Yap</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/Content/Site/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/Site/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/Site/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/Content/Site/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#"><b>BANAZ SİGORTA</b><br />Giriş Yap</a>
+        </div>
+        <div class="login-box-body">
+            <form asp-action="Login" asp-controller="Account">
+                <div class="form-group has-feedback">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input type="email" asp-for="Email" class="form-control" placeholder="E-Posta" />
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Şifre" />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Giriş Yap</button>
+                    </div>
+                </div>
+            </form>
+            <br />
+            <label class="control-label"><a href="#">Şifremi Unuttum</a><br></label>
+            <label class="control-label">Hesabınız yoksa <a href="register" class="text-center">buradan</a> kayıt olun</label>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <p>Hesabınız yoksa <a href="register">buradan</a> kayıt olun.</p>
-    <div class="form-group">
-        <input type="submit" value="Giriş Yap" class="btn btn-primary" />
-    </div>
-</form>
+    <script src="~/Content/Site/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/Site/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

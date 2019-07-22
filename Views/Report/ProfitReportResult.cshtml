@@ -1,0 +1,92 @@
+﻿@model IEnumerable<SigortaTakipSistemi.Models.Insurances>
+
+@{
+    ViewData["Title"] = "Kâr Raporu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <h3>
+            <i class="fa fa-report"></i>&nbsp;Kâr Raporu
+        </h3>
+        <form method="post" enctype="multipart/form-data">
+            <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllInsurances">Dışa Aktar</a>
+        </form>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-body">
+                        <table id="allTables" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Id)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePolicyName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceCompanyName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceStartDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceFinishDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceAmount)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceBonus)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsuranceType)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Id)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePolicy.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePolicyNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceCompany.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceStartDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceFinishDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceAmount) ₺
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceBonus) ₺
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsuranceType)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

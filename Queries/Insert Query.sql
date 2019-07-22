@@ -21,8 +21,10 @@ INSERT INTO Customers VALUES ('Can', 'Iþýk', '22222222222', NULL, '5789687321', 
 INSERT INTO InsuranceCompanies VALUES ('AXA')
 INSERT INTO InsuranceCompanies VALUES ('GROUPAMA')
 INSERT INTO InsuranceCompanies VALUES ('AK SÝGORTA')
+INSERT INTO InsuranceCompanies VALUES ('NESA SÝGORTA')
 
 INSERT INTO InsurancePolicies VALUES ('DASK')
+INSERT INTO InsurancePolicies VALUES ('DÖNEM PRÝMÝ')
 INSERT INTO InsurancePolicies VALUES ('TRAFÝK')
 INSERT INTO InsurancePolicies VALUES ('KASKO')
 INSERT INTO InsurancePolicies VALUES ('ÝÞYERÝ')

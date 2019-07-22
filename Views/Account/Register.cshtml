@@ -1,26 +1,53 @@
-﻿@model SigortaTakipSistemi.Models.RegisterViewModel
+﻿@model SigortaTakipSistemi.Models.ViewModels.RegisterViewModel
 
 @{
     ViewData["Title"] = "Kayıt Ol";
+    Layout = null;
 }
 
-<h1>Kayıt Ol</h1>
-<hr />
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Banaz Sigorta | Kayıt Ol</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/Content/Site/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/Site/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/Site/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/Content/Site/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="#"><b>BANAZ SİGORTA</b><br />Kayıt Ol</a>
+        </div>
 
-<form asp-action="Register" asp-controller="Account">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <div class="register-box-body">
+            <form asp-action="Register" asp-controller="Account">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group has-feedback">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input type="email" asp-for="Email" class="form-control" placeholder="E-Posta" />
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Şifre" />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Kayıt Ol</button>
+                    </div>
+                </div>
+            </form>
+            <br />
+            <label class="control-label">Hesabınız var mı? <a href="login" class="text-center">Buradan</a> giriş yapın.</label>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" class="form-control" type="password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <p>Hesabınız var mı? <a href="login">Buradan</a> giriş yapın.</p>
-    <div class="form-group">
-        <input type="submit" value="Kayıt Ol" class="btn btn-primary" />
-    </div>
-</form>
+    <script src="~/Content/Site/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/Site/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

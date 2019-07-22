@@ -20,7 +20,7 @@ namespace SigortaTakipSistemi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.Where(c => c.IsActive == true).ToListAsync());
+            return View(await _context.Customers.Where(c => c.IsActive == true).AsNoTracking().ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -55,7 +55,7 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Add(customers);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(customers);
         }
