@@ -1,0 +1,47 @@
+﻿@model SigortaTakipSistemi.Models.ViewModels.ReportViewModel
+
+@{
+    ViewData["Title"] = "Kâr Raporu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <h3>
+            <i class="fa fa-report"></i>&nbsp;Kâr Raporu
+        </h3>
+        <form asp-action="ProfitReportResult">
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input asp-for="StartDate" type="text" class="form-control pull-right" id="datepicker" />
+                </div>
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinishDate" class="control-label"></label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input asp-for="FinishDate" type="text" class="form-control pull-right" id="datepicker2" />
+                </div>
+                <span asp-validation-for="FinishDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InsuranceCompany" class="control-label"></label>
+                <select asp-for="InsuranceCompany" class="form-control" asp-items="@ViewBag.InsuranceCompanies"></select>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="submit" value="Getir" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>

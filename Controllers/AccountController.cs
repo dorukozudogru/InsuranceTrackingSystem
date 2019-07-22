@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SigortaTakipSistemi.Models;
+using SigortaTakipSistemi.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Security.Claims;
@@ -153,11 +154,11 @@ namespace SigortaTakipSistemi.Controllers
 #if DEBUG
                 model = new LoginViewModel
                 {
-                    Email = "doruk@d.com",
+                    Email = "dorukozudogru@gmail.com",
                     Password = "QWEqwe.1"
                 };
                 result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-                return Redirect("~/Insurance");
+                return Redirect("~/Home");
 #endif
             }
             if (ModelState.IsValid)
@@ -165,7 +166,7 @@ namespace SigortaTakipSistemi.Controllers
                 result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
                 if (result.Succeeded)
                 {
-                    return Redirect("~/Insurance");
+                    return Redirect("~/Home");
                 }
                 else
                 {

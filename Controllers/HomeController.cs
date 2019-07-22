@@ -1,23 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SigortaTakipSistemi.Models;
+using SigortaTakipSistemi.Models.ViewModels;
 
 namespace SigortaTakipSistemi.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IdentityContext _context;
+
+        public HomeController(IdentityContext context)
         {
-            return Redirect("~/account/login");
+            _context = context;
         }
 
-        public IActionResult Privacy()
+        [Authorize]
+        public IActionResult Index()
         {
+            ViewBag.InsuranceCount = _context.Insurances.Count();
+            ViewBag.CustomerCount = _context.Customers.Count();
             return View();
         }
 

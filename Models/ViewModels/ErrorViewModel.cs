@@ -1,6 +1,6 @@
 using System;
 
-namespace SigortaTakipSistemi.Models
+namespace SigortaTakipSistemi.Models.ViewModels
 {
     public class ErrorViewModel
     {
