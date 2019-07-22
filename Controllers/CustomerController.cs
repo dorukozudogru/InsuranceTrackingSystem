@@ -55,7 +55,7 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Add(customers);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Details));
+                return RedirectToAction(nameof(Index));
             }
             return View(customers);
         }

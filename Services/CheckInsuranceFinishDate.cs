@@ -90,7 +90,7 @@ namespace SigortaTakipSistemi.Services
                                insurance.InsurancePolicyNumber,
                                insurance.InsuranceStartDate.Date,
                                insurance.InsuranceFinishDate.Date);
-            //smtp.Send(msg);
+            smtp.Send(msg);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

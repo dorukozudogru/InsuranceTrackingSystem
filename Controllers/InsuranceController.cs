@@ -295,7 +295,7 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
                 .Where(i => i.IsActive == false).ToList(), 0);
-            string fileName = String.Format("{0}.xlsx", "all_active_insurances_report");
+            string fileName = String.Format("{0}.xlsx", "all_passive_insurances_report");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
             return File(stream, fileType, fileName);
