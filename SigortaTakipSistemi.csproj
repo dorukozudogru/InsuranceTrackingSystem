@@ -5,6 +5,15 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20190726200139_test.cs" />
+    <Compile Remove="Migrations\20190726200139_test.Designer.cs" />
+    <Compile Remove="Migrations\20190726200234_test.cs" />
+    <Compile Remove="Migrations\20190726200234_test.Designer.cs" />
+    <Compile Remove="Migrations\20190726200415_test.cs" />
+    <Compile Remove="Migrations\20190726200415_test.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="4.3.1" />
@@ -20,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Queries\" />
-    <Folder Include="wwwroot\Content\Site\" />
   </ItemGroup>
 
 </Project>

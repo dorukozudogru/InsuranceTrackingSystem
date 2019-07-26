@@ -1,7 +1,7 @@
 ﻿@model SigortaTakipSistemi.Models.ViewModels.ReportViewModel
 
 @{
-    ViewData["Title"] = "Şirket Bazlı Kâr Raporu";
+    ViewData["Title"] = "Genel Rapor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,14 +9,14 @@
     <section class="content">
         <div class="box-header">
             <h2 class="box-title">
-                Şirket Bazlı Kâr Raporu
+                Genel Rapor
             </h2>
         </div>
         <div class="row">
             <div class="box">
                 <div class="box-body">
                     <div class="col-md-4">
-                        <form asp-action="ProfitReportResult">
+                        <form asp-action="GeneralInsuranceReportResult">
                             <div class="form-group">
                                 <label asp-for="StartDate" class="control-label"></label>
                                 <div class="input-group date">
@@ -36,10 +36,6 @@
                                     <input asp-for="FinishDate" type="text" class="form-control pull-right" id="datepicker2" />
                                 </div>
                                 <span asp-validation-for="FinishDate" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="InsuranceCompany" class="control-label"></label>
-                                <select asp-for="InsuranceCompany" class="form-control select2" multiple="multiple" asp-items="@ViewBag.InsuranceCompanies" style="width: 100%;" placeholder="Sigorta şirketi seçiniz."></select>
                             </div>
                             <div class="form-group">
                                 <div class="row">

@@ -1,33 +1,31 @@
-﻿@model IEnumerable<SigortaTakipSistemi.Models.CarModels>
+﻿@model IEnumerable<SigortaTakipSistemi.Models.ViewModels.GeneralReportViewModel>
 
 @{
-    ViewData["Title"] = "Modeller";
+    ViewData["Title"] = "Genel Rapor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="content-wrapper">
     <section class="content">
         <h3>
-            <i class="fa fa-car"></i>&nbsp;Modeller
+            <i class="fa fa-report"></i>&nbsp;Genel Rapor
         </h3>
-        <form method="post" enctype="multipart/form-data">
-            <a class="btn btn-success" asp-action="Create">Yeni Oluştur</a>
-        </form>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box table-responsive">
                     <div class="box-body">
-                        <table id="allTables" class="table table-bordered table-striped">
+                        <table id="reportTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Name)
+                                        @Html.DisplayNameFor(model => model.InsuranceCompanyName)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.CarBrandName)
+                                        @Html.DisplayNameFor(model => model.InsurancePolicyName)
                                     </th>
-                                    <th></th>
-                                    <th></th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Count)
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,16 +33,13 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
+                                            @Html.DisplayFor(modelItem => item.InsuranceCompanyName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.CarBrand.Name)
+                                            @Html.DisplayFor(modelItem => item.InsurancePolicyName)
                                         </td>
                                         <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id">Güncelle</a>
-                                        </td>
-                                        <td>
-                                            <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
+                                            @Html.DisplayFor(modelItem => item.Count)
                                         </td>
                                     </tr>
                                 }

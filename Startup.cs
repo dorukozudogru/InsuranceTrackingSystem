@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using System.Collections.Generic;
 using SigortaTakipSistemi.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace SigortaTakipSistemi
 {

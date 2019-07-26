@@ -18,10 +18,10 @@ INSERT INTO Customers VALUES ('Doruk', 'Özüdoðru', '18173308618', NULL, '5334605
 INSERT INTO Customers VALUES ('Buðra', 'Banaz', '11111111111', NULL, '5468978653', NULL, 1, GETDATE(), (SELECT TOP 1 Id FROM AspNetUsers), NULL, NULL, NULL, NULL)
 INSERT INTO Customers VALUES ('Can', 'Iþýk', '22222222222', NULL, '5789687321', NULL, 1, GETDATE(), (SELECT TOP 1 Id FROM AspNetUsers), NULL, NULL, NULL, NULL)
 
-INSERT INTO InsuranceCompanies VALUES ('AXA')
-INSERT INTO InsuranceCompanies VALUES ('GROUPAMA')
-INSERT INTO InsuranceCompanies VALUES ('AK SÝGORTA')
-INSERT INTO InsuranceCompanies VALUES ('NESA SÝGORTA')
+INSERT INTO InsuranceCompanies VALUES ('AXA','~/Content/Site/dist/img/axa_sigorta.png')
+INSERT INTO InsuranceCompanies VALUES ('GROUPAMA','~/Content/Site/dist/img/groupama.png')
+INSERT INTO InsuranceCompanies VALUES ('AK SÝGORTA','~/Content/Site/dist/img/ak_sigorta.png')
+INSERT INTO InsuranceCompanies VALUES ('NESA SÝGORTA','~/Content/Site/dist/img/default-50x50.gif')
 
 INSERT INTO InsurancePolicies VALUES ('DASK')
 INSERT INTO InsurancePolicies VALUES ('DÖNEM PRÝMÝ')

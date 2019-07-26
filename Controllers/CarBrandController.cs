@@ -22,23 +22,6 @@ namespace SigortaTakipSistemi.Controllers
             return View(await _context.CarBrands.OrderBy(x => x.Name).ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var carBrands = await _context.CarBrands
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (carBrands == null)
-            {
-                return NotFound();
-            }
-
-            return View(carBrands);
-        }
-
         public IActionResult Create()
         {
             return View();

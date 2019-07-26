@@ -22,23 +22,6 @@ namespace SigortaTakipSistemi.Controllers
             return View(await _context.InsurancePolicies.OrderBy(x => x.Name).ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var insurancePolicy = await _context.InsurancePolicies
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (insurancePolicy == null)
-            {
-                return NotFound();
-            }
-
-            return View(insurancePolicy);
-        }
-
         public IActionResult Create()
         {
             return View();

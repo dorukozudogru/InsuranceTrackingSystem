@@ -28,34 +28,16 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        @*<li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">@ViewBag.FinishedInsurancesCount</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">@ViewBag.FinishedInsurancesCount adet süresi dolacak poliçe var</li>
-                                <li>
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>*@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="~/Content/Site/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                <img src="~/Content/Site/dist/img/avatar5.png" class="user-image" alt="User Image">
                                 <span class="hidden-xs">
                                     @this.User?.Claims?.FirstOrDefault()?.Subject?.Name
                                 </span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header">
-                                    <img src="~/Content/Site/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                    <img src="~/Content/Site/dist/img/avatar5.png" class="img-circle" alt="User Image">
                                     <p>
                                         @this.User?.Claims?.FirstOrDefault()?.Subject?.Name
                                         <small></small>
@@ -63,18 +45,14 @@
                                 </li>
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Ayarlar</a>
+                                        <a href="#" class="btn btn-default btn-flat disabled">Ayarlar</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a asp-controller="Account" asp-action="Logout" class="btn btn-default btn-flat">Çıkış Yap</a>
+                                        <a asp-controller="Account" asp-action="Logout" class="btn btn-adn btn-flat">Çıkış Yap</a>
                                     </div>
                                 </li>
                             </ul>
                         </li>
-                        @*
-                        <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                        </li>*@
                     </ul>
                 </div>
             </nav>
@@ -83,11 +61,11 @@
             <section class="sidebar">
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="~/Content/Site/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="~/Content/Site/dist/img/avatar5.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p>
-                            @this.User?.Claims?.FirstOrDefault()?.Subject?.Name
+                            @this.User?.Claims?.FirstOrDefault()?.Subject?.Name.Split("@")[0]
                         </p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
@@ -121,7 +99,6 @@
                             <li><a asp-controller="Customer" asp-action="Index"><i class="fa fa-circle-o text-red"></i> Müşteri Listesi</a></li>
                             <li><a asp-controller="Insurance" asp-action="Index"><i class="fa fa-circle-o text-red"></i> Poliçe Listesi</a></li>
                             <li><a asp-controller="Insurance" asp-action="PassiveInsurances"><i class="fa fa-circle-o text-red"></i> Pasif Poliçe Listesi</a></li>
-                            <li><a asp-controller="Home" asp-action="Error"><i class="fa fa-circle-o text-red"></i> ERROR</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -146,50 +123,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a asp-controller="Report" asp-action="ProfitReport"><i class="fa fa-circle-o text-aqua"></i> Kâr Raporu</a></li>
-                            <li><a asp-controller="#" asp-action="#"><i class="fa fa-circle-o text-aqua"></i> Y Raporu</a></li>
-                            <li><a asp-controller="#" asp-action="#"><i class="fa fa-circle-o text-aqua"></i> Z Raporu</a></li>
-                            <li><a asp-controller="#" asp-action="#"><i class="fa fa-circle-o text-aqua"></i> T Raporu</a></li>
-                        </ul>
-                    </li>
-                    <li class="header">Others</li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-pie-chart"></i>
-                            <span>Charts</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="~/Content/Site/pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-                            <li><a href="~/Content/Site/pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                            <li><a href="~/Content/Site/pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-laptop"></i>
-                            <span>UI Elements</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="~/Content/Site/pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
-                            <li><a href="~/Content/Site/pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-folder"></i> <span>Examples</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="~/Content/Site/pages/examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
-                            <li><a href="~/Content/Site/pages/examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
+                            <li><a asp-controller="Report" asp-action="ProfitReport"><i class="fa fa-circle-o text-aqua"></i> Şirket Bazlı Kâr Raporu</a></li>
+                            <li><a asp-controller="Report" asp-action="AllProfitReport"><i class="fa fa-circle-o text-aqua"></i> Kâr Raporu</a></li>
+                            <li><a asp-controller="Report" asp-action="GeneralInsuranceReport"><i class="fa fa-circle-o text-aqua"></i> Genel Rapor</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -207,200 +143,6 @@
             </div>
             <strong>Copyright &copy; 2019 <a href="#">Banaz Sigorta</a>.</strong> Tüm Hakları Saklıdır.
         </footer>
-
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark" style="display: none;">
-            <!-- Create the tabs -->
-            <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-                <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-                <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <!-- Home tab content -->
-                <div class="tab-pane" id="control-sidebar-home-tab">
-                    <h3 class="control-sidebar-heading">Recent Activity</h3>
-                    <ul class="control-sidebar-menu">
-                        <li>
-                            <a href="javascript:void(0)">
-                                <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-
-                                <div class="menu-info">
-                                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-
-                                    <p>Will be 23 on April 24th</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <i class="menu-icon fa fa-user bg-yellow"></i>
-
-                                <div class="menu-info">
-                                    <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-
-                                    <p>New phone +1(800)555-1234</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
-
-                                <div class="menu-info">
-                                    <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-
-                                    <p>nora@example.com</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <i class="menu-icon fa fa-file-code-o bg-green"></i>
-
-                                <div class="menu-info">
-                                    <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-
-                                    <p>Execution time 5 seconds</p>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.control-sidebar-menu -->
-
-                    <h3 class="control-sidebar-heading">Tasks Progress</h3>
-                    <ul class="control-sidebar-menu">
-                        <li>
-                            <a href="javascript:void(0)">
-                                <h4 class="control-sidebar-subheading">
-                                    Custom Template Design
-                                    <span class="label label-danger pull-right">70%</span>
-                                </h4>
-
-                                <div class="progress progress-xxs">
-                                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <h4 class="control-sidebar-subheading">
-                                    Update Resume
-                                    <span class="label label-success pull-right">95%</span>
-                                </h4>
-
-                                <div class="progress progress-xxs">
-                                    <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <h4 class="control-sidebar-subheading">
-                                    Laravel Integration
-                                    <span class="label label-warning pull-right">50%</span>
-                                </h4>
-
-                                <div class="progress progress-xxs">
-                                    <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <h4 class="control-sidebar-subheading">
-                                    Back End Framework
-                                    <span class="label label-primary pull-right">68%</span>
-                                </h4>
-
-                                <div class="progress progress-xxs">
-                                    <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.control-sidebar-menu -->
-
-                </div>
-                <!-- /.tab-pane -->
-                <!-- Stats tab content -->
-                <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
-                <!-- /.tab-pane -->
-                <!-- Settings tab content -->
-                <div class="tab-pane" id="control-sidebar-settings-tab">
-                    <form method="post">
-                        <h3 class="control-sidebar-heading">General Settings</h3>
-
-                        <div class="form-group">
-                            <label class="control-sidebar-subheading">
-                                Report panel usage
-                                <input type="checkbox" class="pull-right" checked>
-                            </label>
-
-                            <p>
-                                Some information about this general settings option
-                            </p>
-                        </div>
-                        <!-- /.form-group -->
-
-                        <div class="form-group">
-                            <label class="control-sidebar-subheading">
-                                Allow mail redirect
-                                <input type="checkbox" class="pull-right" checked>
-                            </label>
-
-                            <p>
-                                Other sets of options are available
-                            </p>
-                        </div>
-                        <!-- /.form-group -->
-
-                        <div class="form-group">
-                            <label class="control-sidebar-subheading">
-                                Expose author name in posts
-                                <input type="checkbox" class="pull-right" checked>
-                            </label>
-
-                            <p>
-                                Allow the user to show his name in blog posts
-                            </p>
-                        </div>
-                        <!-- /.form-group -->
-
-                        <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-                        <div class="form-group">
-                            <label class="control-sidebar-subheading">
-                                Show me as online
-                                <input type="checkbox" class="pull-right" checked>
-                            </label>
-                        </div>
-                        <!-- /.form-group -->
-
-                        <div class="form-group">
-                            <label class="control-sidebar-subheading">
-                                Turn off notifications
-                                <input type="checkbox" class="pull-right">
-                            </label>
-                        </div>
-                        <!-- /.form-group -->
-
-                        <div class="form-group">
-                            <label class="control-sidebar-subheading">
-                                Delete chat history
-                                <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-                            </label>
-                        </div>
-                        <!-- /.form-group -->
-                    </form>
-                </div>
-                <!-- /.tab-pane -->
-            </div>
-        </aside>
-        <!-- /.control-sidebar -->
-        <!-- Add the sidebar's background. This div must be placed
-             immediately after the control sidebar -->
-        <div class="control-sidebar-bg"></div>
     </div>
     <div class="container container-fluid">
         <partial name="_CookieConsentPartial" />
@@ -425,7 +167,66 @@
     <script src="~/Content/Site/dist/js/demo.js"></script>
     <script src="~/Content/Site/bower_components/select2/dist/js/select2.full.min.js"></script>
     <script>
-        $('#allTables').DataTable()
+        $(document).ready(function () {
+            $('#allTables').DataTable({
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,₺]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    totalAmount = api
+                        .column(6)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0).toFixed(2);
+
+                    totalBonus = api
+                        .column(7)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0).toFixed(2);
+
+                    pageTotalAmount = api
+                        .column(6, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0).toFixed(2);
+
+                    pageTotalBonus = api
+                        .column(7, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0).toFixed(2);
+
+                    $(api.column(6).footer()).html(
+                        pageTotalAmount + '₺'
+                    );
+
+                    $(api.column(7).footer()).html(
+                        pageTotalBonus + '₺'
+                    );
+
+                    $('table tfoot tr:last-child th:nth-child(2)').html(
+                        totalAmount + '₺'
+                    );
+
+                    $('table tfoot tr:last-child th:nth-child(3)').html(
+                        totalBonus + '₺'
+                    );
+                }
+            });
+        });
+
+        $('#reportTable').DataTable()
 
         $('.select2').select2()
 
