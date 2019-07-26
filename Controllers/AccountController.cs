@@ -79,8 +79,8 @@ namespace SigortaTakipSistemi.Controllers
                     Email = "dorukozudogru@gmail.com",
                     Password = "QWEqwe.1"
                 };
-                var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
-                result = await _signInManager.PasswordSignInAsync(user.Email, model.Password, false, true);
+                
+                result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
                 return Redirect("~/Home");
 #endif
             }

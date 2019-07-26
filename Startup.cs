@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using System.Collections.Generic;
 using SigortaTakipSistemi.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace SigortaTakipSistemi
 {
@@ -66,15 +65,14 @@ namespace SigortaTakipSistemi
             {
                 options.LoginPath = "/account/login";
                 options.LogoutPath = "/account/logout";
-                options.AccessDeniedPath = "/account/access-denied";
                 options.SlidingExpiration = true;
-                options.Cookie = new CookieBuilder
-                {
-                    HttpOnly = true,
-                    Name = ".AspNetCoreIdentity",
-                    Path = "/",
-                    SameSite = SameSiteMode.Strict
-                };
+                //options.Cookie = new CookieBuilder
+                //{
+                //    HttpOnly = true,
+                //    Name = ".AspNetCoreIdentity",
+                //    Path = "/",
+                //    SameSite = SameSiteMode.Strict
+                //};
             });
         }
 
@@ -84,7 +82,6 @@ namespace SigortaTakipSistemi
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-                //app.UseDeveloperExceptionPage();
             }
             else
             {
