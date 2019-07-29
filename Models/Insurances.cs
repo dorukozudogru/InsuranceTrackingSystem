@@ -78,7 +78,9 @@ namespace SigortaTakipSistemi.Models
             [Display(Name = "SIFIR")]
             NEW = 0,
             [Display(Name = "YENİLEME")]
-            RENEWAL = 1
+            RENEWAL = 1,
+            [Display(Name = "2. EL")]
+            USED_CAR = 2
         }
 
         [Required]

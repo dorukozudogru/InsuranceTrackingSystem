@@ -72,8 +72,22 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pc => pc.InsuranceCompany)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            insurance.InsuranceTypeName = insurance.InsuranceType == 0 ? "SIFIR" : "YENİLEME";
+            #region InsuranceType
+            if (insurance.InsuranceType == 0)
+            {
+                insurance.InsuranceTypeName = "SIFIR";
+            }
+            else if (insurance.InsuranceType == 1)
+            {
+                insurance.InsuranceTypeName = "YENİLEME";
+            }
+            else if (insurance.InsuranceType == 2)
+            {
+                insurance.InsuranceTypeName = "2. EL";
+            }
+            #endregion
 
+            #region InsurancePaymentType
             if (insurance.InsurancePaymentType == 0)
             {
                 insurance.InsurancePaymentTypeName = "NAKİT";
@@ -86,6 +100,7 @@ namespace SigortaTakipSistemi.Controllers
             {
                 insurance.InsurancePaymentTypeName = "BEDELSİZ";
             }
+            #endregion
 
             if (insurance == null)
             {
@@ -260,7 +275,7 @@ namespace SigortaTakipSistemi.Controllers
             var insurance = await _context.Insurances.FindAsync(id);
 
             _context.Insurances.Remove(insurance);
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -418,8 +433,23 @@ namespace SigortaTakipSistemi.Controllers
                     ws.Cells[c, 12].Value = items[c - 2].InsuranceFinishDate;
                     ws.Cells[c, 13].Value = items[c - 2].InsuranceAmount;
                     ws.Cells[c, 14].Value = items[c - 2].InsuranceBonus;
-                    ws.Cells[c, 15].Value = items[c - 2].InsuranceType == 0 ? "SIFIR" : "YENİLEME";
 
+                    #region InsuranceType
+                    if (items[c - 2].InsuranceType == 0)
+                    {
+                        ws.Cells[c, 15].Value = "SIFIR";
+                    }
+                    else if (items[c - 2].InsuranceType == 1)
+                    {
+                        ws.Cells[c, 15].Value = "YENİLEME";
+                    }
+                    else if (items[c - 2].InsuranceType == 2)
+                    {
+                        ws.Cells[c, 15].Value = "2. EL";
+                    }
+                    #endregion
+
+                    #region InsurancePaymentType
                     if (items[c - 2].InsurancePaymentType == 0)
                     {
                         ws.Cells[c, 16].Value = "NAKİT";
@@ -432,6 +462,7 @@ namespace SigortaTakipSistemi.Controllers
                     {
                         ws.Cells[c, 16].Value = "BEDELSİZ";
                     }
+                    #endregion
                 }
 
                 var lastRow = ws.Dimension.End.Row;
