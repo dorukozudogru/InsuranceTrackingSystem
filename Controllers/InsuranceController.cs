@@ -74,6 +74,19 @@ namespace SigortaTakipSistemi.Controllers
 
             insurance.InsuranceTypeName = insurance.InsuranceType == 0 ? "SIFIR" : "YENİLEME";
 
+            if (insurance.InsurancePaymentType == 0)
+            {
+                insurance.InsurancePaymentTypeName = "NAKİT";
+            }
+            else if (insurance.InsurancePaymentType == 1)
+            {
+                insurance.InsurancePaymentTypeName = "KREDİ KARTI";
+            }
+            else if (insurance.InsurancePaymentType == 2)
+            {
+                insurance.InsurancePaymentTypeName = "BEDELSİZ";
+            }
+
             if (insurance == null)
             {
                 return NotFound();
@@ -96,7 +109,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (ModelState.IsValid)
             {
-                insurance.InsuranceBonus = InsuranceBonusCalculation(insurance.InsuranceAmount, _context.InsurancePolicies.FirstOrDefault(pn => pn.Id == insurance.InsurancePolicyId).Name);
+                //insurance.InsuranceBonus = InsuranceBonusCalculation(insurance.InsuranceAmount, _context.InsurancePolicies.FirstOrDefault(pn => pn.Id == insurance.InsurancePolicyId).Name);
                 insurance.CreatedBy = GetLoggedUserId();
 
                 insurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
@@ -359,7 +372,7 @@ namespace SigortaTakipSistemi.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("Poliçeler");
 
-                using (var range = ws.Cells[1, 1, 1, 15])
+                using (var range = ws.Cells[1, 1, 1, 16])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -382,6 +395,7 @@ namespace SigortaTakipSistemi.Controllers
                 ws.Cells[1, 13].Value = "Poliçe Tutarı";
                 ws.Cells[1, 14].Value = "Poliçe Primi";
                 ws.Cells[1, 15].Value = "Sıfır/Yenileme";
+                ws.Cells[1, 16].Value = "Nakit/Kredi Kartı";
 
                 ws.Column(11).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(12).Style.Numberformat.Format = "dd-mmmm-yyyy";
@@ -405,6 +419,19 @@ namespace SigortaTakipSistemi.Controllers
                     ws.Cells[c, 13].Value = items[c - 2].InsuranceAmount;
                     ws.Cells[c, 14].Value = items[c - 2].InsuranceBonus;
                     ws.Cells[c, 15].Value = items[c - 2].InsuranceType == 0 ? "SIFIR" : "YENİLEME";
+
+                    if (items[c - 2].InsurancePaymentType == 0)
+                    {
+                        ws.Cells[c, 16].Value = "NAKİT";
+                    }
+                    else if (items[c - 2].InsurancePaymentType == 1)
+                    {
+                        ws.Cells[c, 16].Value = "KREDİ KARTI";
+                    }
+                    else if (items[c - 2].InsurancePaymentType == 2)
+                    {
+                        ws.Cells[c, 16].Value = "BEDELSİZ";
+                    }
                 }
 
                 var lastRow = ws.Dimension.End.Row;
@@ -426,12 +453,12 @@ namespace SigortaTakipSistemi.Controllers
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:O" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:P" + items.Count + 2].AutoFilter = true;
 
                 ws.Column(15).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
-                ws.PrinterSettings.Scale = 55;
+                ws.PrinterSettings.Scale = 50;
 
                 p.Save();
             }

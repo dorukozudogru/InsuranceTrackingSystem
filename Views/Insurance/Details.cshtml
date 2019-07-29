@@ -6,62 +6,6 @@
 }
 
 <div class="content-wrapper">
-    @*<section class="content">
-            <div class="box-header">
-                <h3>Poliçe Detayları</h3>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <dl class="row">
-
-                                <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.CreatedAt)
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.CreatedAt)
-                                </dd>
-                                <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.CreatedBy)
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.CreatedBy)
-                                </dd>
-                                <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.UpdatedAt)
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.UpdatedAt)&nbsp;
-                                </dd>
-                                <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.UpdatedBy)
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.UpdatedBy)&nbsp;
-                                </dd>
-                                <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.DeletedAt)
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.DeletedAt)&nbsp;
-                                </dd>
-                                <dt class="col-sm-2">
-                                    @Html.DisplayNameFor(model => model.DeletedBy)
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.DeletedBy)&nbsp;
-                                </dd>
-                            </dl>
-                            <div>
-                                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Güncelle</a>
-                                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>*@
     <section class="invoice">
         <div class="row">
             <div class="col-xs-12">
@@ -82,6 +26,7 @@
                     @Html.DisplayNameFor(model => model.InsuranceCompany.Name): <strong>@Html.DisplayFor(model => model.InsuranceCompany.Name)</strong><br>
                     @Html.DisplayNameFor(model => model.InsurancePolicy.Name) : <strong>@Html.DisplayFor(model => model.InsurancePolicy.Name)</strong><br>
                     @Html.DisplayNameFor(model => model.InsuranceAmount) : <strong>@Html.DisplayFor(model => model.InsuranceAmount) ₺</strong><br>
+                    @Html.DisplayNameFor(model => model.InsuranceBonus): <strong>@Html.DisplayFor(model => model.InsuranceBonus) ₺</strong><br>
                 </address>
             </div>
             <div class="col-sm-4 invoice-col">
@@ -89,7 +34,7 @@
                     @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
                     @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
                     @Html.DisplayNameFor(model => model.InsuranceTypeName): <strong>@Html.DisplayFor(model => model.InsuranceTypeName)</strong><br>
-                    @Html.DisplayNameFor(model => model.InsuranceBonus): <strong>@Html.DisplayFor(model => model.InsuranceBonus) ₺</strong><br>
+                    @Html.DisplayNameFor(model => model.InsurancePaymentTypeName): <strong>@Html.DisplayFor(model => model.InsurancePaymentTypeName)</strong><br>
                 </address>
             </div>
             <div class="col-sm-4 invoice-col">
