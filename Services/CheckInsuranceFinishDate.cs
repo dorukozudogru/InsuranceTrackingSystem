@@ -72,17 +72,18 @@ namespace SigortaTakipSistemi.Services
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.UseDefaultCredentials = false;
             smtp.Credentials = null;
-            smtp.Credentials = new System.Net.NetworkCredential("dorukozudogru.oplog@gmail.com", "doruk.,.,23");
+            smtp.Credentials = new System.Net.NetworkCredential("banazsigorta@gmail.com", "Banaz26.,");
 
-            msg.From = new MailAddress("dorukozudogru.oplog@gmail.com", "Banaz Sigorta");
+            msg.From = new MailAddress("banazsigorta@gmail.com", "Banaz Sigorta");
 
-            foreach (var user in emailUsers)
-            {
-                msg.To.Add(user.Email);
-            }
+            //foreach (var user in emailUsers)
+            //{
+            //    msg.To.Add(user.Email);
+            //}
 
-            msg.To.Add("dorukozudogru@gmail.com");
-            msg.To.Add("bugrabnz@gmail.com");
+            msg.To.Add("banazsigorta@banazsigorta.com.tr");
+            msg.To.Add("banazsigorta@gmail.com");
+            
             msg.Subject = insurance.LicencePlate + " Plakalı Aracın " + insurance.InsurancePolicy.Name + " Poliçesi Süresi Dolmak Üzere";
             msg.Body = string.Format(@"Müşteri Adı: {0} - Sigorta Şirketi: {1} - Poliçe Tipi/Numarası: {2}/{3} - Poliçe Başlangıç/Bitiş Tarihi: {4} / {5}",
                                insurance.Customer.FullName,

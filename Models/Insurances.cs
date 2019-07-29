@@ -81,6 +81,23 @@ namespace SigortaTakipSistemi.Models
             RENEWAL = 1
         }
 
+        [Required]
+        [DisplayName("Nakit/Kredi Kartı")]
+        public byte InsurancePaymentType { get; set; }
+        [NotMapped]
+        [DisplayName("Nakit/Kredi Kartı")]
+        public string InsurancePaymentTypeName { get; set; }
+
+        public enum InsurancePaymentTypeEnum
+        {
+            [Display(Name = "NAKİT")]
+            CASH = 0,
+            [Display(Name = "KREDİ KARTI")]
+            CREDIT_CARD = 1,
+            [Display(Name = "BEDELSİZ")]
+            UNPAID = 2
+        }
+
         [DisplayName("Aktif mi?")]
         public bool IsActive { get; set; }
 

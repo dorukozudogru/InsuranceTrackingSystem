@@ -60,6 +60,9 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.InsuranceType)
                                     </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePaymentType)
+                                    </th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -108,6 +111,9 @@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.InsuranceType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePaymentType)
                                         </td>
                                         <td>
                                             <a asp-action="Edit" asp-route-id="@item.Id">Güncelle</a>

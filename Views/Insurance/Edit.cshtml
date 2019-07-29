@@ -30,12 +30,12 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="CarModel.CarBrandName" class="control-label"></label>
-                                <select id="Brand" asp-for="CarModel.CarBrandId" class="form-control" asp-items="@ViewBag.CarBrands" ></select>
+                                <select id="Brand" asp-for="CarModel.CarBrandId" class="form-control" asp-items="@ViewBag.CarBrands"></select>
                                 <span asp-validation-for="CarModel.CarBrandId" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label asp-for="CarModel.Name" class="control-label"></label>
-                                <select id="Model" asp-for="CarModel.Name" class="form-control" asp-items="@ViewBag.CarModels" ></select>
+                                <select id="Model" asp-for="CarModel.Name" class="form-control" asp-items="@ViewBag.CarModels"></select>
                                 <span asp-validation-for="CarModel.Name" class="text-danger"></span>
                             </div>
                             <div class="form-group">
@@ -90,6 +90,11 @@
                                 <label asp-for="InsuranceType" class="control-label"></label>
                                 <select asp-for="InsuranceType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsuranceTypeEnum>()"></select>
                                 <span asp-validation-for="InsuranceType" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="InsurancePaymentType" class="control-label"></label>
+                                <select asp-for="InsurancePaymentType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()"></select>
+                                <span asp-validation-for="InsurancePaymentType" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="Kaydet" class="btn btn-primary" />
