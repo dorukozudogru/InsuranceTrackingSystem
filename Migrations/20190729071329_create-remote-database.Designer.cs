@@ -10,8 +10,8 @@ using SigortaTakipSistemi.Models;
 namespace SigortaTakipSistemi.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20190721163756_create-database")]
-    partial class createdatabase
+    [Migration("20190729071329_create-remote-database")]
+    partial class createremotedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -260,6 +260,8 @@ namespace SigortaTakipSistemi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("LogoPath");
 
                     b.Property<string>("Name")
                         .IsRequired();

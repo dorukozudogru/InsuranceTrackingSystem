@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Queries\" />
-    <Folder Include="wwwroot\Content\Site\" />
   </ItemGroup>
 
 </Project>

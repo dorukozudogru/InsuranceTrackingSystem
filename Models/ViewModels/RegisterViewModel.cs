@@ -17,5 +17,6 @@ namespace SigortaTakipSistemi.Models.ViewModels
         public string Email { get; set; }
         [DisplayName("Şifre")]
         public string Password { get; set; }
+        public string Token { get; set; }
     }
 }

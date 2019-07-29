@@ -12,13 +12,15 @@ namespace SigortaTakipSistemi.Models.ViewModels
         [Key]
         public int Id { get; set; }
 
+        [Required]
         [DisplayName("Başlangıç Tarihi")]
         public DateTime StartDate { get; set; }
 
+        [Required]
         [DisplayName("Bitiş Tarihi")]
         public DateTime FinishDate { get; set; }
 
         [DisplayName("Sigorta Şirketi")]
-        public int InsuranceCompany { get; set; }
+        public List<int> InsuranceCompany { get; set; }
     }
 }

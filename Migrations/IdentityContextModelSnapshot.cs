@@ -259,6 +259,8 @@ namespace SigortaTakipSistemi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("LogoPath");
+
                     b.Property<string>("Name")
                         .IsRequired();
 

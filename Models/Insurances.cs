@@ -69,6 +69,9 @@ namespace SigortaTakipSistemi.Models
         [Required]
         [DisplayName("Sıfır/Yenileme")]
         public byte InsuranceType { get; set; }
+        [NotMapped]
+        [DisplayName("Sıfır/Yenileme")]
+        public string InsuranceTypeName { get; set; }
 
         public enum InsuranceTypeEnum
         {

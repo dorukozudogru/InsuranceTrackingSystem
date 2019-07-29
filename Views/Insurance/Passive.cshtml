@@ -1,14 +1,14 @@
 ﻿@model SigortaTakipSistemi.Models.Insurances
 
 @{
-    ViewData["Title"] = "Poliçeyi Sil";
+    ViewData["Title"] = "Poliçeyi Pasif Yap";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="content-wrapper">
     <section class="content">
         <div class="box-header">
-            <h3>Bu poliçeyi silmek istediğinizden emin misiniz?</h3>
+            <h3>Bu poliçeyi pasif duruma getirmek istediğinizden emin misiniz?</h3>
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -125,8 +125,9 @@
                             </dd>
                         </dl>
 
-                        <form asp-action="Delete">
+                        <form asp-action="Passive">
                             <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="DeletedAt" value="@DateTime.Now" />
                             <input type="submit" value="Evet" class="btn btn-danger" />
                             <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
                         </form>

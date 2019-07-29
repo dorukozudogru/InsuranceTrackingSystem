@@ -23,6 +23,8 @@ namespace SigortaTakipSistemi.Controllers
         {
             ViewBag.InsuranceCount = _context.Insurances.Count();
             ViewBag.CustomerCount = _context.Customers.Count();
+            ViewBag.ActiveInsuranceCount = _context.Insurances.Where(i => i.IsActive == true).Count();
+            ViewBag.PassiveInsuranceCount = _context.Insurances.Where(i => i.IsActive == false).Count();
             return View();
         }
 

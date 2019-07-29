@@ -15,6 +15,9 @@ namespace SigortaTakipSistemi.Models
         [DisplayName("Sigorta Şirketi")]
         public string Name { get; set; }
 
+        [DisplayName("Sigorta Şirketi Logosu")]
+        public string LogoPath { get; set; }
+
         public virtual List<Insurances> Insurances { get; set; }
     }
 }

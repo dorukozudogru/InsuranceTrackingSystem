@@ -47,7 +47,7 @@ namespace SigortaTakipSistemi.Services
                                                 .Include(cb => cb.CarModel.CarBrand)
                                                 .Include(pn => pn.InsurancePolicy)
                                                 .Include(pc => pc.InsuranceCompany)
-                                                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-30) <= DateTime.Now && i.InsuranceLastMailDate.Value.Date != DateTime.Today && i.InsuranceFinishDate >= DateTime.Now).ToList();
+                                                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-8) <= DateTime.Now && i.InsuranceLastMailDate.Value.Date != DateTime.Today && i.InsuranceFinishDate >= DateTime.Now).ToList();
                 var emailUsers = _context.Users.ToList();
 
                 foreach (var insurance in dueTimeInsurances)
@@ -82,6 +82,7 @@ namespace SigortaTakipSistemi.Services
             }
 
             msg.To.Add("dorukozudogru@gmail.com");
+            msg.To.Add("bugrabnz@gmail.com");
             msg.Subject = insurance.LicencePlate + " Plakalı Aracın " + insurance.InsurancePolicy.Name + " Poliçesi Süresi Dolmak Üzere";
             msg.Body = string.Format(@"Müşteri Adı: {0} - Sigorta Şirketi: {1} - Poliçe Tipi/Numarası: {2}/{3} - Poliçe Başlangıç/Bitiş Tarihi: {4} / {5}",
                                insurance.Customer.FullName,

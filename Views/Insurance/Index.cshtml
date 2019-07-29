@@ -17,7 +17,7 @@
         </form>
         <div class="row">
             <div class="col-xs-12">
-                <div class="box">
+                <div class="box table-responsive">
                     <div class="box-body">
                         <table id="allTables" class="table table-bordered table-striped">
                             <thead>
@@ -64,6 +64,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,7 +93,7 @@
                                             @Html.DisplayFor(modelItem => item.InsurancePolicyNumber)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.InsuranceCompany.Name)
+                                            <img src="@Html.DisplayFor(modelItem => item.InsuranceCompany.LogoPath)" style="max-height:50px; max-width:75px" />
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.InsuranceStartDate)
@@ -116,7 +117,10 @@
                                             <a asp-action="Details" asp-route-id="@item.Id">Detaylar</a>
                                         </td>
                                         <td>
-                                            <a asp-action="Delete" asp-route-id="@item.Id">Pasif Yap</a>
+                                            <a asp-action="Passive" asp-route-id="@item.Id">Pasif Yap</a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
                                         </td>
                                     </tr>
                                 }

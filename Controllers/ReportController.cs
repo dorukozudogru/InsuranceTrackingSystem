@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,14 +27,17 @@ namespace SigortaTakipSistemi.Controllers
 
         public ActionResult ProfitReport()
         {
-            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies, "Id", "Name");
+            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
 
             return View();
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProfitReportResult(ReportViewModel reportViewModel)
         {
-            List<Insurances> insurances = await _context.Insurances
+            if (ModelState.IsValid)
+            {
+                List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
@@ -42,17 +46,87 @@ namespace SigortaTakipSistemi.Controllers
                 .Where(i => i.IsActive == true
                             && i.InsuranceStartDate >= reportViewModel.StartDate
                             && i.InsuranceStartDate <= reportViewModel.FinishDate
-                            && i.InsuranceCompanyId == reportViewModel.InsuranceCompany)
+                            && reportViewModel.InsuranceCompany.Contains(i.InsuranceCompanyId))
                 .AsNoTracking()
                 .ToListAsync();
 
-            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances
-                .Where(i => i.IsActive == true
-                && i.InsuranceStartDate >= reportViewModel.StartDate
-                && i.InsuranceStartDate <= reportViewModel.FinishDate
-                && i.InsuranceCompanyId == reportViewModel.InsuranceCompany));
+                FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances
+                    .Where(i => i.IsActive == true
+                    && i.InsuranceStartDate >= reportViewModel.StartDate
+                    && i.InsuranceStartDate <= reportViewModel.FinishDate
+                    && reportViewModel.InsuranceCompany.Contains(i.InsuranceCompanyId)));
 
-            return View(insurances);
+                return View(insurances);
+            }
+            return RedirectToAction("ProfitReport");
+        }
+
+        public ActionResult AllProfitReport()
+        {
+            return View();
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AllProfitReportResult(ReportViewModel reportViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                List<Insurances> insurances = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == true
+                            && i.InsuranceStartDate >= reportViewModel.StartDate
+                            && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                .AsNoTracking()
+                .ToListAsync();
+
+                FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances
+                    .Where(i => i.IsActive == true
+                    && i.InsuranceStartDate >= reportViewModel.StartDate
+                    && i.InsuranceStartDate <= reportViewModel.FinishDate));
+
+                return View(insurances);
+            }
+            return RedirectToAction("AllProfitReport");
+        }
+
+        public ActionResult GeneralInsuranceReport()
+        {
+            return View();
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GeneralInsuranceReportResult(ReportViewModel reportViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var insurancesGroup = await _context.Insurances
+                    .Include(ic => ic.InsuranceCompany)
+                    .Include(ip => ip.InsurancePolicy)
+                    .Where(i => i.IsActive == true
+                        && i.InsuranceStartDate >= reportViewModel.StartDate
+                        && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .GroupBy(i => new
+                    {
+                        InsuranceCompanyName = i.InsuranceCompany.Name,
+                        InsurancePolicyName = i.InsurancePolicy.Name
+                    })
+                    .Select(i => new GeneralReportViewModel
+                    {
+                        InsuranceCompanyName = i.Key.InsuranceCompanyName,
+                        InsurancePolicyName = i.Key.InsurancePolicyName,
+                        Count = i.Count()
+                    })
+                    .OrderBy(i => i.InsuranceCompanyName)
+                    .ToListAsync();
+
+                return View(insurancesGroup);
+            }
+
+            return RedirectToAction("GeneralInsuranceReport");
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<SigortaTakipSistemi.Models.Insurances>
 
 @{
-    ViewData["Title"] = "Şirket Bazlı Kâr Raporu";
+    ViewData["Title"] = "Kâr Raporu";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="content-wrapper">
     <section class="content">
         <h3>
-            <i class="fa fa-report"></i>&nbsp;Şirket Bazlı Kâr Raporu
+            <i class="fa fa-report"></i>&nbsp;Kâr Raporu
         </h3>
         <form method="post" enctype="multipart/form-data">
             <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllInsurances">Dışa Aktar</a>

@@ -31,8 +31,6 @@ namespace SigortaTakipSistemi.Controllers
         {
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == true));
 
-            //GetFinishedInsurances();
-
             return View(await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
@@ -73,6 +71,8 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            insurance.InsuranceTypeName = insurance.InsuranceType == 0 ? "SIFIR" : "YENİLEME";
 
             if (insurance == null)
             {
@@ -174,6 +174,46 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        public async Task<IActionResult> Passive(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            insurance.InsurancePolicyName = GetInsurancePoliciesById(insurance.InsurancePolicyId).Name;
+            insurance.InsuranceCompanyName = GetInsuranceCompaniesById(insurance.InsuranceCompanyId).Name;
+
+            if (insurance == null)
+            {
+                return NotFound();
+            }
+
+            return View(insurance);
+        }
+
+        [HttpPost, ActionName("Passive")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PassiveConfirmed(int id)
+        {
+            var insurance = await _context.Insurances.FindAsync(id);
+
+            insurance.IsActive = false;
+            insurance.DeletedBy = GetLoggedUserId();
+
+            _context.Update(insurance);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -206,10 +246,8 @@ namespace SigortaTakipSistemi.Controllers
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
-            insurance.IsActive = false;
-            insurance.DeletedBy = GetLoggedUserId();
-
-            _context.Update(insurance);
+            _context.Insurances.Remove(insurance);
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -319,7 +357,7 @@ namespace SigortaTakipSistemi.Controllers
 
             using (var p = new ExcelPackage(stream))
             {
-                var ws = p.Workbook.Worksheets.Add("Insurances");
+                var ws = p.Workbook.Worksheets.Add("Poliçeler");
 
                 using (var range = ws.Cells[1, 1, 1, 15])
                 {
@@ -368,8 +406,32 @@ namespace SigortaTakipSistemi.Controllers
                     ws.Cells[c, 14].Value = items[c - 2].InsuranceBonus;
                     ws.Cells[c, 15].Value = items[c - 2].InsuranceType == 0 ? "SIFIR" : "YENİLEME";
                 }
+
+                var lastRow = ws.Dimension.End.Row;
+                var lastColumn = ws.Dimension.End.Column;
+
+                if (type == 1)
+                {
+                    using (var range = ws.Cells[lastRow + 1, 1, lastRow + 1, lastColumn])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(color: Color.Gray);
+                        range.Style.Font.Color.SetColor(Color.White);
+                    }
+
+                    ws.Cells[lastRow + 1, 12].Value = "Toplam:";
+                    ws.Cells[lastRow + 1, 13].Formula = String.Format("SUM(M2:M{0})", lastRow);
+                    ws.Cells[lastRow + 1, 14].Formula = String.Format("SUM(N2:N{0})", lastRow);
+                }
+
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
                 ws.Cells["A1:O" + items.Count + 2].AutoFilter = true;
+
+                ws.Column(15).PageBreak = true;
+                ws.PrinterSettings.PaperSize = ePaperSize.A4;
+                ws.PrinterSettings.Orientation = eOrientation.Landscape;
+                ws.PrinterSettings.Scale = 55;
 
                 p.Save();
             }
@@ -389,11 +451,6 @@ namespace SigortaTakipSistemi.Controllers
         public string GetLoggedUserId()
         {
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-        }
-
-        public void GetFinishedInsurances()
-        {
-            ViewBag.FinishedInsurancesCount = _context.Insurances.Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-30) <= DateTime.Now).ToList().Count;
         }
 
         public double InsuranceBonusCalculation(double amount, string insurancePolicy)
