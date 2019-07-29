@@ -64,6 +64,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,7 +117,10 @@
                                             <a asp-action="Details" asp-route-id="@item.Id">Detaylar</a>
                                         </td>
                                         <td>
-                                            <a asp-action="Delete" asp-route-id="@item.Id">Pasif Yap</a>
+                                            <a asp-action="Passive" asp-route-id="@item.Id">Pasif Yap</a>
+                                        </td>
+                                        <td>
+                                            <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
                                         </td>
                                     </tr>
                                 }

@@ -10,8 +10,8 @@ using SigortaTakipSistemi.Models;
 namespace SigortaTakipSistemi.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20190725133516_change-insurance-company-table")]
-    partial class changeinsurancecompanytable
+    [Migration("20190729071329_create-remote-database")]
+    partial class createremotedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

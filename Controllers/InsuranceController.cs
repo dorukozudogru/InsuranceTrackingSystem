@@ -174,6 +174,46 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        public async Task<IActionResult> Passive(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            insurance.InsurancePolicyName = GetInsurancePoliciesById(insurance.InsurancePolicyId).Name;
+            insurance.InsuranceCompanyName = GetInsuranceCompaniesById(insurance.InsuranceCompanyId).Name;
+
+            if (insurance == null)
+            {
+                return NotFound();
+            }
+
+            return View(insurance);
+        }
+
+        [HttpPost, ActionName("Passive")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PassiveConfirmed(int id)
+        {
+            var insurance = await _context.Insurances.FindAsync(id);
+
+            insurance.IsActive = false;
+            insurance.DeletedBy = GetLoggedUserId();
+
+            _context.Update(insurance);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -206,10 +246,8 @@ namespace SigortaTakipSistemi.Controllers
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
-            insurance.IsActive = false;
-            insurance.DeletedBy = GetLoggedUserId();
-
-            _context.Update(insurance);
+            _context.Insurances.Remove(insurance);
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

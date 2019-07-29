@@ -38,7 +38,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             var user = new AppIdentityUser
             {
-                UserName = model.Email.Split("@")[0],
+                UserName = model.Email,
                 Email = model.Email,
             };
 
@@ -116,7 +116,7 @@ namespace SigortaTakipSistemi.Controllers
         [Route("account/forget-password")]
         public async Task<IActionResult> ForgetPassword(string email)
         {
-            AppIdentityUser user = await _userManager.FindByNameAsync(email);
+            AppIdentityUser user = await _userManager.FindByEmailAsync(email);
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -161,7 +161,7 @@ namespace SigortaTakipSistemi.Controllers
         [Route("account/reset-password")]
         public async Task<IActionResult> ResetPassword(RegisterViewModel model)
         {
-            AppIdentityUser user = await _userManager.FindByNameAsync(model.Email);
+            AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
 
             IdentityResult result = _userManager.ResetPasswordAsync(user, model.Token, model.Password).Result;
 
