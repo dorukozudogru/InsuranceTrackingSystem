@@ -455,7 +455,7 @@ namespace SigortaTakipSistemi.Controllers
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
                 ws.Cells["A1:P" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(15).PageBreak = true;
+                ws.Column(16).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 50;
