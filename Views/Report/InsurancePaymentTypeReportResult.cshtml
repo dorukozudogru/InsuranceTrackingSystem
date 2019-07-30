@@ -1,0 +1,47 @@
+﻿@model IEnumerable<SigortaTakipSistemi.Models.ViewModels.GeneralReportViewModel>
+
+@{
+    ViewData["Title"] = "Genel Rapor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <h3>
+            <i class="fa fa-report"></i>&nbsp;Genel Rapor
+        </h3>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box table-responsive">
+                    <div class="box-body">
+                        <table id="reportTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePaymentType)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Count)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePaymentTypeName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Count)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

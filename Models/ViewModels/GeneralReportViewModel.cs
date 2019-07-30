@@ -14,6 +14,12 @@ namespace SigortaTakipSistemi.Models.ViewModels
         [DisplayName("Poliçe Tipi")]
         public string InsurancePolicyName { get; set; }
 
+        [DisplayName("Nakit/Kredi Kartı")]
+        public byte InsurancePaymentType { get; set; }
+
+        [DisplayName("Nakit/Kredi Kartı")]
+        public string InsurancePaymentTypeName { get; set; }
+
         [DisplayName("Toplam Poliçe Sayısı")]
         public int Count { get; set; }
     }

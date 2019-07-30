@@ -14,6 +14,7 @@ using OfficeOpenXml.Style;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
+using SigortaTakipSistemi.Helpers;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -31,7 +32,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == true));
 
-            return View(await _context.Insurances
+            List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
@@ -39,14 +40,18 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pc => pc.InsuranceCompany)
                 .Where(i => i.IsActive == true)
                 .AsNoTracking()
-                .ToListAsync());
+                .ToListAsync();
+
+            insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
+
+            return View(insurances);
         }
 
         public async Task<IActionResult> PassiveInsurances()
         {
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == false));
 
-            return View(await _context.Insurances
+            List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
@@ -54,7 +59,11 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pc => pc.InsuranceCompany)
                 .Where(i => i.IsActive == false)
                 .AsNoTracking()
-                .ToListAsync());
+                .ToListAsync();
+
+            insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
+
+            return View(insurances);
         }
 
         public async Task<IActionResult> Details(int? id)

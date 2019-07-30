@@ -128,5 +128,56 @@ namespace SigortaTakipSistemi.Controllers
 
             return RedirectToAction("GeneralInsuranceReport");
         }
+
+        public ActionResult InsurancePaymentTypeReport()
+        {
+            return View();
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> InsurancePaymentTypeReportResult(ReportViewModel reportViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var insurancesGroup = await _context.Insurances
+                    .Include(ic => ic.InsuranceCompany)
+                    .Include(ip => ip.InsurancePolicy)
+                    .Where(i => i.IsActive == true
+                        && i.InsuranceStartDate >= reportViewModel.StartDate
+                        && i.InsuranceStartDate <= reportViewModel.FinishDate
+                        && reportViewModel.InsurancePaymentType.Contains(i.InsurancePaymentType))
+                    .GroupBy(i => new
+                    {
+                        InsurancePaymentTypeEnum = i.InsurancePaymentType
+                    })
+                    .Select(i => new GeneralReportViewModel
+                    {
+                        InsurancePaymentType = i.Key.InsurancePaymentTypeEnum,
+                        Count = i.Count()
+                    })
+                    .OrderBy(i => i.InsurancePaymentType)
+                    .ToListAsync();
+
+                foreach (var item in insurancesGroup)
+                {
+                    if (item.InsurancePaymentType == 0)
+                    {
+                        item.InsurancePaymentTypeName = Helpers.EnumExtensionsHelper.GetDisplayName(Insurances.InsurancePaymentTypeEnum.CASH);
+                    }
+                    if (item.InsurancePaymentType == 1)
+                    {
+                        item.InsurancePaymentTypeName = Helpers.EnumExtensionsHelper.GetDisplayName(Insurances.InsurancePaymentTypeEnum.CREDIT_CARD);
+                    }
+                    if (item.InsurancePaymentType == 2)
+                    {
+                        item.InsurancePaymentTypeName = Helpers.EnumExtensionsHelper.GetDisplayName(Insurances.InsurancePaymentTypeEnum.UNPAID);
+                    }
+                }
+
+                return View(insurancesGroup);
+            }
+
+            return RedirectToAction("GeneralInsuranceReport");
+        }
     }
 }

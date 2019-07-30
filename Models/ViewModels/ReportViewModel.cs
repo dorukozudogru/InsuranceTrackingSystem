@@ -22,5 +22,8 @@ namespace SigortaTakipSistemi.Models.ViewModels
 
         [DisplayName("Sigorta Şirketi")]
         public List<int> InsuranceCompany { get; set; }
+
+        [DisplayName("Nakit/Kredi Kartı")]
+        public List<byte> InsurancePaymentType { get; set; }
     }
 }
