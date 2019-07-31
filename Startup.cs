@@ -89,6 +89,7 @@ namespace SigortaTakipSistemi
                 app.UseHsts();
             }
 
+            app.UseRequestLocalization();
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
