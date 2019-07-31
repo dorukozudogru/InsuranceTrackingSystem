@@ -30,8 +30,6 @@ namespace SigortaTakipSistemi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == true));
-
             List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
@@ -42,6 +40,14 @@ namespace SigortaTakipSistemi.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(insurances.Select(x => new Insurances
+            {
+                Customer = null,
+                CarModel = null,
+                InsurancePolicy = null,
+                InsuranceCompany = null
+            }));
+
             insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
 
             return View(insurances);
@@ -49,8 +55,6 @@ namespace SigortaTakipSistemi.Controllers
 
         public async Task<IActionResult> PassiveInsurances()
         {
-            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == false));
-
             List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
@@ -60,6 +64,14 @@ namespace SigortaTakipSistemi.Controllers
                 .Where(i => i.IsActive == false)
                 .AsNoTracking()
                 .ToListAsync();
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(insurances.Select(x => new Insurances
+            {
+                Customer = null,
+                CarModel = null,
+                InsurancePolicy = null,
+                InsuranceCompany = null
+            }));
 
             insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
 

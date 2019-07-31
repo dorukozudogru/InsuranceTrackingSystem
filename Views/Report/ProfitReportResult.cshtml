@@ -47,6 +47,9 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.InsuranceType)
                                     </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InsurancePaymentType)
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,7 +81,10 @@
                                             @Html.DisplayFor(modelItem => item.InsuranceBonus) ₺
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.InsuranceType)
+                                            @Html.DisplayFor(modelItem => item.InsuranceTypeName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InsurancePaymentTypeName)
                                         </td>
                                     </tr>
                                 }
