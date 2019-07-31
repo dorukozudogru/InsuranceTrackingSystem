@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SigortaTakipSistemi.Helpers;
 using SigortaTakipSistemi.Models;
 using SigortaTakipSistemi.Models.ViewModels;
 using static SigortaTakipSistemi.Controllers.InsuranceController;
@@ -56,6 +57,8 @@ namespace SigortaTakipSistemi.Controllers
                     && i.InsuranceStartDate <= reportViewModel.FinishDate
                     && reportViewModel.InsuranceCompany.Contains(i.InsuranceCompanyId)));
 
+                insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
+
                 return View(insurances);
             }
             return RedirectToAction("ProfitReport");
@@ -87,6 +90,8 @@ namespace SigortaTakipSistemi.Controllers
                     .Where(i => i.IsActive == true
                     && i.InsuranceStartDate >= reportViewModel.StartDate
                     && i.InsuranceStartDate <= reportViewModel.FinishDate));
+
+                insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
 
                 return View(insurances);
             }
