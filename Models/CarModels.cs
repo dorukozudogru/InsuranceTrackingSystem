@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,6 +26,7 @@ namespace SigortaTakipSistemi.Models
         public string CarBrandName { get; set; }
         public virtual CarBrands CarBrand { get; set; }
 
+        [JsonIgnore]
         public virtual List<Insurances> Insurances { get; set; }
     }
 }
