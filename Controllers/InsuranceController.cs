@@ -15,6 +15,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using SigortaTakipSistemi.Helpers;
+using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -28,54 +29,47 @@ namespace SigortaTakipSistemi.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<Insurances> insurances = await _context.Insurances
-                .Include(cu => cu.Customer)
-                .Include(c => c.CarModel)
-                .Include(cb => cb.CarModel.CarBrand)
-                .Include(pn => pn.InsurancePolicy)
-                .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == true)
-                .AsNoTracking()
-                .ToListAsync();
-
-            FakeSession.Instance.Obj = JsonConvert.SerializeObject(insurances.Select(x => new Insurances
-            {
-                Customer = null,
-                CarModel = null,
-                InsurancePolicy = null,
-                InsuranceCompany = null
-            }));
-
-            insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
-
-            return View(insurances);
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == true));
+            return View();
         }
 
-        public async Task<IActionResult> PassiveInsurances()
+        public IActionResult PassiveInsurances()
         {
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == false));
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(bool isActive)
+        {
+            var requestFormData = Request.Form;
+
             List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == false)
+                .Where(i => i.IsActive == isActive)
                 .AsNoTracking()
                 .ToListAsync();
 
-            FakeSession.Instance.Obj = JsonConvert.SerializeObject(insurances.Select(x => new Insurances
-            {
-                Customer = null,
-                CarModel = null,
-                InsurancePolicy = null,
-                InsuranceCompany = null
-            }));
-
             insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
 
-            return View(insurances);
+            List<Insurances> listItems = ProcessCollection(insurances, requestFormData);
+
+            var response = new PaginatedResponse<Insurances>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = insurances.Count,
+                RecordsTotal = insurances.Count
+            };
+
+            return Ok(response);
         }
 
         public async Task<IActionResult> Details(int? id)

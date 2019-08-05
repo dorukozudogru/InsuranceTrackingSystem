@@ -5,6 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<head>
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+</head>
+
 <div class="content-wrapper">
     <section class="content">
         <h3>
@@ -17,7 +21,7 @@
             <div class="col-xs-12">
                 <div class="box table-responsive">
                     <div class="box-body">
-                        <table id="allTables" class="table table-bordered table-striped">
+                        <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
                             <thead>
                                 <tr>
                                     <th>
@@ -46,43 +50,6 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Id)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Surname)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CitizenshipNo)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Email)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Phone)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Other)
-                                        </td>
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id">Güncelle</a>
-                                        </td>
-                                        <td>
-                                            <a asp-action="Details" asp-route-id="@item.Id">Detaylar</a>
-                                        </td>
-                                        <td>
-                                            <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -90,3 +57,63 @@
         </div>
     </section>
 </div>
+
+@section Scripts{
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script>
+        (function () {
+            var generateCustomerTable = $("#ItemsTable").DataTable({
+                "language": {
+                    processing: "Veriler yükleniyor...",
+                    zeroRecords: "Hiçbir kayıt bulunamadı",
+                    emptyTable: "Kayıt bulunmamaktadır",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 750,
+                "ajax": {
+                    "url": "/Customer/Post?isActive=true",
+                    "method": "POST"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "surname" },
+                    { "data": "citizenshipNo" },
+                    { "data": "email" },
+                    { "data": "phone" },
+                    { "data": "other" },
+                    {
+                        "data": "editId", render: function (data, type, row) {
+                            return '<a href="Customer/Edit/' + row.id + '" class="btn-link">Güncelle</a>'
+                        }
+                    },
+                    {
+                        "data": "detailsId", render: function (data, type, row) {
+                            return '<a href="Customer/Details/' + row.id + '" class="btn-link">Detaylar</a>'
+                        }
+                    },
+                    {
+                        "data": "deleteId", render: function (data, type, row) {
+                            return '<a href="Customer/Delete/' + row.id + '" class="btn-link">Sil</a>'
+                        }
+                    }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "full_numbers",
+                "pageLength": 100
+            });
+        })(jQuery);
+    </script>
+}

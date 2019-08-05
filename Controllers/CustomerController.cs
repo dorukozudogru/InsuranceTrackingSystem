@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SigortaTakipSistemi.Models;
+using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -18,9 +20,32 @@ namespace SigortaTakipSistemi.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Customers.Where(c => c.IsActive == true).AsNoTracking().ToListAsync());
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(bool isActive)
+        {
+            var requestFormData = Request.Form;
+
+            List<Customers> customers = await _context.Customers
+                .Where(c => c.IsActive == isActive)
+                .AsNoTracking()
+                .ToListAsync();
+
+            List<Customers> listItems = ProcessCollection(customers, requestFormData);
+
+            var response = new PaginatedResponse<Customers>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = customers.Count,
+                RecordsTotal = customers.Count
+            };
+
+            return Ok(response);
         }
 
         public async Task<IActionResult> Details(int? id)
