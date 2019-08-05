@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -65,6 +66,7 @@ namespace SigortaTakipSistemi.Models
         [DisplayName("Silen Kişi")]
         public string DeletedBy { get; set; }
 
+        [JsonIgnore]
         public virtual List<Insurances> Insurances { get; set; }
     }
 }

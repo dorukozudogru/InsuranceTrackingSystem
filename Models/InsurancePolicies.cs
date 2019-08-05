@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@ namespace SigortaTakipSistemi.Models
         [Required]
         [DisplayName("Poliçe Türü")]
         public string Name { get; set; }
-
+        [JsonIgnore]
         public virtual List<Insurances> Insurances { get; set; }
     }
 }
