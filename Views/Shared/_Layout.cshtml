@@ -162,6 +162,19 @@
     <script>
         $(document).ready(function () {
             $('#allTables').DataTable({
+                "language": {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "pageLength": 100,
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api(), data;
 
@@ -219,7 +232,21 @@
             });
         });
 
-        $('#reportTable').DataTable()
+        $('#reportTable').DataTable({
+            "language": {
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                zeroRecords: "Hiçbir kayıt bulunamadı.",
+                emptyTable: "Kayıt bulunmamaktadır.",
+                search: "Ara:",
+                oPaginate: {
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                },
+                sLengthMenu: "_MENU_ adet kayıt getir",
+                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+            },
+            "pageLength": 100
+        })
 
         $('.select2').select2()
 

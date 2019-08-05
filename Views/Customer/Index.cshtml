@@ -65,9 +65,9 @@
         (function () {
             var generateCustomerTable = $("#ItemsTable").DataTable({
                 "language": {
-                    processing: "Veriler yükleniyor...",
-                    zeroRecords: "Hiçbir kayıt bulunamadı",
-                    emptyTable: "Kayıt bulunmamaktadır",
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
                     search: "Ara:",
                     oPaginate: {
                         "sFirst": "İlk",
@@ -80,7 +80,7 @@
                 },
                 "processing": true,
                 "serverSide": true,
-                "searchDelay": 750,
+                "searchDelay": 1200,
                 "ajax": {
                     "url": "/Customer/Post?isActive=true",
                     "method": "POST"
