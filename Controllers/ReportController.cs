@@ -59,6 +59,9 @@ namespace SigortaTakipSistemi.Controllers
 
                 insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
 
+                insurances.FirstOrDefault().InsuranceAmountTotal = Math.Round(insurances.Sum(i => i.InsuranceAmount), 2);
+                insurances.FirstOrDefault().InsuranceBonusTotal = Math.Round(insurances.Sum(i => i.InsuranceBonus), 2);
+
                 return View(insurances);
             }
             return RedirectToAction("ProfitReport");
@@ -92,6 +95,9 @@ namespace SigortaTakipSistemi.Controllers
                     && i.InsuranceStartDate <= reportViewModel.FinishDate));
 
                 insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
+
+                insurances.FirstOrDefault().InsuranceAmountTotal = Math.Round(insurances.Sum(i => i.InsuranceAmount), 2);
+                insurances.FirstOrDefault().InsuranceBonusTotal = Math.Round(insurances.Sum(i => i.InsuranceBonus), 2);
 
                 return View(insurances);
             }

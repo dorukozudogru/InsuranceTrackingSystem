@@ -91,14 +91,10 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="6" style="text-align:right">Sayfa Toplamı:</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th colspan="6" style="text-align:right">Genel Toplam:</th>
-                                    <th></th>
+                                    <th colspan="5"></th>
+                                    <th>Genel Toplam:</th>
+                                    <th>@Html.DisplayFor(model => model.FirstOrDefault().InsuranceAmountTotal) ₺</th>
+                                    <th>@Html.DisplayFor(model => model.FirstOrDefault().InsuranceBonusTotal) ₺</th>
                                     <th></th>
                                     <th></th>
                                 </tr>

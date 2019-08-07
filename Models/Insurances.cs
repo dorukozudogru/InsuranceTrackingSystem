@@ -64,8 +64,14 @@ namespace SigortaTakipSistemi.Models
         [Required]
         [DisplayName("Poliçe Tutarı")]
         public double InsuranceAmount { get; set; }
+        [NotMapped]
+        [DisplayName("Toplam Poliçe Tutarı")]
+        public double InsuranceAmountTotal { get; set; }
         [DisplayName("Prim")]
         public double InsuranceBonus { get; set; }
+        [NotMapped]
+        [DisplayName("Toplam Prim")]
+        public double InsuranceBonusTotal { get; set; }
         [Required]
         [DisplayName("Sıfır/Yenileme")]
         public byte InsuranceType { get; set; }

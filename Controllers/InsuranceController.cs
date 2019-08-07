@@ -391,7 +391,7 @@ namespace SigortaTakipSistemi.Controllers
                 foreach (var item in items)
                 {
                     item.CarModel = _context.CarModels.FindAsync(item.CarModelId).Result;
-                    item.CarModel.CarBrand = _context.CarBrands.FindAsync(item.CarModelId).Result;
+                    item.CarModel.CarBrand = _context.CarBrands.FindAsync(item.CarModel.CarBrandId).Result;
                     item.Customer = _context.Customers.FindAsync(item.CustomerId).Result;
                     item.InsuranceCompany = _context.InsuranceCompanies.FindAsync(item.InsuranceCompanyId).Result;
                     item.InsurancePolicy = _context.InsurancePolicies.FindAsync(item.InsuranceCompanyId).Result;
