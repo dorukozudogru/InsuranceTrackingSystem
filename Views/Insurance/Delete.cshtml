@@ -6,132 +6,61 @@
 }
 
 <div class="content-wrapper">
-    <section class="content">
-        <div class="box-header">
-            <h3>Bu poliçeyi silmek istediğinizden emin misiniz?</h3>
+    <section class="invoice">
+        <div class="callout callout-danger">
+            <h4>Bu poliçeyi silmek istediğinizden emin misiniz?</h4>
+            <p>
+                Bu poliçeyi silerseniz işlemi geriye alamayacaksınız.
+            </p>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-body">
-                        <dl class="row">
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.Customer.FullName)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.Customer.FullName)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.CarModel.CarBrand.Name)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.CarModel.Name)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.CarModel.Name)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.LicencePlate)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.LicencePlate)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsurancePolicyName)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsurancePolicyName)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsurancePolicyNumber)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsuranceCompanyName)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsuranceCompanyName)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsuranceStartDate)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsuranceStartDate)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsuranceFinishDate)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsuranceFinishDate)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsuranceAmount)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsuranceAmount) ₺
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsuranceBonus)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsuranceBonus) ₺
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.InsuranceType)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.InsuranceType)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.CreatedAt)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.CreatedAt)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.CreatedBy)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.CreatedBy)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.UpdatedAt)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.UpdatedAt)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.UpdatedBy)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.UpdatedBy)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.DeletedAt)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.DeletedAt)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.DeletedBy)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.DeletedBy)
-                            </dd>
-                        </dl>
-
-                        <form asp-action="Delete">
-                            <input type="hidden" asp-for="Id" />
-                            <input type="submit" value="Evet" class="btn btn-danger" />
-                            <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
-                        </form>
-                    </div>
-                </div>
+                <h2 class="page-header">
+                    <i class="fa fa-folder-open"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Customer.FullName) |
+                    @Html.DisplayFor(model => model.LicencePlate) |
+                    <img src="@Html.DisplayFor(model => model.InsuranceCompany.LogoPath)" style="max-height:50px; max-width:75px" />
+                    <br />
+                    <small class="pull-left">Başlangıç / Bitiş Tarihi: @Html.DisplayFor(model => model.InsuranceStartDate) / @Html.DisplayFor(model => model.InsuranceFinishDate)</small>
+                    <br />
+                </h2>
+            </div>
+        </div>
+        <div class="row invoice-info">
+            <div class="col-sm-4 invoice-col">
+                <address>
+                    @Html.DisplayNameFor(model => model.InsurancePolicyNumber): <strong>#@Html.DisplayFor(model => model.InsurancePolicyNumber)</strong><br>
+                    @Html.DisplayNameFor(model => model.InsuranceCompany.Name): <strong>@Html.DisplayFor(model => model.InsuranceCompany.Name)</strong><br>
+                    @Html.DisplayNameFor(model => model.InsurancePolicy.Name) : <strong>@Html.DisplayFor(model => model.InsurancePolicy.Name)</strong><br>
+                    @Html.DisplayNameFor(model => model.InsuranceAmount) : <strong>@Html.DisplayFor(model => model.InsuranceAmount) ₺</strong><br>
+                    @Html.DisplayNameFor(model => model.InsuranceBonus): <strong>@Html.DisplayFor(model => model.InsuranceBonus) ₺</strong><br>
+                </address>
+            </div>
+            <div class="col-sm-4 invoice-col">
+                <address>
+                    @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
+                    @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
+                    @Html.DisplayNameFor(model => model.InsuranceTypeName): <strong>@Html.DisplayFor(model => model.InsuranceTypeName)</strong><br>
+                    @Html.DisplayNameFor(model => model.InsurancePaymentTypeName): <strong>@Html.DisplayFor(model => model.InsurancePaymentTypeName)</strong><br>
+                </address>
+            </div>
+            <div class="col-sm-4 invoice-col">
+                <address>
+                    @Html.DisplayNameFor(model => model.CreatedAt): <strong>@Html.DisplayFor(model => model.CreatedAt)</strong><br>
+                    @Html.DisplayNameFor(model => model.CreatedBy): <strong>@Html.DisplayFor(model => model.CreatedBy)</strong><br>
+                    @Html.DisplayNameFor(model => model.UpdatedAt): <strong>@Html.DisplayFor(model => model.UpdatedAt)</strong><br>
+                    @Html.DisplayNameFor(model => model.UpdatedBy): <strong>@Html.DisplayFor(model => model.UpdatedBy)</strong><br>
+                </address>
+            </div>
+        </div>
+        <div class="row no-print">
+            <div class="col-xs-12">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="Evet" class="btn btn-danger pull-right" />
+                    <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                        <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                    </a>
+                </form>
             </div>
         </div>
     </section>
