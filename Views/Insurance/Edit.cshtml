@@ -40,7 +40,7 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="LicencePlate" class="control-label"></label>
-                                <input asp-for="LicencePlate" class="form-control" />
+                                <input asp-for="LicencePlate" class="form-control" autocomplete="off" />
                                 <span asp-validation-for="LicencePlate" class="text-danger"></span>
                             </div>
                             <div class="form-group">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="InsurancePolicyNumber" class="control-label"></label>
-                                <input asp-for="InsurancePolicyNumber" class="form-control" />
+                                <input asp-for="InsurancePolicyNumber" class="form-control" autocomplete="off" />
                                 <span asp-validation-for="InsurancePolicyNumber" class="text-danger"></span>
                             </div>
                             <div class="form-group">
@@ -64,7 +64,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input asp-for="InsuranceStartDate" type="text" class="form-control pull-right" id="datepicker" />
+                                    <input asp-for="InsuranceStartDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
                                 </div>
                                 <span asp-validation-for="InsuranceStartDate" class="text-danger"></span>
                             </div>
@@ -74,7 +74,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input asp-for="InsuranceFinishDate" type="text" class="form-control pull-right" id="datepicker2" />
+                                    <input asp-for="InsuranceFinishDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
                                 </div>
                                 <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
                             </div>
@@ -82,7 +82,7 @@
                                 <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için "." kullanınız.)</strong></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-try"></i></span>
-                                    <input asp-for="InsuranceAmount" class="form-control" />
+                                    <input asp-for="InsuranceAmount" class="form-control" autocomplete="off" />
                                 </div>
                                 <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
                             </div>
@@ -90,7 +90,7 @@
                                 <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için "." kullanınız.)</strong></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-try"></i></span>
-                                    <input asp-for="InsuranceBonus" class="form-control" />
+                                    <input asp-for="InsuranceBonus" class="form-control" autocomplete="off" />
                                 </div>
                                 <span asp-validation-for="InsuranceBonus" class="text-danger"></span>
                             </div>
