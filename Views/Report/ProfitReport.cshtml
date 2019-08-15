@@ -1,57 +1,184 @@
-﻿@model SigortaTakipSistemi.Models.ViewModels.ReportViewModel
+﻿@model SigortaTakipSistemi.Models.Insurances
 
 @{
     ViewData["Title"] = "Şirket Bazlı Kâr Raporu";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<head>
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+</head>
+
 <div class="content-wrapper">
     <section class="content">
         <div class="box-header">
-            <h2 class="box-title">
-                Şirket Bazlı Kâr Raporu
-            </h2>
+            <h3 class="box-title">
+                <i class="fa fa-list"></i>&nbsp;Şirket Bazlı Kâr Raporu
+            </h3>
+            <form method="post" enctype="multipart/form-data" hidden id="exportButton">
+                <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllInsurances">Dışa Aktar</a>
+            </form>
         </div>
         <div class="row">
-            <div class="box">
+            <div class="box" id="searchBox">
                 <div class="box-body">
                     <div class="col-md-4">
-                        <form asp-action="ProfitReportResult">
-                            <div class="form-group">
-                                <label asp-for="StartDate" class="control-label"></label>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input asp-for="StartDate" type="text" class="form-control pull-right" id="datepicker" />
+                        <div class="form-group">
+                            <label asp-for="@Model.InsuranceStartDate" class="control-label"></label>
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
                                 </div>
-                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                                <input asp-for="@Model.InsuranceStartDate" type="text" class="form-control pull-right" id="datepicker" />
                             </div>
-                            <div class="form-group">
-                                <label asp-for="FinishDate" class="control-label"></label>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input asp-for="FinishDate" type="text" class="form-control pull-right" id="datepicker2" />
+                            <span asp-validation-for="@Model.InsuranceStartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="@Model.InsuranceFinishDate" class="control-label"></label>
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
                                 </div>
-                                <span asp-validation-for="FinishDate" class="text-danger"></span>
+                                <input asp-for="@Model.InsuranceFinishDate" type="text" class="form-control pull-right" id="datepicker2" />
                             </div>
-                            <div class="form-group">
-                                <label asp-for="InsuranceCompany" class="control-label"></label>
-                                <select asp-for="InsuranceCompany" class="form-control select2" multiple="multiple" asp-items="@ViewBag.InsuranceCompanies" style="width: 100%;" placeholder="Sigorta şirketi seçiniz."></select>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <input type="submit" value="Getir" class="btn btn-primary" />
-                                    </div>
+                            <span asp-validation-for="@Model.InsuranceFinishDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="@Model.InsuranceCompany" class="control-label"></label>
+                            <select asp-for="@Model.InsuranceCompany" class="form-control select2" multiple="multiple" id="insuranceCompanies" asp-items="@ViewBag.InsuranceCompanies" style="width: 100%;"></select>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <input type="submit" id="getResult" value="Getir" class="btn btn-primary" />
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="box table-responsive" hidden id="resultRow">
+                <div class="box-body">
+                    <table id="ItemsTable" class="table table-striped table-bordered" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Id)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsurancePolicyName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsuranceCompanyName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsuranceStartDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsuranceFinishDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsuranceAmount)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsuranceBonus)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsuranceType)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.InsurancePaymentType)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th colspan="5"></th>
+                                <th>Genel Toplam:</th>
+                                <th id="totalAmount"></th>
+                                <th id="totalBonus"></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
     </section>
 </div>
+
+@section Scripts{
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script>
+        $('#getResult').click(function () {
+            $("#resultRow").show();
+            $("#exportButton").show();
+            $.ajax({
+                "url": "/Report/PostTotalAmount?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=ins&insuranceCompanies=" + $('#insuranceCompanies').val(),
+                "method": "POST"
+            }).done(function (response) {
+                $('#totalAmount').html(response[0]);
+                $('#totalBonus').html(response[1]);
+            });
+            $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                },
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "ajax": {
+                    "url": "/Report/Post?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=ins&insuranceCompanies=" + $('#insuranceCompanies').val(),
+                    "method": "POST"
+                },
+                "destroy": true,
+                "columns": [
+                    { "data": "id" },
+                    { "data": "insurancePolicy.name" },
+                    { "data": "insurancePolicyNumber" },
+                    {
+                        "data": "insuranceCompany.logoPath", render: function (data, type, row) {
+                            return '<img src="' + row.insuranceCompany.logoPath + '" style="max-height:50px; max-width:75px" />'
+                        }
+                    },
+                    {
+                        "data": "insuranceStartDate",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "insuranceFinishDate",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    { "data": "insuranceAmount" },
+                    { "data": "insuranceBonus" },
+                    { "data": "insuranceTypeName" },
+                    { "data": "insurancePaymentTypeName" }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
+        });
+    </script>
+}
