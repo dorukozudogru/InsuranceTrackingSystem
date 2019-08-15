@@ -13,6 +13,7 @@ using SigortaTakipSistemi.Helpers;
 using SigortaTakipSistemi.Models;
 using SigortaTakipSistemi.Models.ViewModels;
 using static SigortaTakipSistemi.Controllers.InsuranceController;
+using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -33,75 +34,79 @@ namespace SigortaTakipSistemi.Controllers
             return View();
         }
 
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProfitReportResult(ReportViewModel reportViewModel)
+        [HttpPost]
+        public async Task<IActionResult> Post(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies)
         {
-            if (ModelState.IsValid)
-            {
-                List<Insurances> insurances = await _context.Insurances
+            var requestFormData = Request.Form;
+
+            List<Insurances> insurances = await _context.Insurances
                 .Include(cu => cu.Customer)
                 .Include(c => c.CarModel)
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
                 .Where(i => i.IsActive == true
-                            && i.InsuranceStartDate >= reportViewModel.StartDate
-                            && i.InsuranceStartDate <= reportViewModel.FinishDate
-                            && reportViewModel.InsuranceCompany.Contains(i.InsuranceCompanyId))
+                            && i.InsuranceStartDate >= startDate
+                            && i.InsuranceStartDate <= finishDate)
                 .AsNoTracking()
                 .ToListAsync();
 
-                FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances
-                    .Where(i => i.IsActive == true
-                    && i.InsuranceStartDate >= reportViewModel.StartDate
-                    && i.InsuranceStartDate <= reportViewModel.FinishDate
-                    && reportViewModel.InsuranceCompany.Contains(i.InsuranceCompanyId)));
-
-                insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
-
-                insurances.FirstOrDefault().InsuranceAmountTotal = Math.Round(insurances.Sum(i => i.InsuranceAmount), 2);
-                insurances.FirstOrDefault().InsuranceBonusTotal = Math.Round(insurances.Sum(i => i.InsuranceBonus), 2);
-
-                return View(insurances);
+            if (reportType == "ins")
+            {
+                if (!string.IsNullOrEmpty(insuranceCompanies))
+                {
+                    string[] insuranceCompaniesList = insuranceCompanies.Split(",");
+                    insurances = insurances.Where(i => insuranceCompaniesList.Contains(i.InsuranceCompanyId.ToString())).ToList();
+                }
             }
-            return RedirectToAction("ProfitReport");
+
+            insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
+
+            FakeSession.Instance.Obj = JsonConvert.SerializeObject(insurances);
+
+            List<Insurances> listItems = ProcessCollection(insurances, requestFormData);
+
+            var response = new PaginatedResponse<Insurances>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = insurances.Count,
+                RecordsTotal = insurances.Count
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostTotalAmount(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies)
+        {
+            List<Insurances> insurances = await _context.Insurances
+                .Where(i => i.IsActive == true
+                            && i.InsuranceStartDate >= startDate
+                            && i.InsuranceStartDate <= finishDate)
+                .ToListAsync();
+
+            if (reportType == "ins")
+            {
+                if (!string.IsNullOrEmpty(insuranceCompanies))
+                {
+                    string[] insuranceCompaniesList = insuranceCompanies.Split(",");
+                    insurances = insurances.Where(i => insuranceCompaniesList.Contains(i.InsuranceCompanyId.ToString())).ToList();
+                }
+            }
+
+            var response = new List<double>
+            {
+                Math.Round(insurances.Sum(i => i.InsuranceAmount), 2),
+                Math.Round(insurances.Sum(i => i.InsuranceBonus), 2)
+            };
+
+            return Ok(response);
         }
 
         public ActionResult AllProfitReport()
         {
             return View();
-        }
-
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AllProfitReportResult(ReportViewModel reportViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                List<Insurances> insurances = await _context.Insurances
-                .Include(cu => cu.Customer)
-                .Include(c => c.CarModel)
-                .Include(cb => cb.CarModel.CarBrand)
-                .Include(pn => pn.InsurancePolicy)
-                .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == true
-                            && i.InsuranceStartDate >= reportViewModel.StartDate
-                            && i.InsuranceStartDate <= reportViewModel.FinishDate)
-                .AsNoTracking()
-                .ToListAsync();
-
-                FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances
-                    .Where(i => i.IsActive == true
-                    && i.InsuranceStartDate >= reportViewModel.StartDate
-                    && i.InsuranceStartDate <= reportViewModel.FinishDate));
-
-                insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
-
-                insurances.FirstOrDefault().InsuranceAmountTotal = Math.Round(insurances.Sum(i => i.InsuranceAmount), 2);
-                insurances.FirstOrDefault().InsuranceBonusTotal = Math.Round(insurances.Sum(i => i.InsuranceBonus), 2);
-
-                return View(insurances);
-            }
-            return RedirectToAction("AllProfitReport");
         }
 
         public ActionResult GeneralInsuranceReport()
