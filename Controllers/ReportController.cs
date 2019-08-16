@@ -105,7 +105,7 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTotalAmount(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies)
+        public async Task<IActionResult> PostTotalAmount(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies)
         {
             List<Insurances> insurances = await _context.Insurances
                 .Where(i => i.IsActive == true
@@ -119,6 +119,12 @@ namespace SigortaTakipSistemi.Controllers
                 {
                     string[] insuranceCompaniesList = insuranceCompanies.Split(",");
                     insurances = insurances.Where(i => insuranceCompaniesList.Contains(i.InsuranceCompanyId.ToString())).ToList();
+
+                    if (!string.IsNullOrEmpty(insurancePolicies))
+                    {
+                        string[] insurancePoliciesList = insurancePolicies.Split(",");
+                        insurances = insurances.Where(i => insurancePoliciesList.Contains(i.InsurancePolicyId.ToString())).ToList();
+                    }
                 }
             }
 
