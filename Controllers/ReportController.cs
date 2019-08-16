@@ -30,12 +30,33 @@ namespace SigortaTakipSistemi.Controllers
         public ActionResult ProfitReport()
         {
             ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
+            return View();
+        }
 
+        public ActionResult ProfitReportWithInsurancePolicyType()
+        {
+            ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
+            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
+            return View();
+        }
+
+        public ActionResult AllProfitReport()
+        {
+            return View();
+        }
+
+        public ActionResult GeneralInsuranceReport()
+        {
+            return View();
+        }
+
+        public ActionResult InsurancePaymentTypeReport()
+        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies)
+        public async Task<IActionResult> Post(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies)
         {
             var requestFormData = Request.Form;
 
@@ -57,6 +78,12 @@ namespace SigortaTakipSistemi.Controllers
                 {
                     string[] insuranceCompaniesList = insuranceCompanies.Split(",");
                     insurances = insurances.Where(i => insuranceCompaniesList.Contains(i.InsuranceCompanyId.ToString())).ToList();
+
+                    if (!string.IsNullOrEmpty(insurancePolicies))
+                    {
+                        string[] insurancePoliciesList = insurancePolicies.Split(",");
+                        insurances = insurances.Where(i => insurancePoliciesList.Contains(i.InsurancePolicyId.ToString())).ToList();
+                    }
                 }
             }
 
@@ -104,16 +131,6 @@ namespace SigortaTakipSistemi.Controllers
             return Ok(response);
         }
 
-        public ActionResult AllProfitReport()
-        {
-            return View();
-        }
-
-        public ActionResult GeneralInsuranceReport()
-        {
-            return View();
-        }
-
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GeneralInsuranceReportResult(ReportViewModel reportViewModel)
         {
@@ -143,11 +160,6 @@ namespace SigortaTakipSistemi.Controllers
             }
 
             return RedirectToAction("GeneralInsuranceReport");
-        }
-
-        public ActionResult InsurancePaymentTypeReport()
-        {
-            return View();
         }
 
         [ValidateAntiForgeryToken]
