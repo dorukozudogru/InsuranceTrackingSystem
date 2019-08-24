@@ -46,8 +46,6 @@
                                         @Html.DisplayNameFor(model => model.Other)
                                     </th>
                                     <th></th>
-                                    <th></th>
-                                    <th></th>
                                 </tr>
                             </thead>
                         </table>
@@ -94,18 +92,8 @@
                     { "data": "phone" },
                     { "data": "other" },
                     {
-                        "data": "editId", render: function (data, type, row) {
-                            return '<a href="Customer/Edit/' + row.id + '" class="btn-link">Güncelle</a>'
-                        }
-                    },
-                    {
-                        "data": "detailsId", render: function (data, type, row) {
-                            return '<a href="Customer/Details/' + row.id + '" class="btn-link">Detaylar</a>'
-                        }
-                    },
-                    {
-                        "data": "deleteId", render: function (data, type, row) {
-                            return '<a href="Customer/Delete/' + row.id + '" class="btn-link">Sil</a>'
+                        "data": "actionId", render: function (data, type, row) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"><li><a href="Customer/Edit/' + row.id + '" class="btn-link">Güncelle</a></li><li><a href="Customer/Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Customer/Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
                         }
                     }
                 ],

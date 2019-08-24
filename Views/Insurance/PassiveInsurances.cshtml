@@ -67,9 +67,6 @@
                                         @Html.DisplayNameFor(model => model.InsurancePaymentType)
                                     </th>
                                     <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
                                 </tr>
                             </thead>
                         </table>
@@ -137,23 +134,8 @@
                     { "data": "insuranceTypeName" },
                     { "data": "insurancePaymentTypeName" },
                     {
-                        "data": "editId", render: function (data, type, row) {
-                            return '<a href="Insurance/Edit/' + row.id + '" class="btn-link">Güncelle</a>'
-                        }
-                    },
-                    {
-                        "data": "detailsId", render: function (data, type, row) {
-                            return '<a href="Insurance/Details/' + row.id + '" class="btn-link">Detaylar</a>'
-                        }
-                    },
-                    {
-                        "data": "passiveId", render: function (data, type, row) {
-                            return '<a href="Insurance/Revoke/' + row.id + '" class="btn-link">Aktif Yap</a>'
-                        }
-                    },
-                    {
-                        "data": "deleteId", render: function (data, type, row) {
-                            return '<a href="Insurance/Delete/' + row.id + '" class="btn-link">Sil</a>'
+                        "data": "actionId", render: function (data, type, row) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"><li><a href="Edit/' + row.id + '" class="btn-link">Güncelle</a></li><li><a href="Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Passive/' + row.id + '" class="btn-link">Pasif Yap</a></li><li><a href="Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
                         }
                     }
                 ],
