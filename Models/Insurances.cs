@@ -108,6 +108,8 @@ namespace SigortaTakipSistemi.Models
 
         [DisplayName("Aktif mi?")]
         public bool IsActive { get; set; }
+        [DisplayName("İptal Edilme Tarihi")]
+        public DateTime? CancelledAt { get; set; }
 
         [DisplayName("Oluşturulma Tarihi")]
         public DateTime CreatedAt { get; set; }

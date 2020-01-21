@@ -55,6 +55,9 @@
                                         @Html.DisplayNameFor(model => model.InsuranceFinishDate)
                                     </th>
                                     <th>
+                                        @Html.DisplayNameFor(model => model.CancelledAt)
+                                    </th>
+                                    <th>
                                         @Html.DisplayNameFor(model => model.InsuranceAmount)
                                     </th>
                                     <th>
@@ -126,6 +129,15 @@
                     {
                         "data": "insuranceFinishDate",
                         render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                     {
+                        "data": "cancelledAt",
+                         render: function (data, type, row) {
+                             if (data == null) {
+                                 return "-";
+                             }
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }
                     },

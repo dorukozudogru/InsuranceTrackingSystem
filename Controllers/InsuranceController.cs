@@ -389,6 +389,75 @@ namespace SigortaTakipSistemi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Cancel(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            #region InsuranceType
+            if (insurance.InsuranceType == 0)
+            {
+                insurance.InsuranceTypeName = "SIFIR";
+            }
+            else if (insurance.InsuranceType == 1)
+            {
+                insurance.InsuranceTypeName = "YENİLEME";
+            }
+            else if (insurance.InsuranceType == 2)
+            {
+                insurance.InsuranceTypeName = "2. EL";
+            }
+            #endregion
+
+            #region InsurancePaymentType
+            if (insurance.InsurancePaymentType == 0)
+            {
+                insurance.InsurancePaymentTypeName = "NAKİT";
+            }
+            else if (insurance.InsurancePaymentType == 1)
+            {
+                insurance.InsurancePaymentTypeName = "KREDİ KARTI";
+            }
+            else if (insurance.InsurancePaymentType == 2)
+            {
+                insurance.InsurancePaymentTypeName = "BEDELSİZ";
+            }
+            #endregion
+
+            if (insurance == null)
+            {
+                return NotFound();
+            }
+
+            return View(insurance);
+        }
+
+        [HttpPost, ActionName("Cancel")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelConfirmed(int id, double insuranceBonus)
+        {
+            var insurance = await _context.Insurances.FindAsync(id);
+
+            insurance.IsActive = false;
+            insurance.CancelledAt = DateTime.Now;
+            insurance.InsuranceBonus = insuranceBonus;
+            insurance.UpdatedBy = GetLoggedUserId();
+
+            _context.Update(insurance);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         public bool InsuranceExists(int id)
         {
             return _context.Insurances.Any(e => e.Id == id);
