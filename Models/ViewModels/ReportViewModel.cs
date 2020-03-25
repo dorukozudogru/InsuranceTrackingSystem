@@ -13,11 +13,11 @@ namespace SigortaTakipSistemi.Models.ViewModels
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Başlangıç Tarihi")]
+        [DisplayName("Poliçe Başlama Tarihi")]
         public DateTime StartDate { get; set; }
 
         [Required]
-        [DisplayName("Bitiş Tarihi")]
+        [DisplayName("Poliçe Bitiş Tarihi")]
         public DateTime FinishDate { get; set; }
 
         [DisplayName("Sigorta Şirketi")]
@@ -25,5 +25,8 @@ namespace SigortaTakipSistemi.Models.ViewModels
 
         [DisplayName("Nakit/Kredi Kartı")]
         public List<byte> InsurancePaymentType { get; set; }
+
+        [DisplayName("İptal Edilen Poliçeler Dahil Mi?")]
+        public bool IsCancelledIncluded { get; set; }
     }
 }

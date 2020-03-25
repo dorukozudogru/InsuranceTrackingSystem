@@ -7,13 +7,13 @@
 
 <div class="content-wrapper">
     <section class="content">
+        <div class="box-header">
+            <h2 class="box-title">
+                <i class="glyphicon glyphicon-pencil"></i>&nbsp;Poliçeyi Güncelle
+            </h2>
+        </div>
         <div class="row">
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">
-                        Poliçeyi Güncelle
-                    </h3>
-                </div>
                 <div class="box-body">
                     <div class="col-md-4">
                         <form asp-action="Edit">
@@ -22,6 +22,12 @@
                             <input type="hidden" asp-for="CreatedAt" />
                             <input type="hidden" asp-for="CreatedBy" />
                             <input type="hidden" asp-for="IsActive" />
+                            <input type="hidden" asp-for="InsuranceLastMailDate" />
+                            <input type="hidden" asp-for="DeletedAt" />
+                            <input type="hidden" asp-for="DeletedBy" />
+                            <input type="hidden" asp-for="CancelledAt" />
+                            <input type="hidden" asp-for="CancelledInsuranceAmount" />
+                            <input type="hidden" asp-for="CancelledInsuranceBonus" />
                             <input type="hidden" asp-for="UpdatedAt" value="@DateTime.Now" />
                             <div class="form-group">
                                 <label asp-for="Customer.FullName" class="control-label"></label>
@@ -79,7 +85,7 @@
                                 <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için "." kullanınız.)</strong></label>
+                                <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-try"></i></span>
                                     <input asp-for="InsuranceAmount" class="form-control" autocomplete="off" />
@@ -87,7 +93,7 @@
                                 <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için "." kullanınız.)</strong></label>
+                                <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-try"></i></span>
                                     <input asp-for="InsuranceBonus" class="form-control" autocomplete="off" />
@@ -105,8 +111,10 @@
                                 <span asp-validation-for="InsurancePaymentType" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="Kaydet" class="btn btn-primary" />
-                                <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
+                                <input type="submit" value="Kaydet" class="btn btn-success" />
+                                <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                                </a>
                             </div>
                         </form>
                     </div>

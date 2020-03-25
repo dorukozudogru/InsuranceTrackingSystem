@@ -44,13 +44,13 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurancePolicy = await _context.InsurancePolicies.FindAsync(id);
             if (insurancePolicy == null)
             {
-                return NotFound();
+                return View("Error");
             }
             return View(insurancePolicy);
         }
@@ -61,7 +61,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id != insurancePolicy.Id)
             {
-                return NotFound();
+                return View("Error");
             }
 
             if (ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace SigortaTakipSistemi.Controllers
                 {
                     if (!InsurancePolicyExists(insurancePolicy.Id))
                     {
-                        return NotFound();
+                        return View("Error");
                     }
                     else
                     {
@@ -91,14 +91,14 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurancePolicy = await _context.InsurancePolicies
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (insurancePolicy == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(insurancePolicy);

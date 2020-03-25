@@ -55,8 +55,10 @@
 
                         <form asp-action="Delete">
                             <input type="hidden" asp-for="Id" />
-                            <input type="submit" value="Evet" class="btn btn-danger" />
-                            <a class="btn btn-dark" asp-action="Index">Listeye Geri Dön</a>
+                            <input type="submit" value="Evet" class="btn btn-danger pull-right" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
                         </form>
                     </div>
                 </div>

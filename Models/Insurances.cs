@@ -58,7 +58,7 @@ namespace SigortaTakipSistemi.Models
         public DateTime InsuranceFinishDate { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayName("Poliçe Bitiş Tarihi E-Posta Atılma Tarihi")]
+        [DisplayName("Poliçe Bitiş Tarihi İçin E-Posta Atılma Tarihi")]
         public DateTime? InsuranceLastMailDate { get; set; }
 
         [Required]
@@ -108,8 +108,14 @@ namespace SigortaTakipSistemi.Models
 
         [DisplayName("Aktif mi?")]
         public bool IsActive { get; set; }
+
         [DisplayName("İptal Edilme Tarihi")]
         public DateTime? CancelledAt { get; set; }
+        [Required]
+        [DisplayName("İptal Edilen Poliçe Tutarı")]
+        public double CancelledInsuranceAmount { get; set; }
+        [DisplayName("İptal İşleminden Sonra Prim Tutarı")]
+        public double CancelledInsuranceBonus { get; set; }
 
         [DisplayName("Oluşturulma Tarihi")]
         public DateTime CreatedAt { get; set; }

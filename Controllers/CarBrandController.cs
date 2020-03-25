@@ -44,13 +44,13 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var carBrands = await _context.CarBrands.FindAsync(id);
             if (carBrands == null)
             {
-                return NotFound();
+                return View("Error");
             }
             return View(carBrands);
         }
@@ -61,7 +61,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id != carBrands.Id)
             {
-                return NotFound();
+                return View("Error");
             }
 
             if (ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace SigortaTakipSistemi.Controllers
                 {
                     if (!CarBrandsExists(carBrands.Id))
                     {
-                        return NotFound();
+                        return View("Error");
                     }
                     else
                     {
@@ -91,14 +91,14 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var carBrands = await _context.CarBrands
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (carBrands == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(carBrands);

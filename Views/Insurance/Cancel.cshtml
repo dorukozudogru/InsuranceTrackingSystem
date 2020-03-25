@@ -41,9 +41,6 @@
                     @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
                     @Html.DisplayNameFor(model => model.InsuranceTypeName): <strong>@Html.DisplayFor(model => model.InsuranceTypeName)</strong><br>
                     @Html.DisplayNameFor(model => model.InsurancePaymentTypeName): <strong>@Html.DisplayFor(model => model.InsurancePaymentTypeName)</strong><br>
-                    <div class="form-group">
-                        Yeni Prim Tutarı: <input value="insuranceBonus" id="insuranceBonus" name="insuranceBonus" class="form-control" autocomplete="off" />
-                    </div>
                 </address>
             </div>
             <div class="col-sm-4 invoice-col">
@@ -55,17 +52,42 @@
                 </address>
             </div>
         </div>
-        <div class="row no-print">
-            <div class="col-xs-12">
-                <form asp-action="Cancel">
+        <form name="cancelForm" asp-action="Cancel">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row invoice-info">
+                <div class="col-sm-6 invoice-col">
+                    <address>
+                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount):
+                        <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
+                        <div class="form-group input-group">
+                            <span class="input-group-addon">₺</span>
+                            <input inputmode="numeric" id="cancelledInsuranceAmount" name="cancelledInsuranceAmount" class="form-control" autocomplete="off" required />
+                        </div>
+                        <span asp-validation-for="CancelledInsuranceAmount" class="text-danger"></span>
+                    </address>
+                </div>
+                <div class="col-sm-6 invoice-col">
+                    <address>
+                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus):
+                        <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
+                        <div class="form-group input-group">
+                            <span class="input-group-addon">₺</span>
+                            <input inputmode="numeric" id="cancelledInsuranceBonus" name="cancelledInsuranceBonus" class="form-control" autocomplete="off" required />
+                        </div>
+                        <span asp-validation-for="CancelledInsuranceBonus" class="text-danger"></span>
+                    </address>
+                </div>
+            </div>
+            <div class="row no-print">
+                <div class="col-xs-12">
                     <input type="hidden" asp-for="Id" />
                     <input type="hidden" asp-for="CancelledAt" value="@DateTime.Now" />
                     <input type="submit" value="Evet" class="btn btn-warning pull-right" />
                     <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                         <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                     </a>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </section>
 </div>

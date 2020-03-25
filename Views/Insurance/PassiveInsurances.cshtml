@@ -11,12 +11,12 @@
 
 <div class="content-wrapper">
     <section class="content">
-        <h3>
-            <i class="glyphicon glyphicon-folder-close"></i>&nbsp;Pasif Poliçeler
-        </h3>
-        <form method="post" enctype="multipart/form-data">
-            <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllPassiveInsurances">Dışa Aktar</a>
-        </form>
+        <div class="box-header">
+            <h3 class="box-title">
+                <i class="glyphicon glyphicon-folder-close"></i>&nbsp;Pasif ve İptal Poliçeler
+            </h3>
+            <a class="btn btn-info pull-right" asp-controller="Insurance" asp-action="ExportAllPassiveInsurances"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box table-responsive">
@@ -61,7 +61,13 @@
                                         @Html.DisplayNameFor(model => model.InsuranceAmount)
                                     </th>
                                     <th>
+                                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount)
+                                    </th>
+                                    <th>
                                         @Html.DisplayNameFor(model => model.InsuranceBonus)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus)
                                     </th>
                                     <th>
                                         @Html.DisplayNameFor(model => model.InsuranceType)
@@ -132,22 +138,40 @@
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }
                     },
-                     {
+                    {
                         "data": "cancelledAt",
-                         render: function (data, type, row) {
-                             if (data == null) {
-                                 return "-";
-                             }
+                        render: function (data, type, row) {
+                            if (data == null) {
+                                return "-";
+                            }
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }
                     },
                     { "data": "insuranceAmount" },
+                    {
+                        "data": "cancelledInsuranceAmount",
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return "-";
+                            }
+                            return data;
+                        }
+                    },
                     { "data": "insuranceBonus" },
+                    {
+                        "data": "cancelledInsuranceBonus",
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return "-";
+                            }
+                            return data;
+                        }
+                    },
                     { "data": "insuranceTypeName" },
                     { "data": "insurancePaymentTypeName" },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"><li><a href="Edit/' + row.id + '" class="btn-link">Güncelle</a></li><li><a href="Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Revoke/' + row.id + '" class="btn-link">Aktif Yap</a></li><li><a href="Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"><li><a href="Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Revoke/' + row.id + '" class="btn-link">Aktif Yap</a></li><li><a href="Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
                         }
                     }
                 ],

@@ -46,6 +46,20 @@
                 </address>
             </div>
         </div>
+        @if (Model.CancelledAt != null)
+        {
+            <div class="row invoice-info">
+                <div class="col-sm-12 invoice-col">
+                    <h2 class="page-header"></h2>
+                    <address>
+                        @Html.DisplayNameFor(model => model.CancelledAt): <strong>@Html.DisplayFor(model => model.CancelledAt)</strong><br>
+                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount) : <strong>@Html.DisplayFor(model => model.CancelledInsuranceAmount) ₺</strong><br>
+                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus): <strong>@Html.DisplayFor(model => model.CancelledInsuranceBonus) ₺</strong><br>
+                    </address>
+                    <h2 class="page-header"></h2>
+                </div>
+            </div>
+        }
         <div class="row no-print">
             <div class="col-xs-12">
                 @*<a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>*@
