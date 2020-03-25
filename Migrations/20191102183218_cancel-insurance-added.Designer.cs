@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SigortaTakipSistemi.Models;
 
 namespace SigortaTakipSistemi.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20191102183218_cancel-insurance-added")]
+    partial class cancelinsuranceadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,11 +291,7 @@ namespace SigortaTakipSistemi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("CancelledAt");
-
-                    b.Property<double>("CancelledInsuranceAmount");
-
-                    b.Property<double>("CancelledInsuranceBonus");
+                    b.Property<DateTime>("CancelledAt");
 
                     b.Property<int>("CarModelId");
 

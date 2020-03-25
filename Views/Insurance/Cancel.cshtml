@@ -1,12 +1,18 @@
 ﻿@model SigortaTakipSistemi.Models.Insurances
 
 @{
-    ViewData["Title"] = "Poliçe Detayları";
+    ViewData["Title"] = "Poliçeyi İptal Et";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="content-wrapper">
     <section class="invoice">
+        <div class="callout callout-warning">
+            <h4>Bu poliçeyi iptal etmek istediğinizden emin misiniz?</h4>
+            <p>
+                Bu poliçeyi pasif poliçeler ekranından yeniden aktif duruma getirebilirsiniz.
+            </p>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <h2 class="page-header">
@@ -46,30 +52,42 @@
                 </address>
             </div>
         </div>
-        @if (Model.CancelledAt != null)
-        {
+        <form name="cancelForm" asp-action="Cancel">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row invoice-info">
-                <div class="col-sm-12 invoice-col">
-                    <h2 class="page-header"></h2>
+                <div class="col-sm-6 invoice-col">
                     <address>
-                        @Html.DisplayNameFor(model => model.CancelledAt): <strong>@Html.DisplayFor(model => model.CancelledAt)</strong><br>
-                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount) : <strong>@Html.DisplayFor(model => model.CancelledInsuranceAmount) ₺</strong><br>
-                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus): <strong>@Html.DisplayFor(model => model.CancelledInsuranceBonus) ₺</strong><br>
+                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount):
+                        <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
+                        <div class="form-group input-group">
+                            <span class="input-group-addon">₺</span>
+                            <input inputmode="numeric" id="cancelledInsuranceAmount" name="cancelledInsuranceAmount" class="form-control" autocomplete="off" required />
+                        </div>
+                        <span asp-validation-for="CancelledInsuranceAmount" class="text-danger"></span>
                     </address>
-                    <h2 class="page-header"></h2>
+                </div>
+                <div class="col-sm-6 invoice-col">
+                    <address>
+                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus):
+                        <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
+                        <div class="form-group input-group">
+                            <span class="input-group-addon">₺</span>
+                            <input inputmode="numeric" id="cancelledInsuranceBonus" name="cancelledInsuranceBonus" class="form-control" autocomplete="off" required />
+                        </div>
+                        <span asp-validation-for="CancelledInsuranceBonus" class="text-danger"></span>
+                    </address>
                 </div>
             </div>
-        }
-        <div class="row no-print">
-            <div class="col-xs-12">
-                @*<a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>*@
-                <a class="btn btn-success pull-right" asp-action="Edit" asp-route-id="@Model.Id">
-                    <i class="fa fa-pencil"></i>&nbsp;&nbsp;Güncelle
-                </a>
-                <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
-                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
-                </a>
+            <div class="row no-print">
+                <div class="col-xs-12">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="CancelledAt" value="@DateTime.Now" />
+                    <input type="submit" value="Evet" class="btn btn-warning pull-right" />
+                    <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                        <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                    </a>
+                </div>
             </div>
-        </div>
+        </form>
     </section>
 </div>

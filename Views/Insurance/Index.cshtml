@@ -11,13 +11,13 @@
 
 <div class="content-wrapper">
     <section class="content">
-        <h3>
-            <i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;&nbsp;Poliçeler
-        </h3>
-        <form method="post" enctype="multipart/form-data">
-            <a class="btn btn-success" asp-action="Create">Yeni Oluştur</a>
-            <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllActiveInsurances">Dışa Aktar</a>
-        </form>
+        <div class="box-header">
+            <h3 class="box-title">
+                <i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;&nbsp;Poliçeler
+            </h3>
+            <a class="btn btn-info pull-right" asp-controller="Insurance" asp-action="ExportAllActiveInsurances" style="margin-left:10px"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+            <a class="btn btn-success pull-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="box table-responsive">
@@ -136,7 +136,7 @@
                     { "data": "insurancePaymentTypeName" },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"><li><a href="Insurance/Edit/' + row.id + '" class="btn-link">Güncelle</a></li><li><a href="Insurance/Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Insurance/Passive/' + row.id + '" class="btn-link">Pasif Yap</a></li><li><a href="Insurance/Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <li><a href="Insurance/Edit/' + row.id + '" class="btn-link">Güncelle</a></li> <li><a href="Insurance/Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Insurance/Cancel/' + row.id + '" class="btn-link">İptal Et</a></li><li><a href="Insurance/Passive/' + row.id + '" class="btn-link">Pasif Yap</a></li><li><a href="Insurance/Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
                         }
                     }
                 ],

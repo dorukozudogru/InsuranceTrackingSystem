@@ -56,7 +56,7 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies)
+        public async Task<IActionResult> Post(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies, bool isCancelledIncluded)
         {
             var requestFormData = Request.Form;
 
@@ -66,7 +66,7 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == true
+                .Where(i => i.IsActive == !isCancelledIncluded
                             && i.InsuranceStartDate >= startDate
                             && i.InsuranceStartDate <= finishDate)
                 .AsNoTracking()
@@ -105,10 +105,10 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostTotalAmount(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies)
+        public async Task<IActionResult> PostTotalAmount(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies, bool isCancelledIncluded)
         {
             List<Insurances> insurances = await _context.Insurances
-                .Where(i => i.IsActive == true
+                .Where(i => i.IsActive == !isCancelledIncluded
                             && i.InsuranceStartDate >= startDate
                             && i.InsuranceStartDate <= finishDate)
                 .ToListAsync();
@@ -131,7 +131,9 @@ namespace SigortaTakipSistemi.Controllers
             var response = new List<double>
             {
                 Math.Round(insurances.Sum(i => i.InsuranceAmount), 2),
-                Math.Round(insurances.Sum(i => i.InsuranceBonus), 2)
+                Math.Round(insurances.Sum(i => i.CancelledInsuranceAmount), 2),
+                Math.Round(insurances.Sum(i => i.InsuranceBonus), 2),
+                Math.Round(insurances.Sum(i => i.CancelledInsuranceBonus), 2)
             };
 
             return Ok(response);
@@ -145,7 +147,7 @@ namespace SigortaTakipSistemi.Controllers
                 var insurancesGroup = await _context.Insurances
                     .Include(ic => ic.InsuranceCompany)
                     .Include(ip => ip.InsurancePolicy)
-                    .Where(i => i.IsActive == true
+                    .Where(i => i.IsActive == !reportViewModel.IsCancelledIncluded
                         && i.InsuranceStartDate >= reportViewModel.StartDate
                         && i.InsuranceStartDate <= reportViewModel.FinishDate)
                     .GroupBy(i => new
@@ -176,7 +178,7 @@ namespace SigortaTakipSistemi.Controllers
                 var insurancesGroup = await _context.Insurances
                     .Include(ic => ic.InsuranceCompany)
                     .Include(ip => ip.InsurancePolicy)
-                    .Where(i => i.IsActive == true
+                    .Where(i => i.IsActive == !reportViewModel.IsCancelledIncluded
                         && i.InsuranceStartDate >= reportViewModel.StartDate
                         && i.InsuranceStartDate <= reportViewModel.FinishDate
                         && reportViewModel.InsurancePaymentType.Contains(i.InsurancePaymentType))
@@ -211,7 +213,7 @@ namespace SigortaTakipSistemi.Controllers
                 return View(insurancesGroup);
             }
 
-            return RedirectToAction("GeneralInsuranceReport");
+            return RedirectToAction("InsurancePaymentTypeReport");
         }
     }
 }

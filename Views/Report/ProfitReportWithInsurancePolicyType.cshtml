@@ -13,11 +13,8 @@
     <section class="content">
         <div class="box-header">
             <h3 class="box-title">
-                <i class="fa fa-list"></i>&nbsp;Poliçe Tipi Bazlı Kâr Raporu
+                <i class="fa fa-area-chart"></i>&nbsp;Poliçe Tipi Bazlı Kâr Raporu
             </h3>
-            <form method="post" enctype="multipart/form-data" hidden id="exportButton">
-                <a class="btn btn-info" asp-controller="Insurance" asp-action="ExportAllInsurances">Dışa Aktar</a>
-            </form>
         </div>
         <div class="row">
             <div class="box" id="searchBox">
@@ -29,7 +26,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input asp-for="@Model.InsuranceStartDate" type="text" class="form-control pull-right" id="datepicker" />
+                                <input asp-for="@Model.InsuranceStartDate" type="text" class="form-control pull-right" id="datepicker" autocomplete="off" />
                             </div>
                             <span asp-validation-for="@Model.InsuranceStartDate" class="text-danger"></span>
                         </div>
@@ -39,10 +36,12 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input asp-for="@Model.InsuranceFinishDate" type="text" class="form-control pull-right" id="datepicker2" />
+                                <input asp-for="@Model.InsuranceFinishDate" type="text" class="form-control pull-right" id="datepicker2" autocomplete="off" />
                             </div>
                             <span asp-validation-for="@Model.InsuranceFinishDate" class="text-danger"></span>
                         </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label asp-for="@Model.InsuranceCompanyName" class="control-label"></label>
                             <select asp-for="@Model.InsuranceCompany" class="form-control select2" multiple="multiple" id="insuranceCompanies" asp-items="@ViewBag.InsuranceCompanies" style="width: 100%;"></select>
@@ -51,12 +50,30 @@
                             <label asp-for="@Model.InsurancePolicyName" class="control-label"></label>
                             <select asp-for="@Model.InsurancePolicy" class="form-control select2" disabled multiple="multiple" id="insurancePolicies" asp-items="@ViewBag.InsurancePolicies" style="width: 100%;"></select>
                         </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">İptal Edilen Poliçeler Listelensin</label>
+                            <div class="input-group">
+                                <div></div>
+                                <span class="input-group-addon"><input id="IsCancelledIncluded" type="checkbox" value="true" /></span><input disabled value="İptal Poliçeleri Listelemek İçin Seçiniz" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <input type="submit" id="getResult" disabled value="Getir" class="btn btn-primary" />
+                                    <input type="submit" id="getResult" disabled value="Getir" class="btn btn-success btn-block" />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div hidden id="exportButton" class="col-md-4">
+                        <div class="form-group">
+                            <a class="btn btn-info btn-block pull-right" asp-controller="Insurance" asp-action="ExportAllInsurances"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
                         </div>
                     </div>
                 </div>
@@ -85,10 +102,19 @@
                                     @Html.DisplayNameFor(model => model.InsuranceFinishDate)
                                 </th>
                                 <th>
+                                    @Html.DisplayNameFor(model => model.CancelledAt)
+                                </th>
+                                <th>
                                     @Html.DisplayNameFor(model => model.InsuranceAmount)
                                 </th>
                                 <th>
+                                    @Html.DisplayNameFor(model => model.CancelledInsuranceAmount)
+                                </th>
+                                <th>
                                     @Html.DisplayNameFor(model => model.InsuranceBonus)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.CancelledInsuranceBonus)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.InsuranceType)
@@ -100,10 +126,12 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th colspan="5"></th>
+                                <th colspan="6"></th>
                                 <th>Genel Toplam:</th>
                                 <th id="totalAmount"></th>
+                                <th id="cancelledTotalAmount"></th>
                                 <th id="totalBonus"></th>
+                                <th id="cancelledTotalBonus"></th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -116,85 +144,118 @@
 </div>
 
 @section Scripts{
-<script src="~/js/datatables.min.js"></script>
-<script src="~/js/moment.min.js"></script>
-<script>
-    $(function () {
-        $('#insuranceCompanies').change(function () {
-            if ($('#insuranceCompanies').val() != "") {
-                $('#insurancePolicies').prop('disabled', false);
-                $('#getResult').prop('disabled', false);
-            } else {
-                $('#insurancePolicies').prop('disabled', true);
-                $('#getResult').prop('disabled', true);
-            }
+    <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script>
+        $(function () {
+            $('#insuranceCompanies').change(function () {
+                if ($('#insuranceCompanies').val() != "") {
+                    $('#insurancePolicies').prop('disabled', false);
+                    $('#getResult').prop('disabled', false);
+                } else {
+                    $('#insurancePolicies').prop('disabled', true);
+                    $('#getResult').prop('disabled', true);
+                }
+            });
         });
-    });
 
-    $('#getResult').click(function () {
-        $("#resultRow").show();
-        $("#exportButton").show();
-        $.ajax({
-            "url": "/Report/PostTotalAmount?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=ins&insuranceCompanies=" + $('#insuranceCompanies').val() + "&insurancePolicies=" + $('#insurancePolicies').val(),
-            "method": "POST"
-        }).done(function (response) {
-            $('#totalAmount').html(response[0]);
-            $('#totalBonus').html(response[1]);
-        });
-        $("#ItemsTable").DataTable({
-            "language": {
-                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
-                zeroRecords: "Hiçbir kayıt bulunamadı.",
-                emptyTable: "Kayıt bulunmamaktadır.",
-                search: "Ara:",
-                oPaginate: {
-                    "sFirst": "İlk",
-                    "sLast": "Son",
-                    "sNext": "Sonraki",
-                    "sPrevious": "Önceki"
-                },
-                sLengthMenu: "_MENU_ adet kayıt getir",
-                sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
-            },
-            "processing": true,
-            "serverSide": true,
-            "searchDelay": 1200,
-            "ajax": {
-                "url": "/Report/Post?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=ins&insuranceCompanies=" + $('#insuranceCompanies').val() + "&insurancePolicies=" + $('#insurancePolicies').val(),
+        $('#getResult').click(function () {
+
+            var IsCancelledIncluded;
+            IsCancelledIncluded = $('#IsCancelledIncluded').is(':checked') ? 'true' : 'false';
+
+            $("#resultRow").show();
+            $("#exportButton").show();
+            $.ajax({
+                "url": "/Report/PostTotalAmount?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=ins&insuranceCompanies=" + $('#insuranceCompanies').val() + "&insurancePolicies=" + $('#insurancePolicies').val() + "&isCancelledIncluded=" + IsCancelledIncluded,
                 "method": "POST"
-            },
-            "destroy": true,
-            "columns": [
-                { "data": "id" },
-                { "data": "insurancePolicy.name" },
-                { "data": "insurancePolicyNumber" },
-                {
-                    "data": "insuranceCompany.logoPath", render: function (data, type, row) {
-                        return '<img src="' + row.insuranceCompany.logoPath + '" style="max-height:50px; max-width:75px" />'
-                    }
+            }).done(function (response) {
+                $('#totalAmount').html(response[0]);
+                $('#cancelledTotalAmount').html(response[1]);
+                $('#totalBonus').html(response[2]);
+                $('#cancelledTotalBonus').html(response[3]);
+            });
+            $("#ItemsTable").DataTable({
+                "language": {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                    zeroRecords: "Hiçbir kayıt bulunamadı.",
+                    emptyTable: "Kayıt bulunmamaktadır.",
+                    search: "Ara:",
+                    oPaginate: {
+                        "sFirst": "İlk",
+                        "sLast": "Son",
+                        "sNext": "Sonraki",
+                        "sPrevious": "Önceki"
+                    },
+                    sLengthMenu: "_MENU_ adet kayıt getir",
+                    sInfo: "Toplam _TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
                 },
-                {
-                    "data": "insuranceStartDate",
-                    render: function (data, type, row) {
-                        return window.moment(data).format("DD-MMMM-YYYY");
-                    }
+                "processing": true,
+                "serverSide": true,
+                "searchDelay": 1200,
+                "ajax": {
+                    "url": "/Report/Post?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=ins&insuranceCompanies=" + $('#insuranceCompanies').val() + "&insurancePolicies=" + $('#insurancePolicies').val() + "&isCancelledIncluded=" + IsCancelledIncluded,
+                    "method": "POST"
                 },
-                {
-                    "data": "insuranceFinishDate",
-                    render: function (data, type, row) {
-                        return window.moment(data).format("DD-MMMM-YYYY");
-                    }
-                },
-                { "data": "insuranceAmount" },
-                { "data": "insuranceBonus" },
-                { "data": "insuranceTypeName" },
-                { "data": "insurancePaymentTypeName" }
-            ],
-            "ordering": true,
-            "paging": true,
-            "pagingType": "simple_numbers",
-            "pageLength": 100
+                "destroy": true,
+                "columns": [
+                    { "data": "id" },
+                    { "data": "insurancePolicy.name" },
+                    { "data": "insurancePolicyNumber" },
+                    {
+                        "data": "insuranceCompany.logoPath", render: function (data, type, row) {
+                            return '<img src="' + row.insuranceCompany.logoPath + '" style="max-height:50px; max-width:75px" />'
+                        }
+                    },
+                    {
+                        "data": "insuranceStartDate",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "insuranceFinishDate",
+                        render: function (data, type, row) {
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    {
+                        "data": "cancelledAt",
+                        render: function (data, type, row) {
+                            if (data == null) {
+                                return "-";
+                            }
+                            return window.moment(data).format("DD-MMMM-YYYY");
+                        }
+                    },
+                    { "data": "insuranceAmount" },
+                    {
+                        "data": "cancelledInsuranceAmount",
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return "-";
+                            }
+                            return data;
+                        }
+                    },
+                    { "data": "insuranceBonus" },
+                    {
+                        "data": "cancelledInsuranceBonus",
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return "-";
+                            }
+                            return data;
+                        }
+                    },
+                    { "data": "insuranceTypeName" },
+                    { "data": "insurancePaymentTypeName" }
+                ],
+                "ordering": true,
+                "paging": true,
+                "pagingType": "simple_numbers",
+                "pageLength": 100
+            });
         });
-    });
-</script>
+    </script>
 }

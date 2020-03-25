@@ -76,7 +76,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurance = await _context.Insurances
@@ -119,7 +119,7 @@ namespace SigortaTakipSistemi.Controllers
 
             if (insurance == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(insurance);
@@ -156,7 +156,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurance = await _context.Insurances
@@ -169,7 +169,7 @@ namespace SigortaTakipSistemi.Controllers
 
             if (insurance == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
@@ -187,7 +187,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id != insurance.Id)
             {
-                return NotFound();
+                return View("Error");
             }
 
             if (ModelState.IsValid)
@@ -205,7 +205,7 @@ namespace SigortaTakipSistemi.Controllers
                 {
                     if (!InsuranceExists(insurance.Id))
                     {
-                        return NotFound();
+                        return View("Error");
                     }
                     else
                     {
@@ -221,7 +221,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurance = await _context.Insurances
@@ -264,7 +264,7 @@ namespace SigortaTakipSistemi.Controllers
 
             if (insurance == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(insurance);
@@ -277,6 +277,7 @@ namespace SigortaTakipSistemi.Controllers
             var insurance = await _context.Insurances.FindAsync(id);
 
             insurance.IsActive = false;
+            insurance.DeletedAt = DateTime.Now;
             insurance.DeletedBy = GetLoggedUserId();
 
             _context.Update(insurance);
@@ -288,7 +289,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurance = await _context.Insurances
@@ -331,7 +332,7 @@ namespace SigortaTakipSistemi.Controllers
 
             if (insurance == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(insurance);
@@ -353,7 +354,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var insurance = await _context.Insurances
@@ -369,7 +370,7 @@ namespace SigortaTakipSistemi.Controllers
 
             if (insurance == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(insurance);
@@ -382,11 +383,129 @@ namespace SigortaTakipSistemi.Controllers
             var insurance = await _context.Insurances.FindAsync(id);
 
             insurance.IsActive = true;
+            insurance.UpdatedAt = DateTime.Now;
             insurance.UpdatedBy = GetLoggedUserId();
+
+            insurance.DeletedAt = null;
+            insurance.DeletedBy = null;
 
             _context.Update(insurance);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Cancel(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            #region InsuranceType
+            if (insurance.InsuranceType == 0)
+            {
+                insurance.InsuranceTypeName = "SIFIR";
+            }
+            else if (insurance.InsuranceType == 1)
+            {
+                insurance.InsuranceTypeName = "YENİLEME";
+            }
+            else if (insurance.InsuranceType == 2)
+            {
+                insurance.InsuranceTypeName = "2. EL";
+            }
+            #endregion
+
+            #region InsurancePaymentType
+            if (insurance.InsurancePaymentType == 0)
+            {
+                insurance.InsurancePaymentTypeName = "NAKİT";
+            }
+            else if (insurance.InsurancePaymentType == 1)
+            {
+                insurance.InsurancePaymentTypeName = "KREDİ KARTI";
+            }
+            else if (insurance.InsurancePaymentType == 2)
+            {
+                insurance.InsurancePaymentTypeName = "BEDELSİZ";
+            }
+            #endregion
+
+            if (insurance == null)
+            {
+                return View("Error");
+            }
+
+            return View(insurance);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(int id, double cancelledInsuranceAmount, double cancelledInsuranceBonus)
+        {
+            var insurance = await _context.Insurances.FindAsync(id);
+            if (ModelState.IsValid)
+            {
+                insurance.IsActive = false;
+                insurance.CancelledAt = DateTime.Now;
+                insurance.CancelledInsuranceAmount = cancelledInsuranceAmount;
+                insurance.CancelledInsuranceBonus = cancelledInsuranceBonus;
+
+                insurance.DeletedAt = DateTime.Now;
+                insurance.DeletedBy = GetLoggedUserId();
+
+                _context.Update(insurance);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            insurance = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            #region InsuranceType
+            if (insurance.InsuranceType == 0)
+            {
+                insurance.InsuranceTypeName = "SIFIR";
+            }
+            else if (insurance.InsuranceType == 1)
+            {
+                insurance.InsuranceTypeName = "YENİLEME";
+            }
+            else if (insurance.InsuranceType == 2)
+            {
+                insurance.InsuranceTypeName = "2. EL";
+            }
+            #endregion
+
+            #region InsurancePaymentType
+            if (insurance.InsurancePaymentType == 0)
+            {
+                insurance.InsurancePaymentTypeName = "NAKİT";
+            }
+            else if (insurance.InsurancePaymentType == 1)
+            {
+                insurance.InsurancePaymentTypeName = "KREDİ KARTI";
+            }
+            else if (insurance.InsurancePaymentType == 2)
+            {
+                insurance.InsurancePaymentTypeName = "BEDELSİZ";
+            }
+            #endregion
+
+            return View(insurance);
         }
 
         public bool InsuranceExists(int id)
@@ -444,7 +563,7 @@ namespace SigortaTakipSistemi.Controllers
             {
                 var ws = p.Workbook.Worksheets.Add("Poliçeler");
 
-                using (var range = ws.Cells[1, 1, 1, 16])
+                using (var range = ws.Cells[1, 1, 1, 19])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -464,13 +583,17 @@ namespace SigortaTakipSistemi.Controllers
                 ws.Cells[1, 10].Value = "Müşteri E-Postası";
                 ws.Cells[1, 11].Value = "Poliçe Başlama Tarihi";
                 ws.Cells[1, 12].Value = "Poliçe Bitiş Tarihi";
-                ws.Cells[1, 13].Value = "Poliçe Tutarı";
-                ws.Cells[1, 14].Value = "Poliçe Primi";
-                ws.Cells[1, 15].Value = "Sıfır/Yenileme";
-                ws.Cells[1, 16].Value = "Nakit/Kredi Kartı";
+                ws.Cells[1, 13].Value = "İptal Edilme Tarihi";
+                ws.Cells[1, 14].Value = "Poliçe Tutarı";
+                ws.Cells[1, 15].Value = "İptal Edilen Poliçe Tutarı";
+                ws.Cells[1, 16].Value = "Poliçe Primi";
+                ws.Cells[1, 17].Value = "İptal İşleminden Sonra Prim Tutarı";
+                ws.Cells[1, 18].Value = "Sıfır/Yenileme";
+                ws.Cells[1, 19].Value = "Nakit/Kredi Kartı";
 
                 ws.Column(11).Style.Numberformat.Format = "dd-mmmm-yyyy";
                 ws.Column(12).Style.Numberformat.Format = "dd-mmmm-yyyy";
+                ws.Column(13).Style.Numberformat.Format = "dd-mmmm-yyyy";
 
                 ws.Row(1).Style.Font.Bold = true;
 
@@ -488,36 +611,39 @@ namespace SigortaTakipSistemi.Controllers
                     ws.Cells[c, 10].Value = items[c - 2].Customer.Email;
                     ws.Cells[c, 11].Value = items[c - 2].InsuranceStartDate;
                     ws.Cells[c, 12].Value = items[c - 2].InsuranceFinishDate;
-                    ws.Cells[c, 13].Value = items[c - 2].InsuranceAmount;
-                    ws.Cells[c, 14].Value = items[c - 2].InsuranceBonus;
+                    ws.Cells[c, 13].Value = items[c - 2].CancelledAt;
+                    ws.Cells[c, 14].Value = items[c - 2].InsuranceAmount;
+                    ws.Cells[c, 15].Value = items[c - 2].CancelledInsuranceAmount;
+                    ws.Cells[c, 16].Value = items[c - 2].InsuranceBonus;
+                    ws.Cells[c, 17].Value = items[c - 2].CancelledInsuranceBonus;
 
                     #region InsuranceType
                     if (items[c - 2].InsuranceType == 0)
                     {
-                        ws.Cells[c, 15].Value = "SIFIR";
+                        ws.Cells[c, 18].Value = "SIFIR";
                     }
                     else if (items[c - 2].InsuranceType == 1)
                     {
-                        ws.Cells[c, 15].Value = "YENİLEME";
+                        ws.Cells[c, 18].Value = "YENİLEME";
                     }
                     else if (items[c - 2].InsuranceType == 2)
                     {
-                        ws.Cells[c, 15].Value = "2. EL";
+                        ws.Cells[c, 18].Value = "2. EL";
                     }
                     #endregion
 
                     #region InsurancePaymentType
                     if (items[c - 2].InsurancePaymentType == 0)
                     {
-                        ws.Cells[c, 16].Value = "NAKİT";
+                        ws.Cells[c, 19].Value = "NAKİT";
                     }
                     else if (items[c - 2].InsurancePaymentType == 1)
                     {
-                        ws.Cells[c, 16].Value = "KREDİ KARTI";
+                        ws.Cells[c, 19].Value = "KREDİ KARTI";
                     }
                     else if (items[c - 2].InsurancePaymentType == 2)
                     {
-                        ws.Cells[c, 16].Value = "BEDELSİZ";
+                        ws.Cells[c, 19].Value = "BEDELSİZ";
                     }
                     #endregion
                 }
@@ -535,15 +661,17 @@ namespace SigortaTakipSistemi.Controllers
                         range.Style.Font.Color.SetColor(Color.White);
                     }
 
-                    ws.Cells[lastRow + 1, 12].Value = "Toplam:";
-                    ws.Cells[lastRow + 1, 13].Formula = String.Format("SUM(M2:M{0})", lastRow);
+                    ws.Cells[lastRow + 1, 13].Value = "Toplam:";
                     ws.Cells[lastRow + 1, 14].Formula = String.Format("SUM(N2:N{0})", lastRow);
+                    ws.Cells[lastRow + 1, 15].Formula = String.Format("SUM(O2:O{0})", lastRow);
+                    ws.Cells[lastRow + 1, 16].Formula = String.Format("SUM(P2:P{0})", lastRow);
+                    ws.Cells[lastRow + 1, 17].Formula = String.Format("SUM(Q2:Q{0})", lastRow);
                 }
 
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();
-                ws.Cells["A1:P" + items.Count + 2].AutoFilter = true;
+                ws.Cells["A1:S" + items.Count + 2].AutoFilter = true;
 
-                ws.Column(16).PageBreak = true;
+                ws.Column(19).PageBreak = true;
                 ws.PrinterSettings.PaperSize = ePaperSize.A4;
                 ws.PrinterSettings.Orientation = eOrientation.Landscape;
                 ws.PrinterSettings.Scale = 50;
