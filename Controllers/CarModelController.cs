@@ -73,7 +73,12 @@ namespace SigortaTakipSistemi.Controllers
             {
                 try
                 {
-                    _context.Update(carModels);
+                    var oldCarModels = await _context.CarModels.FindAsync(id);
+
+                    oldCarModels.Name = carModels.Name;
+                    oldCarModels.CarBrandId = carModels.CarBrandId;
+
+                    _context.Update(oldCarModels);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -121,7 +126,7 @@ namespace SigortaTakipSistemi.Controllers
             if (hasAnyInsurance == null)
             {
                 var carModels = await _context.CarModels.FindAsync(id);
-                _context.CarModels.Remove(carModels);
+                _context.Remove(carModels);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

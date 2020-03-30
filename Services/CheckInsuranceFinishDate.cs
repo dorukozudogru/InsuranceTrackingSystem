@@ -40,6 +40,7 @@ namespace SigortaTakipSistemi.Services
             using (var scope = _scopeFactory.CreateScope())
             {
                 var _context = scope.ServiceProvider.GetRequiredService<IdentityContext>();
+                _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
                 var dueTimeInsurances = _context.Insurances
                                                 .Include(cu => cu.Customer)
