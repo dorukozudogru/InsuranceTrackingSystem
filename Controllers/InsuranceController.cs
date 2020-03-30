@@ -194,11 +194,39 @@ namespace SigortaTakipSistemi.Controllers
             {
                 try
                 {
-                    insurance.UpdatedBy = GetLoggedUserId();
+                    var oldInsurance = await _context.Insurances
+                       .Include(cu => cu.Customer)
+                       .Include(c => c.CarModel)
+                       .Include(cb => cb.CarModel.CarBrand)
+                       .Include(pn => pn.InsurancePolicy)
+                       .Include(pc => pc.InsuranceCompany)
+                       .FirstOrDefaultAsync(m => m.Id == id);
 
-                    insurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
+                    oldInsurance.CancelledAt = insurance.CancelledAt;
+                    oldInsurance.CancelledInsuranceAmount = insurance.CancelledInsuranceAmount;
+                    oldInsurance.CancelledInsuranceBonus = insurance.CancelledInsuranceBonus;
+                    oldInsurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
+                    oldInsurance.CreatedAt = insurance.CreatedAt;
+                    oldInsurance.CreatedBy = insurance.CreatedBy;
+                    oldInsurance.CustomerId = insurance.CustomerId;
+                    oldInsurance.DeletedAt = insurance.DeletedAt;
+                    oldInsurance.DeletedBy = insurance.DeletedBy;
+                    oldInsurance.InsuranceAmount = insurance.InsuranceAmount;
+                    oldInsurance.InsuranceBonus = insurance.InsuranceBonus;
+                    oldInsurance.InsuranceCompanyId = insurance.InsuranceCompanyId;
+                    oldInsurance.InsuranceFinishDate = insurance.InsuranceFinishDate;
+                    oldInsurance.InsuranceLastMailDate = insurance.InsuranceLastMailDate;
+                    oldInsurance.InsurancePaymentType = insurance.InsurancePaymentType;
+                    oldInsurance.InsurancePolicyId = insurance.InsurancePolicyId;
+                    oldInsurance.InsurancePolicyNumber = insurance.InsurancePolicyNumber;
+                    oldInsurance.InsuranceStartDate = insurance.InsuranceStartDate;
+                    oldInsurance.InsuranceType = insurance.InsuranceType;
+                    oldInsurance.IsActive = insurance.IsActive;
+                    oldInsurance.LicencePlate = insurance.LicencePlate;
+                    oldInsurance.UpdatedAt = insurance.UpdatedAt;
+                    oldInsurance.UpdatedBy = GetLoggedUserId();
 
-                    _context.Update(insurance);
+                    _context.Update(oldInsurance);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

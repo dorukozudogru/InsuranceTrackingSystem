@@ -68,7 +68,11 @@ namespace SigortaTakipSistemi.Controllers
             {
                 try
                 {
-                    _context.Update(carBrands);
+                    var oldCarBrands = await _context.CarBrands.FindAsync(id);
+
+                    oldCarBrands.Name = carBrands.Name;
+
+                    _context.Update(oldCarBrands);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

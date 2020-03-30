@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -113,9 +114,23 @@ namespace SigortaTakipSistemi.Controllers
             {
                 try
                 {
-                    customers.UpdatedBy = GetLoggedUserId();
+                    var oldCustomers = await _context.Customers.FindAsync(id);
 
-                    _context.Update(customers);
+                    oldCustomers.CitizenshipNo = customers.CitizenshipNo;
+                    oldCustomers.CreatedAt = customers.CreatedAt;
+                    oldCustomers.CreatedBy = customers.CreatedBy;
+                    oldCustomers.DeletedAt = customers.DeletedAt;
+                    oldCustomers.DeletedBy = customers.DeletedBy;
+                    oldCustomers.Email = customers.Email;
+                    oldCustomers.IsActive = customers.IsActive;
+                    oldCustomers.Name = customers.Name;
+                    oldCustomers.Other = customers.Other;
+                    oldCustomers.Phone = customers.Phone;
+                    oldCustomers.Surname = customers.Surname;
+                    oldCustomers.UpdatedAt = DateTime.Now;
+                    oldCustomers.UpdatedBy = GetLoggedUserId();
+
+                    _context.Update(oldCustomers);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -162,6 +177,7 @@ namespace SigortaTakipSistemi.Controllers
             {
                 var customers = await _context.Customers.FindAsync(id);
 
+                customers.DeletedAt = DateTime.Now;
                 customers.DeletedBy = GetLoggedUserId();
                 customers.IsActive = false;
 
