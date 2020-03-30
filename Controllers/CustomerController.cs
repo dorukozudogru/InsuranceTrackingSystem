@@ -177,6 +177,7 @@ namespace SigortaTakipSistemi.Controllers
             {
                 var customers = await _context.Customers.FindAsync(id);
 
+                customers.DeletedAt = DateTime.Now;
                 customers.DeletedBy = GetLoggedUserId();
                 customers.IsActive = false;
 
