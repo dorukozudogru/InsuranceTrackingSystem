@@ -82,7 +82,7 @@ namespace SigortaTakipSistemi.Services
             //    msg.To.Add(user.Email);
             //}
 
-            msg.To.Add("banazsigorta@gmail.com");
+            msg.To.Add("banazsigorta@banazotomotiv.com.tr");
             
             msg.Subject = insurance.LicencePlate + " Plakalı Aracın " + insurance.InsurancePolicy.Name + " Poliçesi Süresi Dolmak Üzere";
             msg.Body = string.Format(@"Müşteri Adı: {0} - Sigorta Şirketi: {1} - Poliçe Tipi/Numarası: {2}/{3} - Poliçe Başlangıç/Bitiş Tarihi: {4} / {5}",
