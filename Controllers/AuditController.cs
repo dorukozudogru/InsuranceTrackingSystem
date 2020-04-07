@@ -128,8 +128,8 @@ namespace SigortaTakipSistemi.Controllers
             {
                 Data = listItems,
                 Draw = int.Parse(requestFormData["draw"]),
-                RecordsFiltered = listItems.Count,
-                RecordsTotal = listItems.Count
+                RecordsFiltered = lastAuditList.Count,
+                RecordsTotal = lastAuditList.Count
             };
 
             return Ok(response);
