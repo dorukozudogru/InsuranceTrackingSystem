@@ -78,6 +78,8 @@ namespace SigortaTakipSistemi.Controllers
             if (ModelState.IsValid)
             {
                 customers.CreatedBy = GetLoggedUserId();
+                customers.Name = customers.Name.ToUpper();
+                customers.Surname = customers.Surname.ToUpper();
 
                 _context.Add(customers);
                 await _context.SaveChangesAsync();
@@ -123,10 +125,10 @@ namespace SigortaTakipSistemi.Controllers
                     oldCustomers.DeletedBy = customers.DeletedBy;
                     oldCustomers.Email = customers.Email;
                     oldCustomers.IsActive = customers.IsActive;
-                    oldCustomers.Name = customers.Name;
+                    oldCustomers.Name = customers.Name.ToUpper();
                     oldCustomers.Other = customers.Other;
                     oldCustomers.Phone = customers.Phone;
-                    oldCustomers.Surname = customers.Surname;
+                    oldCustomers.Surname = customers.Surname.ToUpper();
                     oldCustomers.UpdatedAt = DateTime.Now;
                     oldCustomers.UpdatedBy = GetLoggedUserId();
 
