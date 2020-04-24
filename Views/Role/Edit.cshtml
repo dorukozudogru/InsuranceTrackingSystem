@@ -1,0 +1,39 @@
+﻿@model SigortaTakipSistemi.Models.AppIdentityRole
+
+@{
+    ViewData["Title"] = "Rolü Güncelle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="box-header">
+            <h2 class="box-title">
+                <i class="fa fa-check-square-o"></i>&nbsp;Rolü Güncelle
+            </h2>
+        </div>
+        <div class="row">
+            <div class="box">
+                <div class="box-body">
+                    <div class="col-md-4">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Id" />
+                            <div class="form-group">
+                                Rol Adı
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Kaydet" class="btn btn-success" />
+                                <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

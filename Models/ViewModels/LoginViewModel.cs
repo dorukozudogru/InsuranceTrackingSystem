@@ -25,5 +25,8 @@ namespace SigortaTakipSistemi.Models.ViewModels
         public bool RememberMe { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        [DisplayName("Aktif Mi?")]
+        public bool IsActive { get; set; }
     }
 }

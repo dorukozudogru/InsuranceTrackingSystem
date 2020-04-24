@@ -18,5 +18,7 @@ namespace SigortaTakipSistemi.Models.ViewModels
         [DisplayName("Şifre")]
         public string Password { get; set; }
         public string Token { get; set; }
+        [DisplayName("Aktif Mi?")]
+        public bool IsActive { get; set; }
     }
 }

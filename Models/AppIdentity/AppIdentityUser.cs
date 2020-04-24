@@ -13,5 +13,8 @@ namespace SigortaTakipSistemi.Models
         //public string Name { get; set; }
         //[DisplayName("Soyadı")]
         //public string Surname { get; set; }
+
+        [DisplayName("Aktif Mi?")]
+        public bool IsActive { get; set; }
     }
 }

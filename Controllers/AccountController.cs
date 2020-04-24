@@ -4,8 +4,11 @@ using SigortaTakipSistemi.Models;
 using SigortaTakipSistemi.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
-using System.Security.Claims;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -40,6 +43,7 @@ namespace SigortaTakipSistemi.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
+                IsActive = true
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -71,29 +75,39 @@ namespace SigortaTakipSistemi.Controllers
         {
             var result = await _signInManager.PasswordSignInAsync("", "", false, true);
 
+#if DEBUG
             if (model.Email == null && model.Password == null)
             {
-#if DEBUG
                 model = new LoginViewModel
                 {
                     Email = "dorukozudogru@gmail.com",
                     Password = "QWEqwe.1"
                 };
-                
+
                 result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
                 return Redirect("~/Home");
-#endif
             }
+#endif
+
             if (ModelState.IsValid)
             {
-                result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-                if (result.Succeeded)
+                var user = _userManager.FindByEmailAsync(model.Email).Result;
+
+                if (user.IsActive != false)
                 {
-                    return Redirect("~/Home");
+                    result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+                    if (result.Succeeded)
+                    {
+                        return Redirect("~/Home");
+                    }
+                    else
+                    {
+                        ViewBag.LoginError = "E-Posta veya Şifre hatalı girildi. Lütfen tekrar deneyiniz.";
+                    }
                 }
                 else
                 {
-                    ViewBag.LoginError = "E-Posta veya Şifre hatalı girildi. Lütfen tekrar deneyiniz.";
+                    ViewBag.LoginError = "Hesabınız pasif durumdadır. Lütfen yöneticiniz ile iletişime geçiniz.";
                 }
             }
             return View(model);
@@ -176,6 +190,151 @@ namespace SigortaTakipSistemi.Controllers
                     + " Code: " + result.Errors.FirstOrDefault().Code
                     + " Description: " + result.Errors.FirstOrDefault().Description);
             }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Post()
+        {
+            var requestFormData = Request.Form;
+
+            List<AppIdentityUser> users = await _context.Users
+                .AsNoTracking()
+                .ToListAsync();
+
+            List<AppIdentityUser> listItems = ProcessCollection(users, requestFormData);
+
+            var response = new PaginatedResponse<AppIdentityUser>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = users.Count,
+                RecordsTotal = users.Count
+            };
+
+            return Ok(response);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Create(RegisterViewModel model)
+        {
+            var user = new AppIdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                IsActive = true
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var validateItem in result.Errors)
+                    ModelState.AddModelError("", validateItem.Description);
+
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            RegisterViewModel regUser = new RegisterViewModel
+            {
+                Email = user.Email,
+                Password = ""
+            };
+            return View(regUser);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(RegisterViewModel model)
+        {
+            AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
+
+            var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
+
+            IdentityResult result = _userManager.ResetPasswordAsync(user, token, model.Password).Result;
+
+            if (result.Succeeded)
+            {
+                ViewBag.Message = "Şifre başarıyla güncellenmiştir!";
+                return View();
+            }
+            else
+            {
+                throw new TaskCanceledException("Şifreyi güncellerken bir hata oluştu!"
+                    + " Code: " + result.Errors.FirstOrDefault().Code
+                    + " Description: " + result.Errors.FirstOrDefault().Description);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Passive(string passiveUserId)
+        {
+            var user = await _context.Users.FindAsync(passiveUserId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            user.IsActive = false;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Admin(string adminUserId)
+        {
+            var user = await _context.Users.FindAsync(adminUserId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            var result = await _userManager.AddToRoleAsync(user, "Admin");
+            if (!result.Succeeded)
+            {
+                return View("Error");
+            }
+
+            return Ok();
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
