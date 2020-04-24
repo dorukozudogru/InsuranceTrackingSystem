@@ -42,6 +42,12 @@
                 </div>
             </form>
             <br />
+            @if (ViewBag.LoginError != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.LoginError
+                </div>
+            }
             <label class="control-label"><a asp-action="ForgetPassword" asp-controller="Account">Şifremi Unuttum</a><br></label>
             <label class="control-label">Hesabınız yoksa <a href="register" class="text-center">buradan</a> kayıt olun</label>
         </div>

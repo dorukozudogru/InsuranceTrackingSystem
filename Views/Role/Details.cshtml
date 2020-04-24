@@ -1,0 +1,36 @@
+﻿@model SigortaTakipSistemi.Models.AppIdentityRole
+
+@{
+    ViewData["Title"] = "Rol Detayları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="invoice">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="page-header">
+                    <i class="fa fa-check-square-o"></i> @Html.DisplayFor(model => model.Name)
+                </h2>
+            </div>
+        </div>
+        <div class="row invoice-info">
+            <div class="col-sm-4 invoice-col">
+                <address>
+                    Rol Adı: <strong>@Html.DisplayFor(model => model.NormalizedName)</strong><br>
+                    Eşzamanlılık Damgası: <strong>@Html.DisplayFor(model => model.ConcurrencyStamp)</strong><br>
+                </address>
+            </div>
+        </div>
+        <div class="row no-print">
+            <div class="col-xs-12">
+                <a class="btn btn-success pull-right" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fa fa-pencil"></i>&nbsp;&nbsp;Güncelle
+                </a>
+                <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
