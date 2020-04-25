@@ -115,6 +115,27 @@ namespace SigortaTakipSistemi.Controllers
                             }
                         }
                     }
+                    else if (audit.Action == "Exported")
+                    {
+                        foreach (var value in newValue)
+                        {
+                            if (value.Value != null && value.Key != null)
+                            {
+                                lastAuditList.Add(new Audit
+                                {
+                                    Action = audit.Action,
+                                    DateTime = audit.DateTime,
+                                    EntityName = "-",
+                                    Id = audit.Id,
+                                    KeyValues = keyValue.FirstOrDefault().Value.ToString(),
+                                    NewValues = "-",
+                                    OldValues = "-",
+                                    TableName = audit.TableName,
+                                    Username = username
+                                });
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

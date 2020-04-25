@@ -544,7 +544,8 @@ namespace SigortaTakipSistemi.Controllers
         [Route("insurance/insurance-export")]
         public ActionResult ExportAllInsurances()
         {
-            var stream = ExportInsurance(JsonConvert.DeserializeObject<List<Insurances>>(FakeSession.Instance.Obj), 1);
+            var pageName = Request.Headers["Referer"].ToString()?.Split("/");
+            var stream = ExportInsurance(JsonConvert.DeserializeObject<List<Insurances>>(FakeSession.Instance.Obj), 1, pageName.Last());
             string fileName = String.Format("{0}.xlsx", "all_insurances_report");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -560,7 +561,7 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == true).ToList(), 0);
+                .Where(i => i.IsActive == true).ToList(), 0, "ActiveInsurances");
             string fileName = String.Format("{0}.xlsx", "all_active_insurances_report");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
@@ -576,14 +577,14 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == false).ToList(), 0);
+                .Where(i => i.IsActive == false).ToList(), 0, "PassiveInsurances");
             string fileName = String.Format("{0}.xlsx", "all_passive_insurances_report");
             string fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             stream.Position = 0;
             return File(stream, fileType, fileName);
         }
 
-        public MemoryStream ExportInsurance(List<Insurances> items, byte type)
+        public MemoryStream ExportInsurance(List<Insurances> items, byte type, string pageName)
         {
             var stream = new System.IO.MemoryStream();
 
@@ -706,6 +707,7 @@ namespace SigortaTakipSistemi.Controllers
 
                 p.Save();
             }
+            AddExportAudit(pageName);
             return stream;
         }
 
@@ -749,6 +751,21 @@ namespace SigortaTakipSistemi.Controllers
                 bonus = (amount * 10) / 100;
             }
             return bonus;
+        }
+
+        public void AddExportAudit(string pageName)
+        {
+            Audit audit = new Audit()
+            {
+                Action = "Exported",
+                DateTime = DateTime.Now.ToUniversalTime(),
+                KeyValues = "{\"Id\":\"-\"}",
+                NewValues = "{\"PageName\":\"" + pageName + "\"}",
+                TableName = pageName,
+                Username = HttpContext?.User?.Identity?.Name
+            };
+            _context.Add(audit);
+            _context.SaveChanges();
         }
 
         public class FakeSession
