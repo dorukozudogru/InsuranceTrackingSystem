@@ -60,17 +60,35 @@ namespace SigortaTakipSistemi.Controllers
         {
             var requestFormData = Request.Form;
 
-            List<Insurances> insurances = await _context.Insurances
-                .Include(cu => cu.Customer)
-                .Include(c => c.CarModel)
-                .Include(cb => cb.CarModel.CarBrand)
-                .Include(pn => pn.InsurancePolicy)
-                .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == !isCancelledIncluded
-                            && i.InsuranceStartDate >= startDate
-                            && i.InsuranceStartDate <= finishDate)
-                .AsNoTracking()
-                .ToListAsync();
+            List<Insurances> insurances = new List<Insurances>();
+
+            var cancelledInsurances = GetCancelledInsurances().Result;
+            var activeInsurances = GetActiveInsurances().Result;
+            var passiveInsurances = GetPassiveInsurances().Result;
+
+            cancelledInsurances = cancelledInsurances
+                .Where(i => i.InsuranceStartDate >= startDate
+                          && i.InsuranceStartDate <= finishDate)
+                .ToList();
+
+            activeInsurances = activeInsurances
+                .Where(i => i.InsuranceStartDate >= startDate
+                          && i.InsuranceStartDate <= finishDate)
+                .ToList();
+
+            passiveInsurances = passiveInsurances
+                .Where(i => i.InsuranceStartDate >= startDate
+                          && i.InsuranceStartDate <= finishDate)
+                .ToList();
+
+            if (!isCancelledIncluded)
+            {
+                insurances = activeInsurances;
+            }
+            else
+            {
+                insurances = activeInsurances.Concat(cancelledInsurances).ToList();
+            }
 
             if (reportType == "ins")
             {
@@ -107,11 +125,35 @@ namespace SigortaTakipSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostTotalAmount(string reportType, DateTime startDate, DateTime finishDate, string insuranceCompanies, string insurancePolicies, bool isCancelledIncluded)
         {
-            List<Insurances> insurances = await _context.Insurances
-                .Where(i => i.IsActive == !isCancelledIncluded
-                            && i.InsuranceStartDate >= startDate
-                            && i.InsuranceStartDate <= finishDate)
-                .ToListAsync();
+            List<Insurances> insurances = new List<Insurances>();
+
+            var cancelledInsurances = GetCancelledInsurances().Result;
+            var activeInsurances = GetActiveInsurances().Result;
+            var passiveInsurances = GetPassiveInsurances().Result;
+
+            cancelledInsurances = cancelledInsurances
+                .Where(i => i.InsuranceStartDate >= startDate
+                          && i.InsuranceStartDate <= finishDate)
+                .ToList();
+
+            activeInsurances = activeInsurances
+                .Where(i => i.InsuranceStartDate >= startDate
+                          && i.InsuranceStartDate <= finishDate)
+                .ToList();
+
+            passiveInsurances = passiveInsurances
+                .Where(i => i.InsuranceStartDate >= startDate
+                          && i.InsuranceStartDate <= finishDate)
+                .ToList();
+
+            if (!isCancelledIncluded)
+            {
+                insurances = activeInsurances;
+            }
+            else
+            {
+                insurances = activeInsurances.Concat(cancelledInsurances).ToList();
+            }
 
             if (reportType == "ins")
             {
@@ -144,29 +186,70 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var insurancesGroup = await _context.Insurances
-                    .Include(ic => ic.InsuranceCompany)
-                    .Include(ip => ip.InsurancePolicy)
-                    .Where(i => i.IsActive == !reportViewModel.IsCancelledIncluded
-                        && i.InsuranceStartDate >= reportViewModel.StartDate
-                        && i.InsuranceStartDate <= reportViewModel.FinishDate)
-                    .GroupBy(i => new
-                    {
-                        InsuranceCompanyName = i.InsuranceCompany.Name,
-                        InsurancePolicyName = i.InsurancePolicy.Name
-                    })
-                    .Select(i => new GeneralReportViewModel
-                    {
-                        InsuranceCompanyName = i.Key.InsuranceCompanyName,
-                        InsurancePolicyName = i.Key.InsurancePolicyName,
-                        Count = i.Count()
-                    })
-                    .OrderBy(i => i.InsuranceCompanyName)
-                    .ToListAsync();
+                List<GeneralReportViewModel> insurancesGroup = new List<GeneralReportViewModel>();
+                List<Insurances> insurances = new List<Insurances>();
 
+                var cancelledInsurances = GetCancelledInsurances().Result;
+                var activeInsurances = GetActiveInsurances().Result;
+                var passiveInsurances = GetPassiveInsurances().Result;
+
+                cancelledInsurances = cancelledInsurances
+                    .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                              && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .ToList();
+
+                activeInsurances = activeInsurances
+                    .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                              && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .ToList();
+
+                passiveInsurances = passiveInsurances
+                    .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                              && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .ToList();
+
+                if (!reportViewModel.IsCancelledIncluded)
+                {
+                    insurancesGroup = activeInsurances
+                                         .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                                                  && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                                         .GroupBy(i => new
+                                         {
+                                             InsuranceCompanyName = i.InsuranceCompany.Name,
+                                             InsurancePolicyName = i.InsurancePolicy.Name
+                                         })
+                                         .Select(i => new GeneralReportViewModel
+                                         {
+                                             InsuranceCompanyName = i.Key.InsuranceCompanyName,
+                                             InsurancePolicyName = i.Key.InsurancePolicyName,
+                                             Count = i.Count()
+                                         })
+                                         .OrderBy(i => i.InsuranceCompanyName)
+                                         .ToList();
+                }
+                else
+                {
+                    insurances = activeInsurances.Concat(cancelledInsurances).ToList();
+
+                    insurancesGroup = insurances
+                                         .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                                                  && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                                         .GroupBy(i => new
+                                         {
+                                             InsuranceCompanyName = i.InsuranceCompany.Name,
+                                             InsurancePolicyName = i.InsurancePolicy.Name
+                                         })
+                                         .Select(i => new GeneralReportViewModel
+                                         {
+                                             InsuranceCompanyName = i.Key.InsuranceCompanyName,
+                                             InsurancePolicyName = i.Key.InsurancePolicyName,
+                                             Count = i.Count()
+                                         })
+                                         .OrderBy(i => i.InsuranceCompanyName)
+                                         .ToList();
+                }
                 return View(insurancesGroup);
             }
-
             return RedirectToAction("GeneralInsuranceReport");
         }
 
@@ -175,24 +258,66 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var insurancesGroup = await _context.Insurances
-                    .Include(ic => ic.InsuranceCompany)
-                    .Include(ip => ip.InsurancePolicy)
-                    .Where(i => i.IsActive == !reportViewModel.IsCancelledIncluded
-                        && i.InsuranceStartDate >= reportViewModel.StartDate
-                        && i.InsuranceStartDate <= reportViewModel.FinishDate
-                        && reportViewModel.InsurancePaymentType.Contains(i.InsurancePaymentType))
-                    .GroupBy(i => new
-                    {
-                        InsurancePaymentTypeEnum = i.InsurancePaymentType
-                    })
-                    .Select(i => new GeneralReportViewModel
-                    {
-                        InsurancePaymentType = i.Key.InsurancePaymentTypeEnum,
-                        Count = i.Count()
-                    })
-                    .OrderBy(i => i.InsurancePaymentType)
-                    .ToListAsync();
+                List<GeneralReportViewModel> insurancesGroup = new List<GeneralReportViewModel>();
+                List<Insurances> insurances = new List<Insurances>();
+
+                var cancelledInsurances = GetCancelledInsurances().Result;
+                var activeInsurances = GetActiveInsurances().Result;
+                var passiveInsurances = GetPassiveInsurances().Result;
+
+                cancelledInsurances = cancelledInsurances
+                    .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                              && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .ToList();
+
+                activeInsurances = activeInsurances
+                    .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                              && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .ToList();
+
+                passiveInsurances = passiveInsurances
+                    .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                              && i.InsuranceStartDate <= reportViewModel.FinishDate)
+                    .ToList();
+
+                if (!reportViewModel.IsCancelledIncluded)
+                {
+                    insurancesGroup = activeInsurances
+                                         .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                                                  && i.InsuranceStartDate <= reportViewModel.FinishDate
+                                                  && reportViewModel.InsurancePaymentType.Contains(i.InsurancePaymentType))
+                                              .GroupBy(i => new
+                                              {
+                                                  InsurancePaymentTypeEnum = i.InsurancePaymentType
+                                              })
+                                              .Select(i => new GeneralReportViewModel
+                                              {
+                                                  InsurancePaymentType = i.Key.InsurancePaymentTypeEnum,
+                                                  Count = i.Count()
+                                              })
+                                              .OrderBy(i => i.InsurancePaymentType)
+                                              .ToList();
+                }
+                else
+                {
+                    insurances = activeInsurances.Concat(cancelledInsurances).ToList();
+
+                    insurancesGroup = insurances
+                                         .Where(i => i.InsuranceStartDate >= reportViewModel.StartDate
+                                                  && i.InsuranceStartDate <= reportViewModel.FinishDate
+                                                  && reportViewModel.InsurancePaymentType.Contains(i.InsurancePaymentType))
+                                              .GroupBy(i => new
+                                              {
+                                                  InsurancePaymentTypeEnum = i.InsurancePaymentType
+                                              })
+                                              .Select(i => new GeneralReportViewModel
+                                              {
+                                                  InsurancePaymentType = i.Key.InsurancePaymentTypeEnum,
+                                                  Count = i.Count()
+                                              })
+                                              .OrderBy(i => i.InsurancePaymentType)
+                                              .ToList();
+                }
 
                 foreach (var item in insurancesGroup)
                 {
@@ -209,11 +334,48 @@ namespace SigortaTakipSistemi.Controllers
                         item.InsurancePaymentTypeName = Helpers.EnumExtensionsHelper.GetDisplayName(Insurances.InsurancePaymentTypeEnum.UNPAID);
                     }
                 }
-
                 return View(insurancesGroup);
             }
-
             return RedirectToAction("InsurancePaymentTypeReport");
+        }
+
+        public async Task<List<Insurances>> GetActiveInsurances()
+        {
+            return await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == true)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<Insurances>> GetPassiveInsurances()
+        {
+            return await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == false && (i.CancelledAt == null && i.CancelledInsuranceAmount == 0 && i.CancelledInsuranceBonus == 0))
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<List<Insurances>> GetCancelledInsurances()
+        {
+            return await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == false && (i.CancelledAt != null && i.CancelledInsuranceAmount != 0 && i.CancelledInsuranceBonus != 0))
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }
