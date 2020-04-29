@@ -360,7 +360,7 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == false && (i.CancelledAt == null && i.CancelledInsuranceAmount == 0 && i.CancelledInsuranceBonus == 0))
+                .Where(i => i.IsActive == false && i.CancelledAt == null)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -373,7 +373,7 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == false && (i.CancelledAt != null && i.CancelledInsuranceAmount != 0 && i.CancelledInsuranceBonus != 0))
+                .Where(i => i.IsActive == false && i.CancelledAt != null)
                 .AsNoTracking()
                 .ToListAsync();
         }
