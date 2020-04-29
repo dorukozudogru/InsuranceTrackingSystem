@@ -19,7 +19,6 @@ using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
 
 namespace SigortaTakipSistemi.Controllers
 {
-    [Authorize]
     public class InsuranceController : Controller
     {
         private readonly IdentityContext _context;
@@ -29,12 +28,14 @@ namespace SigortaTakipSistemi.Controllers
             _context = context;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == true));
             return View();
         }
 
+        [Authorize]
         public IActionResult PassiveInsurances()
         {
             FakeSession.Instance.Obj = JsonConvert.SerializeObject(_context.Insurances.Where(i => i.IsActive == false));
@@ -42,6 +43,7 @@ namespace SigortaTakipSistemi.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(bool isActive)
         {
@@ -72,6 +74,7 @@ namespace SigortaTakipSistemi.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -125,6 +128,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
@@ -133,6 +137,7 @@ namespace SigortaTakipSistemi.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Insurances insurance)
@@ -152,6 +157,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -181,6 +187,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Insurances insurance)
@@ -245,6 +252,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         public async Task<IActionResult> Passive(int? id)
         {
             if (id == null)
@@ -298,6 +306,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Passive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PassiveConfirmed(int id)
@@ -313,6 +322,7 @@ namespace SigortaTakipSistemi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -366,6 +376,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -378,6 +389,7 @@ namespace SigortaTakipSistemi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
         public async Task<IActionResult> Revoke(int? id)
         {
             if (id == null)
@@ -404,6 +416,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Revoke")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RevokeConfirmed(int id)
@@ -422,6 +435,7 @@ namespace SigortaTakipSistemi.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
         public async Task<IActionResult> Cancel(int? id)
         {
             if (id == null)
@@ -475,6 +489,7 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(int id, double cancelledInsuranceAmount, double cancelledInsuranceBonus)
@@ -536,11 +551,13 @@ namespace SigortaTakipSistemi.Controllers
             return View(insurance);
         }
 
+        [Authorize]
         public bool InsuranceExists(int id)
         {
             return _context.Insurances.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Admin")]
         [Route("insurance/insurance-export")]
         public ActionResult ExportAllInsurances()
         {
@@ -552,6 +569,7 @@ namespace SigortaTakipSistemi.Controllers
             return File(stream, fileType, fileName);
         }
 
+        [Authorize(Roles = "Admin")]
         [Route("insurance/insurance-active-export")]
         public ActionResult ExportAllActiveInsurances()
         {
@@ -568,6 +586,7 @@ namespace SigortaTakipSistemi.Controllers
             return File(stream, fileType, fileName);
         }
 
+        [Authorize(Roles = "Admin")]
         [Route("insurance/insurance-passive-export")]
         public ActionResult ExportAllPassiveInsurances()
         {
@@ -584,6 +603,7 @@ namespace SigortaTakipSistemi.Controllers
             return File(stream, fileType, fileName);
         }
 
+        [Authorize(Roles = "Admin")]
         public MemoryStream ExportInsurance(List<Insurances> items, byte type, string pageName)
         {
             var stream = new System.IO.MemoryStream();
@@ -711,21 +731,25 @@ namespace SigortaTakipSistemi.Controllers
             return stream;
         }
 
+        [Authorize]
         public InsurancePolicies GetInsurancePoliciesById(int Id)
         {
             return _context.InsurancePolicies.FirstOrDefault(x => x.Id == Id);
         }
 
+        [Authorize]
         public InsuranceCompanies GetInsuranceCompaniesById(int Id)
         {
             return _context.InsuranceCompanies.FirstOrDefault(x => x.Id == Id);
         }
 
+        [Authorize]
         public string GetLoggedUserId()
         {
             return this.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
+        [Authorize]
         public double InsuranceBonusCalculation(double amount, string insurancePolicy)
         {
             double bonus = 0.0;
@@ -753,6 +777,7 @@ namespace SigortaTakipSistemi.Controllers
             return bonus;
         }
 
+        [Authorize]
         public void AddExportAudit(string pageName)
         {
             Audit audit = new Audit()
