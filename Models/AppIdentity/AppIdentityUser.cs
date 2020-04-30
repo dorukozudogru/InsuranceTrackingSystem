@@ -16,5 +16,8 @@ namespace SigortaTakipSistemi.Models
 
         [DisplayName("Aktif Mi?")]
         public bool IsActive { get; set; }
+
+        [DisplayName("Admin Mi?")]
+        public bool IsAdmin { get; set; }
     }
 }

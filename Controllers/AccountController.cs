@@ -323,13 +323,34 @@ namespace SigortaTakipSistemi.Controllers
                 return View("Error");
             }
 
-            var result = await _userManager.AddToRoleAsync(user, "Admin");
-            if (!result.Succeeded)
-            {
-                return View("Error");
-            }
+            var isUserAdmin = _context.UserRoles.Where(i => i.UserId == user.Id).ToList();
 
-            return Ok();
+            if (isUserAdmin.Count != 0)
+            {
+                var result = await _userManager.RemoveFromRoleAsync(user, "Admin");
+                user.IsAdmin = false;
+                _context.SaveChanges();
+
+                if (!result.Succeeded)
+                {
+                    return View("Error");
+                }
+
+                return Ok();
+            }
+            else
+            {
+                var result = await _userManager.AddToRoleAsync(user, "Admin");
+                user.IsAdmin = true;
+                _context.SaveChanges();
+
+                if (!result.Succeeded)
+                {
+                    return View("Error");
+                }
+
+                return Ok();
+            }
         }
 
         public IActionResult AccessDenied()
