@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<SigortaTakipSistemi.Models.AppIdentityUser>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Sistem Kullanıcıları";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -33,40 +33,12 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.IsActive)
                                     </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IsAdmin)
+                                    </th>
                                     <th>İşlemler</th>
                                 </tr>
                             </thead>
-                            @*<tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Id)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.UserName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.IsAdmin)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.IsActive)
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                        <span class="fa fa-ellipsis-h"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef">
-                                                        <li><a asp-action="Edit" asp-route-id="@item.Id">Şifre Güncelle</a></li>
-                                                        <li><a data-toggle="modal" data-target="#modal-admin" class="setAdmin" user-id="@item.Id" user-username="@item.UserName" name="setAdmin">Admin Yap</a></li>
-                                                        <li><a data-toggle="modal" data-target="#modal-passive" class="setPassive" user-id="@item.Id" user-username="@item.UserName" name="setPassive">Pasif Yap</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>*@
                         </table>
                     </div>
                 </div>
@@ -189,7 +161,7 @@
                 function (e) {
                     adminUserId = $(this).attr('user-id');
                     adminUserName = $(this).attr('user-username');
-                    document.getElementById('message-admin').innerHTML = "<strong>" + adminUserName + "</strong> kullanıcısını <strong>admin</strong> yapmak istediğinizden emin misiniz?";
+                    document.getElementById('message-admin').innerHTML = "<strong>" + adminUserName + "</strong> kullanıcısının <strong>admin yetkisini değiştirmek</strong> istediğinizden emin misiniz?";
                 });
 
             $(document).delegate('#admin',
@@ -257,8 +229,24 @@
                             }
                         },
                         {
+                            "data": "isAdmin",
+                            render: function (data, type, row) {
+                                if (data === true) {
+                                    return '<input type="checkbox" checked disabled>'
+                                }
+                                else if (data === false) {
+                                    return '<input type="checkbox" disabled>'
+                                }
+                            }
+                        },
+                        {
                             "data": "actionId", render: function (data, type, row) {
-                                return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <li><a href="Account/Edit/' + row.id + '">Şifre Güncelle</a></li> <li><a data-toggle="modal" data-target="#modal-admin" class="setAdmin" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Admin Yap</a></li> <li><a data-toggle="modal" data-target="#modal-passive" class="setPassive" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a></li> </ul></div>'
+                                if (row.isAdmin) {
+                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <li><a href="Account/Edit/' + row.id + '">Şifre Güncelle</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Adminliği Al</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a></li> </ul></div>'
+                                }
+                                else {
+                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <li><a href="Account/Edit/' + row.id + '">Şifre Güncelle</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Admin Yap</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a></li> </ul></div>'
+                                }
                             }
                         }
                     ],
