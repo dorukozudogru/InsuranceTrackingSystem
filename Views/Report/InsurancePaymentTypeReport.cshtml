@@ -2,69 +2,78 @@
 
 @{
     ViewData["Title"] = "Ödeme Şekli Raporu";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="content-wrapper">
-    <section class="content">
-        <div class="box-header">
-            <h2 class="box-title">
-                <i class="fa fa-credit-card-alt"></i>&nbsp;Ödeme Şekli Raporu
-            </h2>
-        </div>
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="box">
-                <form asp-action="InsurancePaymentTypeReportResult">
-                    <div class="box-body">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="StartDate" class="control-label"></label>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input asp-for="StartDate" type="text" class="form-control pull-right" id="datepicker" autocomplete="off"/>
-                                </div>
-                                <span asp-validation-for="StartDate" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="FinishDate" class="control-label"></label>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input asp-for="FinishDate" type="text" class="form-control pull-right" id="datepicker2" autocomplete="off"/>
-                                </div>
-                                <span asp-validation-for="FinishDate" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="InsurancePaymentType" class="control-label"></label>
-                                <select asp-for="InsurancePaymentType" class="form-control select2" multiple="multiple" required asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()" style="width: 100%;"></select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">İptal Edilen Poliçeler Dahil Edilsin</label>
-                                <div class="input-group">
-                                    <div></div>
-                                    <span class="input-group-addon"><input asp-for="IsCancelledIncluded" type="checkbox" /></span><input disabled value="İptal Poliçeleri Dahil Etmek İçin Seçiniz" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-credit-card"></i>&nbsp;Ödeme Şekli Raporu
+                        </h5>
                     </div>
-                    <div class="box-body">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-xs-12">
+                    <form asp-action="InsurancePaymentTypeReportResult">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="StartDate" class="control-label"></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="StartDate" type="text" class="form-control pull-right" id="datepicker" autocomplete="off" />
+                                        </div>
+                                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="FinishDate" class="control-label"></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input asp-for="FinishDate" type="text" class="form-control pull-right" id="datepicker2" autocomplete="off" />
+                                        </div>
+                                        <span asp-validation-for="FinishDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="InsurancePaymentType" class="control-label"></label>
+                                        <select asp-for="InsurancePaymentType" class="form-control select2" multiple="multiple" required asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">İptal Edilen Poliçeler Dahil Edilsin</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <input asp-for="IsCancelledIncluded" type="checkbox" />
+                                                </span>
+                                            </div>
+                                            <input disabled value="İptal Poliçeleri Dahil Etmek İçin Seçiniz" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <input type="submit" value="Getir" class="btn btn-success btn-block" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

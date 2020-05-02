@@ -28,7 +28,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(InsuranceCompanies insuranceCompany)
         {
             if (ModelState.IsValid)
@@ -37,7 +36,7 @@ namespace SigortaTakipSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(insuranceCompany);
+            throw new TaskCanceledException("Poliçe şirketi oluşturulurken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -56,39 +55,19 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, InsuranceCompanies insuranceCompany)
+        public async Task<IActionResult> Edit(int id, string insuranceCompanyName)
         {
-            if (id != insuranceCompany.Id)
+            var insuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
+
+            if (insuranceCompany != null)
             {
-                return View("Error");
-            }
+                insuranceCompany.Name = insuranceCompanyName;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var oldInsuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
-
-                    oldInsuranceCompany.Name = insuranceCompany.Name;
-
-                    _context.Update(oldInsuranceCompany);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InsuranceCompanyExists(insuranceCompany.Id))
-                    {
-                        return View("Error");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(insuranceCompany);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(insuranceCompany);
+            throw new TaskCanceledException("Poliçe şirketi güncellenirken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)

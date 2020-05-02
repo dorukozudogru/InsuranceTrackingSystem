@@ -2,59 +2,63 @@
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="content-wrapper">
-    <section class="content">
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-aqua-gradient">
+            <div class="col-lg-6 col-6">
+                <div class="small-box bg-info">
                     <div class="inner">
                         <h3>@ViewBag.InsuranceCount</h3>
+
                         <p>Toplam Poliçe</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-folder-open"></i>
+                        <i class="fas fa-folder-open"></i>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-xs-6">
-                        <div class="small-box bg-green-gradient">
+                        <div class="small-box bg-success">
                             <div class="inner">
                                 <h3>@ViewBag.ActiveInsuranceCount</h3>
+
                                 <p>Aktif Toplam Poliçe</p>
                             </div>
                             <div class="icon">
-                                <i class="fa fa-check"></i>
+                                <i class="fas fa-check"></i>
                             </div>
                             <a asp-controller="Insurance" asp-action="Index" class="small-box-footer">
-                                Git <i class="fa fa-arrow-circle-right"></i>
+                                Git <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-xs-6">
-                        <div class="small-box bg-red-gradient">
+                        <div class="small-box bg-danger">
                             <div class="inner">
                                 <h3>@ViewBag.PassiveInsuranceCount</h3>
+
                                 <p>Pasif Toplam Poliçe</p>
                             </div>
                             <div class="icon">
-                                <i class="fa fa-close"></i>
+                                <i class="fas fa-times"></i>
                             </div>
                             <a asp-controller="Insurance" asp-action="PassiveInsurances" class="small-box-footer">
-                                Git <i class="fa fa-arrow-circle-right"></i>
+                                Git <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-6 col-xs-6">
-                <div class="small-box bg-aqua-gradient">
+                <div class="small-box bg-info">
                     <div class="inner">
                         <h3>@ViewBag.CustomerCount</h3>
 
                         <p>Toplam Müşteri</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-users"></i>
+                        <i class="fas fa-users"></i>
                     </div>
                     <a asp-controller="Customer" asp-action="Index" class="small-box-footer">
                         Git <i class="fa fa-arrow-circle-right"></i>
@@ -62,5 +66,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

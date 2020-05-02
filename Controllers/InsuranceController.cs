@@ -408,6 +408,36 @@ namespace SigortaTakipSistemi.Controllers
             insurance.InsurancePolicyName = GetInsurancePoliciesById(insurance.InsurancePolicyId).Name;
             insurance.InsuranceCompanyName = GetInsuranceCompaniesById(insurance.InsuranceCompanyId).Name;
 
+            #region InsuranceType
+            if (insurance.InsuranceType == 0)
+            {
+                insurance.InsuranceTypeName = "SIFIR";
+            }
+            else if (insurance.InsuranceType == 1)
+            {
+                insurance.InsuranceTypeName = "YENİLEME";
+            }
+            else if (insurance.InsuranceType == 2)
+            {
+                insurance.InsuranceTypeName = "2. EL";
+            }
+            #endregion
+
+            #region InsurancePaymentType
+            if (insurance.InsurancePaymentType == 0)
+            {
+                insurance.InsurancePaymentTypeName = "NAKİT";
+            }
+            else if (insurance.InsurancePaymentType == 1)
+            {
+                insurance.InsurancePaymentTypeName = "KREDİ KARTI";
+            }
+            else if (insurance.InsurancePaymentType == 2)
+            {
+                insurance.InsurancePaymentTypeName = "BEDELSİZ";
+            }
+            #endregion
+
             if (insurance == null)
             {
                 return View("Error");

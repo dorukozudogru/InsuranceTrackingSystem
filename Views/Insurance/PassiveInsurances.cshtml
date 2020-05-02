@@ -2,89 +2,88 @@
 
 @{
     ViewData["Title"] = "Pasif Poliçeler";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<head>
-    <link href="~/css/datatables.min.css" rel="stylesheet" />
-</head>
-
-<div class="content-wrapper">
-    <section class="content">
-        <div class="box-header">
-            <h3 class="box-title">
-                <i class="fa fa-folder"></i>&nbsp; Pasif ve İptal Poliçeler
-            </h3>
-            <a class="btn btn-info pull-right" asp-controller="Insurance" asp-action="ExportAllPassiveInsurances"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
-        </div>
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
-                <div class="box table-responsive">
-                    <div class="box-body">
-                        <table id="ItemsTable" class="table table-striped table-bordered" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Id)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Customer.FullName)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CarModel.Name)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.LicencePlate)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsurancePolicyName)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsuranceCompanyName)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsuranceStartDate)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsuranceFinishDate)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CancelledAt)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsuranceAmount)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsuranceBonus)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsuranceType)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsurancePaymentType)
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                        </table>
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-folder"></i>&nbsp;Pasif ve İptal Poliçeler
+                            <a class="btn btn-info btn-sm float-right" asp-controller="Insurance" asp-action="ExportAllPassiveInsurances"><i class="fa fa-download"></i>&nbsp;&nbsp;Dışa Aktar</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-striped table-bordered" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Customer.FullName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.CarModel.Name)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.LicencePlate)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsurancePolicyName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsurancePolicyNumber)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsuranceCompanyName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsuranceStartDate)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsuranceFinishDate)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.CancelledAt)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsuranceAmount)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.CancelledInsuranceAmount)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsuranceBonus)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.CancelledInsuranceBonus)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsuranceType)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsurancePaymentType)
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>
 
 @section Scripts{
     <script src="~/js/datatables.min.js"></script>
@@ -171,7 +170,7 @@
                     { "data": "insurancePaymentTypeName" },
                     {
                         "data": "actionId", render: function (data, type, row) {
-                            return '<div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"><li><a href="Details/' + row.id + '" class="btn-link">Detaylar</a></li><li><a href="Revoke/' + row.id + '" class="btn-link">Aktif Yap</a></li><li><a href="Delete/' + row.id + '" class="btn-link">Sil</a></li></ul></div>'
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Details/' + row.id + '" class="btn-link">Detaylar</a> <a class="dropdown-item" href="Revoke/' + row.id + '" class="btn-link">Aktif Yap</a> <a class="dropdown-item" href="Delete/' + row.id + '" class="btn-link">Sil</a> </div>'
                         }
                     }
                 ],

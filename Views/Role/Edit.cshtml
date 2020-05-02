@@ -2,38 +2,64 @@
 
 @{
     ViewData["Title"] = "Sistem Rolü Güncelle";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="content-wrapper">
-    <section class="content">
-        <div class="box-header">
-            <h2 class="box-title">
-                <i class="fa fa-edit"></i>&nbsp;Sistem Rolü Güncelle
-            </h2>
-        </div>
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="box">
-                <div class="box-body">
-                    <div class="col-md-4">
-                        <form asp-action="Edit">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <input type="hidden" asp-for="Id" />
-                            <div class="form-group">
-                                Rol Adı
-                                <input asp-for="Name" class="form-control" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Sistem Rolü Güncelle
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="Id" />
+                                <div class="form-group">
+                                    <label class="control-label">Rol Adı</label>
+                                    <input asp-for="Name" class="form-control" id="roleName" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <input type="submit" value="Kaydet" class="btn btn-success" />
-                                <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
-                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
-                                </a>
-                            </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateRole()"/>
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>
+
+<script>
+    var roleName;
+    var id;
+
+    function updateRole() {
+        roleName = document.getElementById("roleName").value;
+        id = document.getElementById("Id").value;
+        $.ajax({
+            url: '/Role/Edit?roleName=' + roleName + "&id=" + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

@@ -96,13 +96,13 @@ namespace SigortaTakipSistemi.Controllers
                 if (user.IsActive != false)
                 {
                     result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-                    if (result.Succeeded)
+                    if (!result.Succeeded)
                     {
-                        return Redirect("~/Home");
+                        ViewBag.LoginError = "E-Posta veya Şifre hatalı girildi. Lütfen tekrar deneyiniz.";
                     }
                     else
                     {
-                        ViewBag.LoginError = "E-Posta veya Şifre hatalı girildi. Lütfen tekrar deneyiniz.";
+                        return Redirect("~/Home");
                     }
                 }
                 else
@@ -179,16 +179,16 @@ namespace SigortaTakipSistemi.Controllers
 
             IdentityResult result = _userManager.ResetPasswordAsync(user, model.Token, model.Password).Result;
 
-            if (result.Succeeded)
-            {
-                ViewBag.Message = "Şifreniz başarıyla yenilenmiştir!";
-                return View();
-            }
-            else
+            if (!result.Succeeded)
             {
                 throw new TaskCanceledException("Şifrenizi sıfırlarken bir hata oluştu!"
                     + " Code: " + result.Errors.FirstOrDefault().Code
                     + " Description: " + result.Errors.FirstOrDefault().Description);
+            }
+            else
+            {
+                ViewBag.Message = "Şifreniz başarıyla yenilenmiştir!";
+                return View();
             }
         }
 
@@ -229,25 +229,26 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(RegisterViewModel model)
+        public async Task<IActionResult> Create(string email, string password)
         {
             var user = new AppIdentityUser
             {
-                UserName = model.Email,
-                Email = model.Email,
+                UserName = email,
+                Email = email,
                 IsActive = true
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
                 foreach (var validateItem in result.Errors)
                     ModelState.AddModelError("", validateItem.Description);
 
-                return View(model);
+                throw new TaskCanceledException("Kullanıcıyı oluştururken bir hata oluştu!"
+                    + " Code: " + result.Errors.FirstOrDefault().Code
+                    + " Description: " + result.Errors.FirstOrDefault().Description);
             }
-
-            return RedirectToAction(nameof(Index));
+            return View();
         }
 
         [Authorize(Roles = "Admin")]
@@ -274,24 +275,29 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(RegisterViewModel model)
+        public async Task<IActionResult> Edit(string email, string password)
         {
+            RegisterViewModel model = new RegisterViewModel()
+            {
+                Email = email,
+                Password = password
+            };
+
             AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
 
             var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
 
             IdentityResult result = _userManager.ResetPasswordAsync(user, token, model.Password).Result;
 
-            if (result.Succeeded)
-            {
-                ViewBag.Message = "Şifre başarıyla güncellenmiştir!";
-                return View();
-            }
-            else
+            if (!result.Succeeded)
             {
                 throw new TaskCanceledException("Şifreyi güncellerken bir hata oluştu!"
                     + " Code: " + result.Errors.FirstOrDefault().Code
                     + " Description: " + result.Errors.FirstOrDefault().Description);
+            }
+            else
+            {
+                return View();
             }
         }
 

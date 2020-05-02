@@ -2,48 +2,51 @@
 
 @{
     ViewData["Title"] = "Ödeme Şekli Raporu";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="content-wrapper">
-    <section class="content">
-        <div class="box-header">
-            <h2 class="box-title">
-                <i class="fa fa-credit-card-alt"></i>&nbsp;Ödeme Şekli Raporu
-            </h2>
-        </div>
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
-                <div class="box table-responsive">
-                    <div class="box-body">
-                        <table id="allTables" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.InsurancePaymentType)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Count)
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.InsurancePaymentTypeName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Count)
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fas fa-credit-card"></i>&nbsp;Ödeme Şekli Raporu
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="allTables" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.InsurancePaymentType)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Count)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.InsurancePaymentTypeName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Count)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>
