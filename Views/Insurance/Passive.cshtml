@@ -73,13 +73,11 @@
                     <hr />
                     <div class="row no-print">
                         <div class="col-12">
-                            <form asp-action="Passive">
-                                <input type="hidden" asp-for="Id" />
-                                <input type="submit" value="Evet" class="btn btn-warning float-right" />
-                                <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
-                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
-                                </a>
-                            </form>
+                            <input type="hidden" asp-for="Id" id="insuranceId" />
+                            <input type="submit" value="Evet" class="btn btn-warning float-right" onclick="passiveInsurance()" />
+                            <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -87,3 +85,24 @@
         </div>
     </div>
 </section>
+
+<script>
+    var insuranceId;
+
+    function passiveInsurance() {
+        insuranceId = document.getElementById("insuranceId").value;
+        $.ajax({
+            url: '/Insurance/Passive?id=' + insuranceId,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

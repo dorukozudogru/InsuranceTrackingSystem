@@ -26,13 +26,11 @@
                     <hr />
                     <div class="row no-print">
                         <div class="col-12">
-                            <form asp-action="Delete">
-                                <input type="hidden" asp-for="Id" />
-                                <input type="submit" value="Evet" class="btn btn-danger float-right" />
-                                <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
-                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
-                                </a>
-                            </form>
+                            <input type="hidden" asp-for="Id" id="modelId" />
+                            <input type="submit" value="Evet" class="btn btn-danger float-right" onclick="deleteModel()" />
+                            <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -40,3 +38,24 @@
         </div>
     </div>
 </section>
+
+<script>
+    var modelId;
+
+    function deleteModel() {
+        modelId = document.getElementById("modelId").value;
+        $.ajax({
+            url: '/CarModel/Delete?id=' + modelId,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

@@ -14,121 +14,144 @@
                             <i class="fas fa-pencil-alt"></i>&nbsp;Poliçeyi Güncelle
                         </h5>
                     </div>
-                    <form role="form" asp-action="Edit">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <input type="hidden" asp-for="Id" />
-                                    <input type="hidden" asp-for="CreatedAt" />
-                                    <input type="hidden" asp-for="CreatedBy" />
-                                    <input type="hidden" asp-for="IsActive" />
-                                    <input type="hidden" asp-for="InsuranceLastMailDate" />
-                                    <input type="hidden" asp-for="DeletedAt" />
-                                    <input type="hidden" asp-for="DeletedBy" />
-                                    <input type="hidden" asp-for="CancelledAt" />
-                                    <input type="hidden" asp-for="CancelledInsuranceAmount" />
-                                    <input type="hidden" asp-for="CancelledInsuranceBonus" />
-                                    <input type="hidden" asp-for="UpdatedAt" value="@DateTime.Now" />
-                                    <div class="form-group">
-                                        <label asp-for="Customer.FullName" class="control-label"></label>
-                                        <select asp-for="CustomerId" class="form-control select2" style="width: 100%;" asp-items="@ViewBag.Customers"></select>
-                                        <span asp-validation-for="CustomerId" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="CarModel.CarBrandName" class="control-label"></label>
-                                        <select id="Brand" asp-for="CarModel.CarBrandId" class="form-control" asp-items="@ViewBag.CarBrands"></select>
-                                        <span asp-validation-for="CarModel.CarBrandId" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="CarModel.Name" class="control-label"></label>
-                                        <select id="Model" asp-for="CarModel.Name" class="form-control" asp-items="@ViewBag.CarModels"></select>
-                                        <span asp-validation-for="CarModel.Name" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="LicencePlate" class="control-label"></label>
-                                        <input asp-for="LicencePlate" class="form-control" autocomplete="off" />
-                                        <span asp-validation-for="LicencePlate" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsurancePolicyName" class="control-label"></label>
-                                        <select asp-for="InsurancePolicyId" class="form-control" style="width: 100%;" asp-items="@ViewBag.InsurancePolicies"></select>
-                                        <span asp-validation-for="InsurancePolicyId" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsurancePolicyNumber" class="control-label"></label>
-                                        <input asp-for="InsurancePolicyNumber" class="form-control" autocomplete="off" />
-                                        <span asp-validation-for="InsurancePolicyNumber" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsuranceCompanyName" class="control-label"></label>
-                                        <select asp-for="InsuranceCompanyId" class="form-control" asp-items="@ViewBag.InsuranceCompanies"></select>
-                                        <span asp-validation-for="InsuranceCompanyId" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsuranceStartDate" class="control-label"></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="far fa-calendar-alt"></i>
-                                                </span>
-                                            </div>
-                                            <input asp-for="InsuranceStartDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="form-group">
+                                    <label asp-for="Customer.FullName" class="control-label"></label>
+                                    <select asp-for="CustomerId" class="form-control select2" style="width: 100%;" asp-items="@ViewBag.Customers" id="customerId"></select>
+                                    <span asp-validation-for="CustomerId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CarModel.CarBrandName" class="control-label"></label>
+                                    <select id="Brand" asp-for="CarModel.CarBrandId" class="form-control" asp-items="@ViewBag.CarBrands"></select>
+                                    <span asp-validation-for="CarModel.CarBrandId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="CarModel.Name" class="control-label"></label>
+                                    <select id="Model" asp-for="CarModel.Name" class="form-control" asp-items="@ViewBag.CarModels"></select>
+                                    <span asp-validation-for="CarModel.Name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LicencePlate" class="control-label"></label>
+                                    <input asp-for="LicencePlate" class="form-control" autocomplete="off" id="licencePlate" />
+                                    <span asp-validation-for="LicencePlate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsurancePolicyName" class="control-label"></label>
+                                    <select asp-for="InsurancePolicyId" class="form-control" style="width: 100%;" asp-items="@ViewBag.InsurancePolicies" id="insurancePolicyId"></select>
+                                    <span asp-validation-for="InsurancePolicyId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsurancePolicyNumber" class="control-label"></label>
+                                    <input asp-for="InsurancePolicyNumber" class="form-control" autocomplete="off" id="insurancePolicyNumber" />
+                                    <span asp-validation-for="InsurancePolicyNumber" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsuranceCompanyName" class="control-label"></label>
+                                    <select asp-for="InsuranceCompanyId" class="form-control" asp-items="@ViewBag.InsuranceCompanies" id="insuranceCompanyId"></select>
+                                    <span asp-validation-for="InsuranceCompanyId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsuranceStartDate" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen tarih formatını YYYY/MM/DD (Örn. 2020/11/25) şeklinde ayarlayınız.)</strong></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
                                         </div>
-                                        <span asp-validation-for="InsuranceStartDate" class="text-danger"></span>
+                                        <input asp-for="InsuranceStartDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker" />
                                     </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsuranceFinishDate" class="control-label"></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="far fa-calendar-alt"></i>
-                                                </span>
-                                            </div>
-                                            <input asp-for="InsuranceFinishDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
+                                    <span asp-validation-for="InsuranceStartDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsuranceFinishDate" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen tarih formatını YYYY/MM/DD (Örn. 2020/11/25) şeklinde ayarlayınız.)</strong></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
                                         </div>
-                                        <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
+                                        <input asp-for="InsuranceFinishDate" type="text" class="form-control pull-right" autocomplete="off" id="datepicker2" />
                                     </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-try"></i></span>
-                                            <input asp-for="InsuranceAmount" class="form-control" autocomplete="off" />
-                                        </div>
-                                        <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
+                                    <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-try"></i></span>
+                                        <input asp-for="InsuranceAmount" class="form-control" autocomplete="off" id="insuranceAmount" />
                                     </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-try"></i></span>
-                                            <input asp-for="InsuranceBonus" class="form-control" autocomplete="off" />
-                                        </div>
-                                        <span asp-validation-for="InsuranceBonus" class="text-danger"></span>
+                                    <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-try"></i></span>
+                                        <input asp-for="InsuranceBonus" class="form-control" autocomplete="off" id="insuranceBonus" />
                                     </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsuranceType" class="control-label"></label>
-                                        <select asp-for="InsuranceType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsuranceTypeEnum>()"></select>
-                                        <span asp-validation-for="InsuranceType" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="InsurancePaymentType" class="control-label"></label>
-                                        <select asp-for="InsurancePaymentType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()"></select>
-                                        <span asp-validation-for="InsurancePaymentType" class="text-danger"></span>
-                                    </div>
+                                    <span asp-validation-for="InsuranceBonus" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsuranceType" class="control-label"></label>
+                                    <select asp-for="InsuranceType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsuranceTypeEnum>()" id="insuranceType"></select>
+                                    <span asp-validation-for="InsuranceType" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="InsurancePaymentType" class="control-label"></label>
+                                    <select asp-for="InsurancePaymentType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()" id="insurancePaymentType"></select>
+                                    <span asp-validation-for="InsurancePaymentType" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <div class="form-group">
-                                <input type="submit" value="Kaydet" class="btn btn-success" />
-                                <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
-                                    <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
-                                </a>
-                            </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateInsurance()" />
+                            <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    function updateInsurance() {
+        var Id = document.getElementById("id").value;
+        var CustomerId = document.getElementById("customerId").value;
+        var Model = document.getElementById("Model").value;
+        var LicencePlate = document.getElementById("licencePlate").value;
+        var InsurancePolicyId = document.getElementById("insurancePolicyId").value;
+        var InsurancePolicyNumber = document.getElementById("insurancePolicyNumber").value;
+        var InsuranceCompanyId = document.getElementById("insuranceCompanyId").value;
+        var InsuranceStartDate = document.getElementById("datepicker").value;
+        var InsuranceFinishDate = document.getElementById("datepicker2").value;
+        var InsuranceAmount = document.getElementById("insuranceAmount").value;
+        var InsuranceBonus = document.getElementById("insuranceBonus").value;
+        var InsuranceType = document.getElementById("insuranceType").value;
+        var InsurancePaymentType = document.getElementById("insurancePaymentType").value;
+
+        $.ajax({
+            url: '/Insurance/Edit?insurance.CustomerId=' + CustomerId + '&insurance.CarModel.Name=' + Model + '&insurance.LicencePlate=' + LicencePlate +
+                '&insurance.InsurancePolicyId=' + InsurancePolicyId + '&insurance.InsurancePolicyNumber=' + InsurancePolicyNumber + '&insurance.InsuranceCompanyId=' + InsuranceCompanyId +
+                '&insurance.InsuranceStartDate=' + InsuranceStartDate + '&insurance.InsuranceFinishDate=' + InsuranceFinishDate + '&insurance.InsuranceAmount=' + InsuranceAmount +
+                '&insurance.InsuranceBonus=' + InsuranceBonus + '&insurance.InsuranceType=' + InsuranceType + '&insurance.InsurancePaymentType=' + InsurancePaymentType + '&id=' + Id,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

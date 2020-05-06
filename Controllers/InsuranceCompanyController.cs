@@ -88,7 +88,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hasAnyInsurance = await _context.Insurances

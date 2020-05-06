@@ -189,67 +189,39 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Insurances insurance)
         {
-            if (id != insurance.Id)
-            {
-                return View("Error");
-            }
+            var oldInsurance = await _context.Insurances
+                   .Include(cu => cu.Customer)
+                   .Include(c => c.CarModel)
+                   .Include(cb => cb.CarModel.CarBrand)
+                   .Include(pn => pn.InsurancePolicy)
+                   .Include(pc => pc.InsuranceCompany)
+                   .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (ModelState.IsValid)
+            if (oldInsurance != null)
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    var oldInsurance = await _context.Insurances
-                       .Include(cu => cu.Customer)
-                       .Include(c => c.CarModel)
-                       .Include(cb => cb.CarModel.CarBrand)
-                       .Include(pn => pn.InsurancePolicy)
-                       .Include(pc => pc.InsuranceCompany)
-                       .FirstOrDefaultAsync(m => m.Id == id);
-
-                    oldInsurance.CancelledAt = insurance.CancelledAt;
-                    oldInsurance.CancelledInsuranceAmount = insurance.CancelledInsuranceAmount;
-                    oldInsurance.CancelledInsuranceBonus = insurance.CancelledInsuranceBonus;
                     oldInsurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
-                    oldInsurance.CreatedAt = insurance.CreatedAt;
-                    oldInsurance.CreatedBy = insurance.CreatedBy;
                     oldInsurance.CustomerId = insurance.CustomerId;
-                    oldInsurance.DeletedAt = insurance.DeletedAt;
-                    oldInsurance.DeletedBy = insurance.DeletedBy;
                     oldInsurance.InsuranceAmount = insurance.InsuranceAmount;
                     oldInsurance.InsuranceBonus = insurance.InsuranceBonus;
                     oldInsurance.InsuranceCompanyId = insurance.InsuranceCompanyId;
                     oldInsurance.InsuranceFinishDate = insurance.InsuranceFinishDate;
-                    oldInsurance.InsuranceLastMailDate = insurance.InsuranceLastMailDate;
                     oldInsurance.InsurancePaymentType = insurance.InsurancePaymentType;
                     oldInsurance.InsurancePolicyId = insurance.InsurancePolicyId;
                     oldInsurance.InsurancePolicyNumber = insurance.InsurancePolicyNumber;
                     oldInsurance.InsuranceStartDate = insurance.InsuranceStartDate;
                     oldInsurance.InsuranceType = insurance.InsuranceType;
-                    oldInsurance.IsActive = insurance.IsActive;
                     oldInsurance.LicencePlate = insurance.LicencePlate;
-                    oldInsurance.UpdatedAt = insurance.UpdatedAt;
-                    oldInsurance.UpdatedBy = GetLoggedUserId();
 
                     _context.Update(oldInsurance);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InsuranceExists(insurance.Id))
-                    {
-                        return View("Error");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            return View(insurance);
+            throw new TaskCanceledException("Müşteri güncellenirken bir hata oluştu!");
         }
 
         [Authorize]
@@ -308,18 +280,21 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize]
         [HttpPost, ActionName("Passive")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> PassiveConfirmed(int id)
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
-            insurance.IsActive = false;
-            insurance.DeletedAt = DateTime.Now;
-            insurance.DeletedBy = GetLoggedUserId();
+            if (insurance != null)
+            {
+                insurance.IsActive = false;
+                insurance.DeletedAt = DateTime.Now;
+                insurance.DeletedBy = GetLoggedUserId();
 
-            _context.Update(insurance);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Update(insurance);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            throw new TaskCanceledException("Poliçe pasif edilirken bir hata oluştu!");
         }
 
         [Authorize]
@@ -378,15 +353,18 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize]
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
-            _context.Insurances.Remove(insurance);
+            if (insurance != null)
+            {
+                _context.Insurances.Remove(insurance);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            throw new TaskCanceledException("Poliçe silinirken bir hata oluştu!");
         }
 
         [Authorize]
@@ -448,21 +426,24 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize]
         [HttpPost, ActionName("Revoke")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RevokeConfirmed(int id)
         {
             var insurance = await _context.Insurances.FindAsync(id);
 
-            insurance.IsActive = true;
-            insurance.UpdatedAt = DateTime.Now;
-            insurance.UpdatedBy = GetLoggedUserId();
+            if (insurance != null)
+            {
+                insurance.IsActive = true;
+                insurance.UpdatedAt = DateTime.Now;
+                insurance.UpdatedBy = GetLoggedUserId();
 
-            insurance.DeletedAt = null;
-            insurance.DeletedBy = null;
+                insurance.DeletedAt = null;
+                insurance.DeletedBy = null;
 
-            _context.Update(insurance);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Update(insurance);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            throw new TaskCanceledException("Poliçe aktif edilirken bir hata oluştu!");
         }
 
         [Authorize]
@@ -521,64 +502,28 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(int id, double cancelledInsuranceAmount, double cancelledInsuranceBonus)
         {
             var insurance = await _context.Insurances.FindAsync(id);
-            if (ModelState.IsValid)
-            {
-                insurance.IsActive = false;
-                insurance.CancelledAt = DateTime.Now;
-                insurance.CancelledInsuranceAmount = cancelledInsuranceAmount;
-                insurance.CancelledInsuranceBonus = cancelledInsuranceBonus;
 
-                insurance.DeletedAt = DateTime.Now;
-                insurance.DeletedBy = GetLoggedUserId();
+            if (insurance != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    insurance.IsActive = false;
+                    insurance.CancelledAt = DateTime.Now;
+                    insurance.CancelledInsuranceAmount = cancelledInsuranceAmount;
+                    insurance.CancelledInsuranceBonus = cancelledInsuranceBonus;
 
-                _context.Update(insurance);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+                    insurance.DeletedAt = DateTime.Now;
+                    insurance.DeletedBy = GetLoggedUserId();
 
-            insurance = await _context.Insurances
-                .Include(cu => cu.Customer)
-                .Include(c => c.CarModel)
-                .Include(cb => cb.CarModel.CarBrand)
-                .Include(pn => pn.InsurancePolicy)
-                .Include(pc => pc.InsuranceCompany)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            #region InsuranceType
-            if (insurance.InsuranceType == 0)
-            {
-                insurance.InsuranceTypeName = "SIFIR";
+                    _context.Update(insurance);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            else if (insurance.InsuranceType == 1)
-            {
-                insurance.InsuranceTypeName = "YENİLEME";
-            }
-            else if (insurance.InsuranceType == 2)
-            {
-                insurance.InsuranceTypeName = "2. EL";
-            }
-            #endregion
-
-            #region InsurancePaymentType
-            if (insurance.InsurancePaymentType == 0)
-            {
-                insurance.InsurancePaymentTypeName = "NAKİT";
-            }
-            else if (insurance.InsurancePaymentType == 1)
-            {
-                insurance.InsurancePaymentTypeName = "KREDİ KARTI";
-            }
-            else if (insurance.InsurancePaymentType == 2)
-            {
-                insurance.InsurancePaymentTypeName = "BEDELSİZ";
-            }
-            #endregion
-
-            return View(insurance);
+            throw new TaskCanceledException("Poliçe iptal edilirken bir hata oluştu!");
         }
 
         [Authorize]
