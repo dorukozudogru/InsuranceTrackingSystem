@@ -41,16 +41,19 @@
                                                     @Html.DisplayFor(modelItem => item.Id)
                                                 </td>
                                                 <td>
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                            <span class="fa fa-ellipsis-h"></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef">
-                                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Güncelle</a></li>
-                                                            <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Detaylar</a></li>
-                                                            <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
-                                                        </ul>
-                                                    </div>
+                                                    @if (item.Name != "Admin")
+                                                    {
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                                <span class="fa fa-ellipsis-h"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef">
+                                                                <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Güncelle</a></li>
+                                                                <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Detaylar</a></li>
+                                                                <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Sil</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    }
                                                 </td>
                                             </tr>
                                         }

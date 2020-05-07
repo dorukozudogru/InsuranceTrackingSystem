@@ -33,6 +33,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <li class="user-header bg-primary">
+                            <br />
                             <img src="~/Content/Site/dist/img/avatar5.png" class="user-image img-circle elevation-2" alt="User Image">
                             <p>
                                 @this.User?.Claims?.FirstOrDefault()?.Subject?.Name
@@ -183,7 +184,7 @@
                 </nav>
             </div>
         </aside>
-        <div class="content-wrapper">
+        <div class="content-wrapper text-sm">
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -278,6 +279,21 @@
 
         $("#resultRow").hide();
         $("#exportButton").hide();
+    </script>
+    <script type='text/javascript'>
+        var url = window.location;
+        const allLinks = document.querySelectorAll('.nav-item a');
+        const currentLink = [...allLinks].filter(e => {
+            return e.href == url;
+        });
+
+        currentLink[0].classList.add("active");
+        if (currentLink[0].closest(".nav-treeview") != null) {
+            currentLink[0].closest(".nav-treeview").style.display = "block";
+            currentLink[0].closest(".has-treeview").classList.add("active");
+            currentLink[0].parentElement.parentElement.parentElement.children[0].classList.add("active");
+            currentLink[0].parentElement.parentElement.parentElement.classList.add("menu-open");
+        }
     </script>
     @RenderSection("Scripts", required: false)
 </body>
