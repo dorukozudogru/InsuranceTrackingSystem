@@ -12,47 +12,59 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Banaz Sigorta | Giriş Yap</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="~/Content/Site/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/Content/Site/bower_components/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/Content/Site/bower_components/Ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="~/Content/Site/dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/NewSite/dist/css/adminlte.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
             <a href="#"><b>BANAZ SİGORTA</b><br />Giriş Yap</a>
         </div>
-        <div class="login-box-body">
-            <form asp-action="Login" asp-controller="Account">
-                <div class="form-group has-feedback">
+        <div class="card">
+            <div class="card-body login-card-body">
+                <form asp-action="Login" asp-controller="Account">
                     <label asp-for="Email" class="control-label"></label>
-                    <input type="email" asp-for="Email" class="form-control" placeholder="E-Posta" />
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input type="password" asp-for="Password" class="form-control" placeholder="Şifre" />
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Giriş Yap</button>
+                    <div class="input-group mb-3 has-feedback">
+                        <input type="email" asp-for="Email" class="form-control" placeholder="E-Posta" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </form>
-            <br />
-            @if (ViewBag.LoginError != null)
-            {
-                <div class="alert alert-danger">
-                    @ViewBag.LoginError
-                </div>
-            }
-            <label class="control-label"><a asp-action="ForgetPassword" asp-controller="Account">Şifremi Unuttum</a><br></label>
-            <label class="control-label">Hesabınız yoksa <a href="register" class="text-center">buradan</a> kayıt olun</label>
+                    <label asp-for="Password" class="control-label"></label>
+                    <div class="input-group mb-3 has-feedback">
+                        <input type="password" asp-for="Password" class="form-control" placeholder="Şifre" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">Giriş Yap</button>
+                        </div>
+                    </div>
+                </form>
+                <br />
+                @if (ViewBag.LoginError != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.LoginError
+                    </div>
+                }
+                <p class="mb-1"><a asp-action="ForgetPassword" asp-controller="Account">Şifremi Unuttum</a><br></p>
+                <p class="mb-1">Hesabınız yoksa <a href="register" class="text-center">buradan</a> kayıt olun</p>
+            </div>
         </div>
     </div>
-    <script src="~/Content/Site/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="~/Content/Site/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/Content/NewSite/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Content/NewSite/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/NewSite/dist/js/adminlte.min.js"></script>
 </body>
 </html>
