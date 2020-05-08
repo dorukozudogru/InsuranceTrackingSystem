@@ -75,20 +75,6 @@ namespace SigortaTakipSistemi.Controllers
         {
             var result = await _signInManager.PasswordSignInAsync("", "", false, true);
 
-#if DEBUG
-            if (model.Email == null && model.Password == null)
-            {
-                model = new LoginViewModel
-                {
-                    Email = "dorukozudogru@gmail.com",
-                    Password = "QWEqwe.1"
-                };
-
-                result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-                return Redirect("~/Home");
-            }
-#endif
-
             if (ModelState.IsValid)
             {
                 var user = _userManager.FindByEmailAsync(model.Email).Result;

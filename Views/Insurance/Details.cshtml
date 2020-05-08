@@ -67,9 +67,12 @@
                     <hr />
                     <div class="row no-print">
                         <div class="col-12">
-                            <a class="btn btn-success float-right" asp-action="Edit" asp-route-id="@Model.Id">
-                                <i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Güncelle
-                            </a>
+                            @if (Model.IsActive != false)
+                            {
+                                <a class="btn btn-success float-right" asp-action="Edit" asp-route-id="@Model.Id">
+                                    <i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;Güncelle
+                                </a>
+                            }
                             <a class="btn btn-primary float-right text-white" onClick="window.history.back()" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>

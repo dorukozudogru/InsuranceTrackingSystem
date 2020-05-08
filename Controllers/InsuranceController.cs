@@ -146,6 +146,9 @@ namespace SigortaTakipSistemi.Controllers
             {
                 //insurance.InsuranceBonus = InsuranceBonusCalculation(insurance.InsuranceAmount, _context.InsurancePolicies.FirstOrDefault(pn => pn.Id == insurance.InsurancePolicyId).Name);
                 insurance.CreatedBy = GetLoggedUserId();
+                insurance.CreatedAt = DateTime.Now;
+                insurance.IsActive = true;
+                insurance.InsuranceLastMailDate = DateTime.MinValue;
 
                 insurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
                 insurance.CarModel.CarBrandId = _context.CarBrands.FirstOrDefault(x => x.Name == insurance.CarModel.CarBrand.Name).Id;
@@ -215,6 +218,8 @@ namespace SigortaTakipSistemi.Controllers
                     oldInsurance.InsuranceStartDate = insurance.InsuranceStartDate;
                     oldInsurance.InsuranceType = insurance.InsuranceType;
                     oldInsurance.LicencePlate = insurance.LicencePlate;
+                    oldInsurance.UpdatedAt = DateTime.Now;
+                    oldInsurance.UpdatedBy = GetLoggedUserId();
 
                     _context.Update(oldInsurance);
                     await _context.SaveChangesAsync();

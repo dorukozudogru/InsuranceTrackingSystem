@@ -19,12 +19,6 @@
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                 <input type="hidden" asp-for="Id" id="id" />
-                                <input type="hidden" asp-for="CreatedAt" id="createdAt" />
-                                <input type="hidden" asp-for="CreatedBy" id="createdBy" />
-                                <input type="hidden" asp-for="IsActive" value="@true" id="isActive" />
-                                <input type="hidden" asp-for="UpdatedAt" value="@DateTime.Now" id="updatedAt" />
-                                <input type="hidden" asp-for="DeletedAt" id="deletedAt" />
-                                <input type="hidden" asp-for="DeletedBy" id="deletedBy" />
                                 <div class="form-group">
                                     <label asp-for="Name" class="control-label"></label>
                                     <input asp-for="Name" class="form-control" id="name" />
@@ -80,19 +74,11 @@
         var Email = document.getElementById("email").value;
         var Phone = document.getElementById("phone").value;
         var Other = document.getElementById("other").value;
-        var IsActive = document.getElementById("isActive").value;
-        var CreatedAt = document.getElementById("createdAt").value;
-        var CreatedBy = document.getElementById("createdBy").value;
-        var UpdatedAt = document.getElementById("updatedAt").value;
-        var DeletedAt = document.getElementById("deletedAt").value;
-        var DeletedBy = document.getElementById("deletedBy").value;
         var Id = document.getElementById("id").value;
 
         $.ajax({
             url: '/Customer/Edit?customers.Name=' + Name + '&customers.Surname=' + Surname + '&customers.CitizenshipNo=' + CitizenshipNo +
-                '&customers.Email=' + Email + '&customers.Phone=' + Phone + '&customers.Other=' + Other + '&customers.IsActive=' + IsActive +
-                '&customers.CreatedAt=' + CreatedAt + '&customers.CreatedBy=' + CreatedBy + '&customers.UpdatedAt=' + UpdatedAt +
-                '&customers.DeletedAt=' + DeletedAt + '&customers.DeletedBy=' + DeletedBy + '&id=' + Id,
+                '&customers.Email=' + Email + '&customers.Phone=' + Phone + '&customers.Other=' + Other + '&id=' + Id,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").click();
