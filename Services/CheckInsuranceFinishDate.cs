@@ -53,7 +53,7 @@ namespace SigortaTakipSistemi.Services
 
                 foreach (var insurance in dueTimeInsurances)
                 {
-                    //SendEmail(insurance, emailUsers);
+                    SendEmail(insurance, emailUsers);
                     insurance.InsuranceLastMailDate = DateTime.Now;
 
                     _context.Update(insurance);
