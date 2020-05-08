@@ -2,92 +2,141 @@
 
 @{
     ViewData["Title"] = "Poliçeyi İptal Et";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="content-wrapper">
-    <section class="invoice">
-        <div class="callout callout-warning">
-            <h4>Bu poliçeyi iptal etmek istediğinizden emin misiniz?</h4>
-            <p>
-                Bu poliçeyi pasif poliçeler ekranından yeniden aktif duruma getirebilirsiniz.
-            </p>
-        </div>
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
-                <h2 class="page-header">
-                    <i class="fa fa-folder-open"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Customer.FullName) |
-                    @Html.DisplayFor(model => model.LicencePlate) |
-                    <img src="@Html.DisplayFor(model => model.InsuranceCompany.LogoPath)" style="max-height:50px; max-width:75px" />
-                    <br />
-                    <small class="pull-left">Başlangıç / Bitiş Tarihi: @Html.DisplayFor(model => model.InsuranceStartDate) / @Html.DisplayFor(model => model.InsuranceFinishDate)</small>
-                    <br />
-                </h2>
+            <div class="col-12">
+                <div class="callout callout-warning">
+                    <h4>Bu poliçeyi iptal etmek istediğinizden emin misiniz?</h4>
+                    <p>
+                        Bu poliçeyi pasif poliçeler ekranından yeniden aktif duruma getirebilirsiniz.
+                    </p>
+                </div>
+                <div class="invoice p-3 mb-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>
+                                <i class="fa fa-folder-open"></i> @Html.DisplayFor(model => model.Id) | @Html.DisplayFor(model => model.Customer.FullName) |
+                                @Html.DisplayFor(model => model.LicencePlate) |
+                                <img src="@Html.DisplayFor(model => model.InsuranceCompany.LogoPath)" style="max-height:50px; max-width:75px" />
+                                <br />
+                                <small class="pull-left">Başlangıç / Bitiş Tarihi: <strong>@Html.DisplayFor(model => model.InsuranceStartDate) / @Html.DisplayFor(model => model.InsuranceFinishDate)</strong></small>
+                                <br />
+                            </h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.InsurancePolicyNumber): <strong>#@Html.DisplayFor(model => model.InsurancePolicyNumber)</strong><br>
+                                @Html.DisplayNameFor(model => model.InsuranceCompany.Name): <strong>@Html.DisplayFor(model => model.InsuranceCompany.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.InsurancePolicy.Name) : <strong>@Html.DisplayFor(model => model.InsurancePolicy.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.InsuranceAmount) : <strong>@Html.DisplayFor(model => model.InsuranceAmount) ₺</strong><br>
+                                @Html.DisplayNameFor(model => model.InsuranceBonus): <strong>@Html.DisplayFor(model => model.InsuranceBonus) ₺</strong><br>
+                            </address>
+                        </div>
+                        <div class="col-sm-4 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
+                                @Html.DisplayNameFor(model => model.InsuranceTypeName): <strong>@Html.DisplayFor(model => model.InsuranceTypeName)</strong><br>
+                                @Html.DisplayNameFor(model => model.InsurancePaymentTypeName): <strong>@Html.DisplayFor(model => model.InsurancePaymentTypeName)</strong><br>
+                            </address>
+                        </div>
+                        <div class="col-sm-4 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.CreatedAt): <strong>@Html.DisplayFor(model => model.CreatedAt)</strong><br>
+                                @Html.DisplayNameFor(model => model.CreatedBy): <strong>@Html.DisplayFor(model => model.CreatedBy)</strong><br>
+                                @Html.DisplayNameFor(model => model.UpdatedAt): <strong>@Html.DisplayFor(model => model.UpdatedAt)</strong><br>
+                                @Html.DisplayNameFor(model => model.UpdatedBy): <strong>@Html.DisplayFor(model => model.UpdatedBy)</strong><br>
+                            </address>
+                        </div>
+                    </div>
+                    @if (Model.CancelledAt != null)
+                    {
+                        <hr />
+                        <div class="row invoice-info">
+                            <div class="col-sm-12 invoice-col">
+                                <h2 class="page-header"></h2>
+                                <address>
+                                    @Html.DisplayNameFor(model => model.CancelledAt): <strong>@Html.DisplayFor(model => model.CancelledAt)</strong><br>
+                                    @Html.DisplayNameFor(model => model.CancelledInsuranceAmount) : <strong>@Html.DisplayFor(model => model.CancelledInsuranceAmount) ₺</strong><br>
+                                    @Html.DisplayNameFor(model => model.CancelledInsuranceBonus): <strong>@Html.DisplayFor(model => model.CancelledInsuranceBonus) ₺</strong><br>
+                                </address>
+                                <h2 class="page-header"></h2>
+                            </div>
+                        </div>
+                    }
+                    <hr />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row invoice-info">
+                        <div class="col-sm-6 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.CancelledInsuranceAmount):
+                                <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
+                                <div class="form-group input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">₺</span>
+                                    </div>
+                                    <input inputmode="numeric" id="cancelledInsuranceAmount" name="cancelledInsuranceAmount" class="form-control" autocomplete="off" required />
+                                </div>
+                                <span asp-validation-for="CancelledInsuranceAmount" class="text-danger"></span>
+                            </address>
+                        </div>
+                        <div class="col-sm-6 invoice-col">
+                            <address>
+                                @Html.DisplayNameFor(model => model.CancelledInsuranceBonus):
+                                <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
+                                <div class="form-group input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">₺</span>
+                                    </div>
+                                    <input inputmode="numeric" id="cancelledInsuranceBonus" name="cancelledInsuranceBonus" class="form-control" autocomplete="off" required />
+                                </div>
+                                <span asp-validation-for="CancelledInsuranceBonus" class="text-danger"></span>
+                            </address>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <input type="hidden" asp-for="Id" id="insuranceId" />
+                            <input type="submit" value="Evet" class="btn btn-warning float-right" onclick="cancelInsurance()" />
+                            <a class="btn btn-primary float-right" asp-action="Index" style="margin-right: 5px;">
+                                <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row invoice-info">
-            <div class="col-sm-4 invoice-col">
-                <address>
-                    @Html.DisplayNameFor(model => model.InsurancePolicyNumber): <strong>#@Html.DisplayFor(model => model.InsurancePolicyNumber)</strong><br>
-                    @Html.DisplayNameFor(model => model.InsuranceCompany.Name): <strong>@Html.DisplayFor(model => model.InsuranceCompany.Name)</strong><br>
-                    @Html.DisplayNameFor(model => model.InsurancePolicy.Name) : <strong>@Html.DisplayFor(model => model.InsurancePolicy.Name)</strong><br>
-                    @Html.DisplayNameFor(model => model.InsuranceAmount) : <strong>@Html.DisplayFor(model => model.InsuranceAmount) ₺</strong><br>
-                    @Html.DisplayNameFor(model => model.InsuranceBonus): <strong>@Html.DisplayFor(model => model.InsuranceBonus) ₺</strong><br>
-                </address>
-            </div>
-            <div class="col-sm-4 invoice-col">
-                <address>
-                    @Html.DisplayNameFor(model => model.CarModel.CarBrand.Name): <strong>@Html.DisplayFor(model => model.CarModel.CarBrand.Name)</strong><br>
-                    @Html.DisplayNameFor(model => model.CarModel.Name): <strong>@Html.DisplayFor(model => model.CarModel.Name)</strong><br>
-                    @Html.DisplayNameFor(model => model.InsuranceTypeName): <strong>@Html.DisplayFor(model => model.InsuranceTypeName)</strong><br>
-                    @Html.DisplayNameFor(model => model.InsurancePaymentTypeName): <strong>@Html.DisplayFor(model => model.InsurancePaymentTypeName)</strong><br>
-                </address>
-            </div>
-            <div class="col-sm-4 invoice-col">
-                <address>
-                    @Html.DisplayNameFor(model => model.CreatedAt): <strong>@Html.DisplayFor(model => model.CreatedAt)</strong><br>
-                    @Html.DisplayNameFor(model => model.CreatedBy): <strong>@Html.DisplayFor(model => model.CreatedBy)</strong><br>
-                    @Html.DisplayNameFor(model => model.UpdatedAt): <strong>@Html.DisplayFor(model => model.UpdatedAt)</strong><br>
-                    @Html.DisplayNameFor(model => model.UpdatedBy): <strong>@Html.DisplayFor(model => model.UpdatedBy)</strong><br>
-                </address>
-            </div>
-        </div>
-        <form name="cancelForm" asp-action="Cancel">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row invoice-info">
-                <div class="col-sm-6 invoice-col">
-                    <address>
-                        @Html.DisplayNameFor(model => model.CancelledInsuranceAmount):
-                        <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
-                        <div class="form-group input-group">
-                            <span class="input-group-addon">₺</span>
-                            <input inputmode="numeric" id="cancelledInsuranceAmount" name="cancelledInsuranceAmount" class="form-control" autocomplete="off" required />
-                        </div>
-                        <span asp-validation-for="CancelledInsuranceAmount" class="text-danger"></span>
-                    </address>
-                </div>
-                <div class="col-sm-6 invoice-col">
-                    <address>
-                        @Html.DisplayNameFor(model => model.CancelledInsuranceBonus):
-                        <br /><label class="text-danger small"><strong>Lütfen kuruş için virgül (,) kullanınız.</strong></label>
-                        <div class="form-group input-group">
-                            <span class="input-group-addon">₺</span>
-                            <input inputmode="numeric" id="cancelledInsuranceBonus" name="cancelledInsuranceBonus" class="form-control" autocomplete="off" required />
-                        </div>
-                        <span asp-validation-for="CancelledInsuranceBonus" class="text-danger"></span>
-                    </address>
-                </div>
-            </div>
-            <div class="row no-print">
-                <div class="col-xs-12">
-                    <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="CancelledAt" value="@DateTime.Now" />
-                    <input type="submit" value="Evet" class="btn btn-warning pull-right" />
-                    <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
-                        <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
-                    </a>
-                </div>
-            </div>
-        </form>
-    </section>
-</div>
+    </div>
+</section>
+
+<script>
+    var insuranceId;
+    var cancelledInsuranceAmount;
+    var cancelledInsuranceBonus;
+
+    function cancelInsurance() {
+        insuranceId = document.getElementById("insuranceId").value;
+        cancelledInsuranceAmount = document.getElementById("cancelledInsuranceAmount").value;
+        cancelledInsuranceBonus = document.getElementById("cancelledInsuranceBonus").value;
+        $.ajax({
+            url: '/Insurance/Cancel?id=' + insuranceId + '&cancelledInsuranceAmount=' + cancelledInsuranceAmount + '&cancelledInsuranceBonus=' + cancelledInsuranceBonus,
+            type: 'POST',
+            success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").click();
+                window.setTimeout(function () {
+                    window.history.back();
+                }, 2000);
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>

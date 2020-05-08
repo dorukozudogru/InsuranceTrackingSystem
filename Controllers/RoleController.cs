@@ -28,9 +28,13 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AppIdentityRole appIdentityRole)
+        public async Task<IActionResult> Create(string roleName)
         {
+            AppIdentityRole appIdentityRole = new AppIdentityRole()
+            {
+                Name = roleName
+            };
+
             if (ModelState.IsValid)
             {
                 appIdentityRole.NormalizedName = appIdentityRole.Name;
@@ -38,7 +42,8 @@ namespace SigortaTakipSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(appIdentityRole);
+
+            throw new TaskCanceledException("Rol oluşturulurken bir hata oluştu!");
         }
 
         //SHOULD SHOW WHO HAS ROLES
@@ -75,36 +80,19 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, AppIdentityRole appIdentityRole)
+        public async Task<IActionResult> Edit(string id, string roleName)
         {
-            if (id != appIdentityRole.Id)
-            {
-                return View("Error");
-            }
+            var role = await _context.Roles.FindAsync(id);
 
-            if (ModelState.IsValid)
+            if (role != null)
             {
-                try
-                {
-                    appIdentityRole.NormalizedName = appIdentityRole.Name;
-                    _context.Update(appIdentityRole);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AppIdentityRoleExists(appIdentityRole.Id))
-                    {
-                        return View("Error");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                role.Name = roleName;
+                role.NormalizedName = roleName;
+                _context.Update(role);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(appIdentityRole);
+            throw new TaskCanceledException("Rol güncellenirken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Delete(string id)
@@ -125,7 +113,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var hasAnyUser = await _context.UserRoles

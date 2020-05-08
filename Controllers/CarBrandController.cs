@@ -28,7 +28,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CarBrands carBrands)
         {
             if (ModelState.IsValid)
@@ -37,7 +36,7 @@ namespace SigortaTakipSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(carBrands);
+            throw new TaskCanceledException("Marka oluşturulurken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -56,39 +55,19 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CarBrands carBrands)
+        public async Task<IActionResult> Edit(int id, string carBrandName)
         {
-            if (id != carBrands.Id)
+            var carBrand = await _context.CarBrands.FindAsync(id);
+
+            if (carBrand != null)
             {
-                return View("Error");
-            }
+                carBrand.Name = carBrandName;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var oldCarBrands = await _context.CarBrands.FindAsync(id);
-
-                    oldCarBrands.Name = carBrands.Name;
-
-                    _context.Update(oldCarBrands);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CarBrandsExists(carBrands.Id))
-                    {
-                        return View("Error");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(carBrand);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(carBrands);
+            throw new TaskCanceledException("Marka güncellenirken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -109,7 +88,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hasAnyInsurance = await _context.Insurances

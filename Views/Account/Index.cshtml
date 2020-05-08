@@ -2,118 +2,87 @@
 
 @{
     ViewData["Title"] = "Sistem Kullanıcıları";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<head>
-    <link href="~/css/datatables.min.css" rel="stylesheet" />
-</head>
-
-<div class="content-wrapper">
-    <section class="content">
-        <div class="box-header">
-            <h3 class="box-title">
-                <i class="fa fa-users"></i>&nbsp; Sistem Kullanıcıları
-            </h3>
-            <a class="btn btn-success pull-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
-        </div>
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
-                <div class="box table-responsive">
-                    <div class="box-body">
-                        <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Id)
-                                    </th>
-                                    <th>
-                                        E-Posta
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.IsActive)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.IsAdmin)
-                                    </th>
-                                    <th>İşlemler</th>
-                                </tr>
-                            </thead>
-                        </table>
+            <div class="col-md-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h5 class="box-title">
+                            <i class="fa fa-users"></i>&nbsp;Sistem Kullanıcıları
+                            <a class="btn btn-success btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;Yeni Oluştur</a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="card-body">
+                                <table id="ItemsTable" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Id)
+                                            </th>
+                                            <th>
+                                                E-Posta
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.IsActive)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.IsAdmin)
+                                            </th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal-passive">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Kullanıcıyı Pasif Yap</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="message-passive">&hellip;</p>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-success" id="passive">Evet</button>
+                                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal">Kapat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal-admin">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Kullanıcının Admin Yetkisini Değiştir</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="message-admin">&hellip;</p>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-success" id="admin">Evet</button>
+                                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Kapat</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="modal-passive">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong>Kullanıcıyı Pasif Yap</strong></h4>
-                    </div>
-                    <div class="modal-body">
-                        <p id="message-passive">&hellip;</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="passive">Evet</button>
-                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Kapat</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="modal-admin">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong>Kullanıcıyı Admin Yap</strong></h4>
-                    </div>
-                    <div class="modal-body">
-                        <p id="message-admin">&hellip;</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="admin">Evet</button>
-                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Kapat</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal modal-success fade" id="modal-success">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Başarılı!</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Kullanıcı başarıyla güncellenmiştir.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal modal-danger fade" id="modal-error">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Tüh! Bir hata oluştu.</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            Kullanıcıyı güncellerken bir hata oluştu.
-                            <br />
-                            <br />
-                            Hemen site yöneticisi ile iletişime geçin ki durumu hızlıca çözelim.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-
+    </div>
+</section>
 
 @section Scripts {
     @{
@@ -132,22 +101,17 @@
             $(document).delegate('#passive',
                 'click',
                 function (e) {
-                    console.log(passiveUserId);
                     $.ajax({
                         url: '/Account/Passive?passiveUserId=' + passiveUserId,
                         type: 'POST',
                         success: function (returnvalue) {
                             $("#modal-passive").modal('hide');
-                            $("#modal-success").modal('show');
-                            setTimeout(function () { $("#modal-success").modal('hide'); }, 3000);
-                            setTimeout("location.reload(true);", 3000);
+                            document.getElementById("swalDefaultSuccess").click();
+                            setTimeout("location.reload(true);", 2000);
                         },
                         error: function (error) {
-                            //console.log(error.responseText);
                             $("#modal-passive").modal('hide');
-                            $("#modal-error").modal('show');
-                            setTimeout(function () { $("#modal-error").modal('hide'); }, 3000);
-                            setTimeout("location.reload(true);", 3000);
+                            document.getElementById("swalDefaultError").click();
                         }
                     });
                 });
@@ -167,22 +131,17 @@
             $(document).delegate('#admin',
                 'click',
                 function (e) {
-                    console.log(adminUserId);
                     $.ajax({
                         url: '/Account/Admin?adminUserId=' + adminUserId,
                         type: 'POST',
                         success: function (returnvalue) {
                             $("#modal-admin").modal('hide');
-                            $("#modal-success").modal('show');
-                            setTimeout(function () { $("#modal-success").modal('hide'); }, 3000);
-                            setTimeout("location.reload(true);", 3000);
+                            document.getElementById("swalDefaultSuccess").click();
+                            setTimeout("location.reload(true);", 2000);
                         },
                         error: function (error) {
-                            //console.log(error.responseText);
                             $("#modal-admin").modal('hide');
-                            $("#modal-error").modal('show');
-                            setTimeout(function () { $("#modal-error").modal('hide'); }, 3000);
-                            setTimeout("location.reload(true);", 3000);
+                            document.getElementById("swalDefaultError").click();
                         }
                     });
                 });
@@ -193,7 +152,7 @@
             (function () {
                 var generateCustomerTable = $("#ItemsTable").DataTable({
                     "language": {
-                        processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
+                        processing: '<i class="fas fa-sync fa-spin fa-3x fa-fw"></i><span class="sr-only">Yükleniyor...</span> ',
                         zeroRecords: "Hiçbir kayıt bulunamadı.",
                         emptyTable: "Kayıt bulunmamaktadır.",
                         search: "Ara:",
@@ -242,10 +201,10 @@
                         {
                             "data": "actionId", render: function (data, type, row) {
                                 if (row.isAdmin) {
-                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <li><a href="Account/Edit/' + row.id + '">Şifre Güncelle</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Adminliği Al</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a></li> </ul></div>'
+                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Adminliği Al</a><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
                                 }
                                 else {
-                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <li><a href="Account/Edit/' + row.id + '">Şifre Güncelle</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Admin Yap</a></li> <li><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a></li> </ul></div>'
+                                    return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Account/Edit/' + row.id + '">Şifre Güncelle</a> <a href="#" data-toggle="modal" data-target="#modal-admin" class="setAdmin dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setAdmin">Admin Yap</a><a href="#" data-toggle="modal" data-target="#modal-passive" class="setPassive dropdown-item" user-id="' + row.id + '" user-username="' + row.userName + '" name="setPassive">Pasif Yap</a> </ul></div>'
                                 }
                             }
                         }

@@ -72,20 +72,21 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Customers customers)
         {
             if (ModelState.IsValid)
             {
                 customers.CreatedBy = GetLoggedUserId();
+                customers.CreatedAt = DateTime.Now;
                 customers.Name = customers.Name.ToUpper();
                 customers.Surname = customers.Surname.ToUpper();
+                customers.IsActive = true;
 
                 _context.Add(customers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customers);
+            throw new TaskCanceledException("Müşteri oluşturulurken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -104,51 +105,26 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Customers customers)
         {
-            if (id != customers.Id)
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer != null)
             {
-                return View("Error");
-            }
+                customer.CitizenshipNo = customers.CitizenshipNo;
+                customer.Email = customers.Email;
+                customer.Name = customers.Name.ToUpper();
+                customer.Other = customers.Other;
+                customer.Phone = customers.Phone;
+                customer.Surname = customers.Surname.ToUpper();
+                customer.UpdatedAt = DateTime.Now;
+                customer.UpdatedBy = GetLoggedUserId();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var oldCustomers = await _context.Customers.FindAsync(id);
-
-                    oldCustomers.CitizenshipNo = customers.CitizenshipNo;
-                    oldCustomers.CreatedAt = customers.CreatedAt;
-                    oldCustomers.CreatedBy = customers.CreatedBy;
-                    oldCustomers.DeletedAt = customers.DeletedAt;
-                    oldCustomers.DeletedBy = customers.DeletedBy;
-                    oldCustomers.Email = customers.Email;
-                    oldCustomers.IsActive = customers.IsActive;
-                    oldCustomers.Name = customers.Name.ToUpper();
-                    oldCustomers.Other = customers.Other;
-                    oldCustomers.Phone = customers.Phone;
-                    oldCustomers.Surname = customers.Surname.ToUpper();
-                    oldCustomers.UpdatedAt = DateTime.Now;
-                    oldCustomers.UpdatedBy = GetLoggedUserId();
-
-                    _context.Update(oldCustomers);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomersExists(customers.Id))
-                    {
-                        return View("Error");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(customer);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customers);
+            throw new TaskCanceledException("Müşteri güncellenirken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -169,7 +145,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hasAnyInsurance = await _context.Insurances

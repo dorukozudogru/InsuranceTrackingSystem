@@ -28,7 +28,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(InsurancePolicies insurancePolicy)
         {
             if (ModelState.IsValid)
@@ -37,7 +36,7 @@ namespace SigortaTakipSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(insurancePolicy);
+            throw new TaskCanceledException("Poliçe türü oluşturulurken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -56,39 +55,19 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, InsurancePolicies insurancePolicy)
+        public async Task<IActionResult> Edit(int id, string insurancePolicyName)
         {
-            if (id != insurancePolicy.Id)
+            var insurancePolicy = await _context.InsurancePolicies.FindAsync(id);
+
+            if (insurancePolicy != null)
             {
-                return View("Error");
-            }
+                insurancePolicy.Name = insurancePolicyName;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var oldInsurancePolicy = await _context.InsurancePolicies.FindAsync(id);
-
-                    oldInsurancePolicy.Name = insurancePolicy.Name;
-
-                    _context.Update(oldInsurancePolicy);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InsurancePolicyExists(insurancePolicy.Id))
-                    {
-                        return View("Error");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(insurancePolicy);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(insurancePolicy);
+            throw new TaskCanceledException("Poliçe türü güncellenirken bir hata oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -109,7 +88,6 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hasAnyInsurance = await _context.Insurances

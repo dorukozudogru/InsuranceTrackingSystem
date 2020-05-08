@@ -15,12 +15,17 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
-    <PackageReference Include="NEST" Version="7.6.1" />
   </ItemGroup>
 
 
   <ItemGroup>
     <Folder Include="Queries\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\Content\NewSite\plugins\bootstrap-datepicker\.github\ISSUE_TEMPLATE.md" />
+    <None Include="wwwroot\Content\NewSite\plugins\bootstrap-datepicker\.github\PULL_REQUEST_TEMPLATE.md" />
   </ItemGroup>
 
 </Project>
