@@ -18,10 +18,26 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" asp-for="Id" id="id" />
+                                <div class="row">
+                                    <input asp-for="Id" class="form-control" id="id" hidden />
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Poliçe ID</label>
+                                            <input asp-for="Id" class="form-control" id="disInsuranceId" disabled />
+                                            <span asp-validation-for="Id" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Müşteri ID</label>
+                                            <input asp-for="CustomerId" class="form-control" id="disCustomerId" disabled />
+                                            <span asp-validation-for="CustomerId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label asp-for="Customer.FullName" class="control-label"></label>
-                                    <select asp-for="CustomerId" class="form-control select2" style="width: 100%;" asp-items="@ViewBag.Customers" id="customerId"></select>
+                                    <select asp-for="CustomerId" class="form-control" style="width: 100%;" asp-items="@ViewBag.Customers" id="customerId"></select>
                                     <span asp-validation-for="CustomerId" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
@@ -120,6 +136,57 @@
         </div>
     </div>
 </section>
+
+<script>
+    window.onload = function getInsurance() {
+        var id = '@Url.RouteUrl(ViewContext.RouteData.Values).Split("/").Last()';
+
+        $.ajax({
+            url: '/Insurance/EditPost?&id=' + id,
+            type: 'POST',
+            success: function (returnvalue) {
+                var start = new Date(returnvalue.insuranceStartDate);
+                var finish = new Date(returnvalue.insuranceFinishDate);
+
+                var dayS = start.getDate();
+                var monthS = start.getMonth() + 1;
+                var yearS = start.getFullYear();
+                dayS = dayS < 10 ? "0" + dayS : dayS;
+                monthS = monthS < 10 ? "0" + monthS : monthS;
+
+                var dayF = finish.getDate();
+                var monthF = finish.getMonth() + 1;
+                var yearF = finish.getFullYear();
+                dayF = dayF < 10 ? "0" + dayF : dayF;
+                monthF = monthF < 10 ? "0" + monthF : monthF;
+
+                document.getElementById("id").value = returnvalue.id;
+                document.getElementById("disCustomerId").value = returnvalue.customerId;
+                document.getElementById("disInsuranceId").value = returnvalue.id;
+                document.getElementById("customerId").value = returnvalue.customerId;
+                document.getElementById("Brand").value = returnvalue.carModel.carBrandId;
+                document.getElementById("Model").value = returnvalue.carModel.name;
+                document.getElementById("licencePlate").value = returnvalue.licencePlate;
+                document.getElementById("insurancePolicyId").value = returnvalue.insurancePolicyId;
+                document.getElementById("insurancePolicyNumber").value = returnvalue.insurancePolicyNumber;
+                document.getElementById("insuranceCompanyId").value = returnvalue.insuranceCompanyId;
+                document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
+                document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;
+                document.getElementById("insuranceAmount").value = returnvalue.insuranceAmount;
+                document.getElementById("insuranceBonus").value = returnvalue.insuranceBonus;
+                document.getElementById("insuranceType").value = returnvalue.insuranceType;
+                document.getElementById("insurancePaymentType").value = returnvalue.insurancePaymentType;
+            },
+            error: function (error) {
+                document.getElementById("swalDefaultError").click();
+            }
+        });
+    }
+</script>
+
+<script>
+
+</script>
 
 <script>
     function updateInsurance() {

@@ -161,7 +161,20 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit()
+        {
+            ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
+            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
+            ViewBag.Customers = new SelectList(_context.Customers.OrderBy(x => x.Name), "Id", "FullName");
+            ViewBag.CarBrands = new SelectList(_context.CarBrands.OrderBy(x => x.Name), "Id", "Name");
+            ViewBag.CarModels = new SelectList(_context.CarModels.OrderBy(x => x.Name), "Name", "Name");
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditPost(int? id)
         {
             if (id == null)
             {
@@ -181,13 +194,7 @@ namespace SigortaTakipSistemi.Controllers
                 return View("Error");
             }
 
-            ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
-            ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
-            ViewBag.Customers = new SelectList(_context.Customers, "Id", "FullName");
-            ViewBag.CarBrands = new SelectList(_context.CarBrands.OrderBy(x => x.Name), "Id", "Name");
-            ViewBag.CarModels = new SelectList(_context.CarModels.OrderBy(x => x.Name), "Name", "Name");
-
-            return View(insurance);
+            return Ok(insurance);
         }
 
         [Authorize]
