@@ -133,7 +133,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
             ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
-            ViewBag.Customers = new SelectList(_context.Customers, "Id", "FullName");
+            ViewBag.Customers = new SelectList(_context.Customers.Where(x => x.IsActive == true).OrderBy(x => x.Name), "Id", "FullName");
             return View();
         }
 
@@ -165,7 +165,7 @@ namespace SigortaTakipSistemi.Controllers
         {
             ViewBag.InsurancePolicies = new SelectList(_context.InsurancePolicies.OrderBy(x => x.Name), "Id", "Name");
             ViewBag.InsuranceCompanies = new SelectList(_context.InsuranceCompanies.OrderBy(x => x.Name), "Id", "Name");
-            ViewBag.Customers = new SelectList(_context.Customers.OrderBy(x => x.Name), "Id", "FullName");
+            ViewBag.Customers = new SelectList(_context.Customers.Where(x => x.IsActive == true).OrderBy(x => x.Name), "Id", "FullName");
             ViewBag.CarBrands = new SelectList(_context.CarBrands.OrderBy(x => x.Name), "Id", "Name");
             ViewBag.CarModels = new SelectList(_context.CarModels.OrderBy(x => x.Name), "Name", "Name");
 
