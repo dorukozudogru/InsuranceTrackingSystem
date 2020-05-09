@@ -75,6 +75,37 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> FinishingInsurancesPost()
+        {
+            var requestFormData = Request.Form;
+
+            List<Insurances> insurances = await _context.Insurances
+                .Include(cu => cu.Customer)
+                .Include(c => c.CarModel)
+                .Include(cb => cb.CarModel.CarBrand)
+                .Include(pn => pn.InsurancePolicy)
+                .Include(pc => pc.InsuranceCompany)
+                .Where(i => i.IsActive == true && i.InsuranceFinishDate.Date > DateTime.Now.AddDays(-8).Date && i.InsuranceFinishDate <= DateTime.Now.Date)
+                .AsNoTracking()
+                .ToListAsync();
+
+            insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
+
+            List<Insurances> listItems = ProcessCollection(insurances, requestFormData);
+
+            var response = new PaginatedResponse<Insurances>
+            {
+                Data = listItems,
+                Draw = int.Parse(requestFormData["draw"]),
+                RecordsFiltered = insurances.Count,
+                RecordsTotal = insurances.Count
+            };
+
+            return Ok(response);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

@@ -176,6 +176,8 @@
                 "processing": true,
                 "serverSide": true,
                 "searchDelay": 1200,
+                "stateSave": true,
+                "stateDuration": -1,
                 "ajax": {
                     "url": "/Report/Post?startDate=" + $('#datepicker').val() + "&finishDate=" + $('#datepicker2').val() + "&reportType=all&isCancelledIncluded=" + IsCancelledIncluded,
                     "method": "POST"
