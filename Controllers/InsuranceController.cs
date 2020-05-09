@@ -86,7 +86,7 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(cb => cb.CarModel.CarBrand)
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
-                .Where(i => i.IsActive == true && i.InsuranceFinishDate.Date > DateTime.Now.AddDays(-8).Date && i.InsuranceFinishDate <= DateTime.Now.Date)
+                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-8) <= DateTime.Now && i.InsuranceFinishDate >= DateTime.Now)
                 .AsNoTracking()
                 .ToListAsync();
 
