@@ -42,25 +42,13 @@ namespace SigortaTakipSistemi.Services
                 var _context = scope.ServiceProvider.GetRequiredService<IdentityContext>();
                 _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-                //var dueTimeInsurances = _context.Insurances
-                //                                .Include(cu => cu.Customer)
-                //                                .Include(c => c.CarModel)
-                //                                .Include(cb => cb.CarModel.CarBrand)
-                //                                .Include(pn => pn.InsurancePolicy)
-                //                                .Include(pc => pc.InsuranceCompany)
-                //                                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-8) <= DateTime.Now && i.InsuranceLastMailDate.Value.Date != DateTime.Today && i.InsuranceFinishDate >= DateTime.Now).ToList();
-
                 var dueTimeInsurances = _context.Insurances
                                                 .Include(cu => cu.Customer)
                                                 .Include(c => c.CarModel)
                                                 .Include(cb => cb.CarModel.CarBrand)
                                                 .Include(pn => pn.InsurancePolicy)
                                                 .Include(pc => pc.InsuranceCompany)
-                                                .Where(i => i.IsActive == true).ToList();
-
-                dueTimeInsurances = dueTimeInsurances.Where(x => x.InsuranceFinishDate.Date > DateTime.Now.AddDays(-8).Date && x.InsuranceFinishDate <= DateTime.Now.Date).ToList();
-
-                dueTimeInsurances = dueTimeInsurances.Where(x => x.InsuranceLastMailDate < DateTime.Today.Date).ToList();
+                                                .Where(i => i.IsActive == true && i.InsuranceFinishDate.AddDays(-8) <= DateTime.Now && i.InsuranceLastMailDate.Value.Date != DateTime.Today && i.InsuranceFinishDate >= DateTime.Now).ToList();
 
                 var emailUsers = _context.Users.ToList();
 
