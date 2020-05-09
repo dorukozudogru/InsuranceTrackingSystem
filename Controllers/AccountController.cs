@@ -139,9 +139,9 @@ namespace SigortaTakipSistemi.Controllers
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.UseDefaultCredentials = false;
             smtp.Credentials = null;
-            smtp.Credentials = new System.Net.NetworkCredential("dorukozudogru.oplog@gmail.com", "doruk.,.,23");
+            smtp.Credentials = new System.Net.NetworkCredential("banazsigorta@gmail.com", "Banaz26.,");
 
-            msg.From = new MailAddress("dorukozudogru.oplog@gmail.com", "Banaz Sigorta");
+            msg.From = new MailAddress("banazsigorta@gmail.com", "Banaz Sigorta");
 
             msg.To.Add(userEmail);
 
