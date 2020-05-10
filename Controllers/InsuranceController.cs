@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using SigortaTakipSistemi.Helpers;
 using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
+using SigortaTakipSistemi.Models.ViewModels;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -103,6 +104,34 @@ namespace SigortaTakipSistemi.Controllers
             };
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> MonthlyInsurances()
+        {
+            var insurances = await _context.Insurances
+                .Where(i => i.IsActive == true &&
+                       i.InsuranceStartDate.Year >= DateTime.Now.AddYears(-1).Year &&
+                       i.InsuranceStartDate.Year <= DateTime.Now.Year &&
+                       i.InsuranceStartDate.Month <= DateTime.Now.Month)
+                .GroupBy(i => new
+                {
+                    Year = i.InsuranceStartDate.Year,
+                    Month = i.InsuranceStartDate.Month
+                })
+                .Select(i => new MonthlyReportViewModel
+                {
+                    Year = i.Key.Year,
+                    Month = i.Key.Month,
+                    InsuranceCount = i.Count()
+                })
+                .OrderBy(i => i.Month)
+                .ThenBy(i => i.Year)
+                .Skip(2)
+                .ToListAsync();
+
+            return Json(insurances);
         }
 
         [Authorize]
