@@ -45,6 +45,16 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm-right">
+                        <div class="dropdown-item">
+                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 2.2.0
+                        </div>
+                    </div>
+                </li>
             </ul>
         </nav>
         <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position:fixed">
@@ -202,12 +212,12 @@
             </button>
             @RenderBody()
         </div>
-        <footer class="main-footer">
-            <strong>Tüm Hakları Saklıdır &copy; 2019 - @DateTime.Now.Year</strong> | Banaz Sigorta
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Versiyon</b> 2.1.0
-            </div>
-        </footer>
+        @*<footer class="main-footer">
+                <strong>Tüm Hakları Saklıdır &copy; 2019 - @DateTime.Now.Year</strong> | Banaz Sigorta
+                <div class="float-right d-none d-sm-inline-block">
+                    <b>Versiyon</b> 2.1.0
+                </div>
+            </footer>*@
     </div>
 
     <script src="~/Content/NewSite/plugins/jquery/jquery.min.js"></script>
@@ -226,6 +236,7 @@
     <script src="~/Content/NewSite/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/Content/NewSite/plugins/sweetalert2.9/sweetalert2.9.js"></script>
     <script src="~/Content/NewSite/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="~/Content/NewSite/plugins/chart.js/Chart.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#allTables').DataTable({
