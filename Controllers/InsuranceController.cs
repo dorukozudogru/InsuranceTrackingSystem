@@ -580,19 +580,22 @@ namespace SigortaTakipSistemi.Controllers
 
             if (insurance != null)
             {
-                if (ModelState.IsValid)
+                if (insurance.InsuranceAmount >= cancelledInsuranceAmount)
                 {
-                    insurance.IsActive = false;
-                    insurance.CancelledAt = DateTime.Now;
-                    insurance.CancelledInsuranceAmount = cancelledInsuranceAmount;
-                    insurance.CancelledInsuranceBonus = cancelledInsuranceBonus;
+                    if (ModelState.IsValid)
+                    {
+                        insurance.IsActive = false;
+                        insurance.CancelledAt = DateTime.Now;
+                        insurance.CancelledInsuranceAmount = cancelledInsuranceAmount;
+                        insurance.CancelledInsuranceBonus = cancelledInsuranceBonus;
 
-                    insurance.DeletedAt = DateTime.Now;
-                    insurance.DeletedBy = GetLoggedUserId();
+                        insurance.DeletedAt = DateTime.Now;
+                        insurance.DeletedBy = GetLoggedUserId();
 
-                    _context.Update(insurance);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                        _context.Update(insurance);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
             }
             throw new TaskCanceledException("Poliçe iptal edilirken bir hata oluştu!");
