@@ -129,12 +129,14 @@
             url: '/Insurance/Cancel?id=' + insuranceId + '&cancelledInsuranceAmount=' + cancelledInsuranceAmount + '&cancelledInsuranceBonus=' + cancelledInsuranceBonus,
             type: 'POST',
             success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });

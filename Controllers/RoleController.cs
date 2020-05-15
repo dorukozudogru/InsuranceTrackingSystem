@@ -28,22 +28,28 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string roleName)
+        public async Task<IActionResult> Create(AppIdentityRole role)
         {
             AppIdentityRole appIdentityRole = new AppIdentityRole()
             {
-                Name = roleName
+                Name = role.Name,
+                NormalizedName = role.Name
             };
 
-            if (ModelState.IsValid)
-            {
-                appIdentityRole.NormalizedName = appIdentityRole.Name;
-                _context.Add(appIdentityRole);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            AppIdentityRole tempRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == role.Name);
 
-            throw new TaskCanceledException("Rol oluşturulurken bir hata oluştu!");
+            if (tempRole == null)
+            {
+                if (!string.IsNullOrEmpty(appIdentityRole.Name))
+                {
+                    _context.Add(appIdentityRole);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Rol Başarıyla Oluşturulmuştur!" });
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
+            }
+            return BadRequest("Rol Oluşturulurken Bir Hata Oluştu!");
         }
 
         //SHOULD SHOW WHO HAS ROLES
@@ -80,33 +86,42 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, string roleName)
+        public async Task<IActionResult> Edit(string id, AppIdentityRole roles)
         {
             var role = await _context.Roles.FindAsync(id);
+            
 
             if (role != null)
             {
-                role.Name = roleName;
-                role.NormalizedName = roleName;
-                _context.Update(role);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!string.IsNullOrEmpty(roles.Name))
+                {
+                    if (ModelState.IsValid)
+                    {
+                        role.Name = roles.Name;
+                        role.NormalizedName = roles.Name;
+                        _context.Update(role);
+                        await _context.SaveChangesAsync();
+                        return Ok(new { Result = true, Message = "Rol Başarıyla Güncellendi!" });
+                    }
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Rol güncellenirken bir hata oluştu!");
+            return BadRequest("Rol Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var appIdentityRole = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appIdentityRole == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             return View(appIdentityRole);
@@ -123,9 +138,9 @@ namespace SigortaTakipSistemi.Controllers
                 var appIdentityRole = await _context.Roles.FindAsync(id);
                 _context.Roles.Remove(appIdentityRole);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Rol Silinmiştir!" });
             }
-            throw new TaskCanceledException("Bu role ait kullanıcı(lar) bulunmaktadır.");
+            return BadRequest("Bu Role Ait Kullanıcı Bulunmaktadır.");
         }
 
         private bool AppIdentityRoleExists(string id)

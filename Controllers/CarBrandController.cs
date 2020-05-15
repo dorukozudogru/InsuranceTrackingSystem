@@ -34,9 +34,9 @@ namespace SigortaTakipSistemi.Controllers
             {
                 _context.Add(carBrands);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Marka Başarıyla Oluşturulmuştur!" });
             }
-            throw new TaskCanceledException("Marka oluşturulurken bir hata oluştu!");
+            return BadRequest("Marka Oluşturulurken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -55,19 +55,24 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string carBrandName)
+        public async Task<IActionResult> Edit(int id, CarBrands carBrands)
         {
             var carBrand = await _context.CarBrands.FindAsync(id);
 
             if (carBrand != null)
             {
-                carBrand.Name = carBrandName;
+                if (ModelState.IsValid)
+                {
+                    carBrand.Name = carBrands.Name;
 
-                _context.Update(carBrand);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Update(carBrand);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Marka Başarıyla Güncellendi!" });
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Marka güncellenirken bir hata oluştu!");
+            return BadRequest("Marka Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -98,9 +103,9 @@ namespace SigortaTakipSistemi.Controllers
                 var carBrands = await _context.CarBrands.FindAsync(id);
                 _context.CarBrands.Remove(carBrands);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Marka Silinmiştir!" });
             }
-            throw new TaskCanceledException("Bu markaya ait sigorta kayıtları bulunmaktadır.");
+            return BadRequest("Bu Markaya Ait Sigorta Kayıtları Bulunmaktadır!");
         }
 
         private bool CarBrandsExists(int id)

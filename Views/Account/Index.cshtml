@@ -106,11 +106,13 @@
                         type: 'POST',
                         success: function (returnvalue) {
                             $("#modal-passive").modal('hide');
+                            document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                             document.getElementById("swalDefaultSuccess").click();
                             setTimeout("location.reload(true);", 2000);
                         },
                         error: function (error) {
                             $("#modal-passive").modal('hide');
+                            document.getElementById("swalDefaultError").value = error.responseText;
                             document.getElementById("swalDefaultError").click();
                         }
                     });
@@ -136,11 +138,13 @@
                         type: 'POST',
                         success: function (returnvalue) {
                             $("#modal-admin").modal('hide');
+                            document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                             document.getElementById("swalDefaultSuccess").click();
                             setTimeout("location.reload(true);", 2000);
                         },
                         error: function (error) {
                             $("#modal-admin").modal('hide');
+                            document.getElementById("swalDefaultError").value = error.responseText;
                             document.getElementById("swalDefaultError").click();
                         }
                     });

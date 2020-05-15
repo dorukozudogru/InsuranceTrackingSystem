@@ -84,9 +84,9 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Add(customers);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Müşteri Başarıyla Oluşturulmuştur!" });
             }
-            throw new TaskCanceledException("Müşteri oluşturulurken bir hata oluştu!");
+            return BadRequest("Müşteri Oluşturulurken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -111,20 +111,25 @@ namespace SigortaTakipSistemi.Controllers
 
             if (customer != null)
             {
-                customer.CitizenshipNo = customers.CitizenshipNo;
-                customer.Email = customers.Email;
-                customer.Name = customers.Name.ToUpper();
-                customer.Other = customers.Other;
-                customer.Phone = customers.Phone;
-                customer.Surname = customers.Surname.ToUpper();
-                customer.UpdatedAt = DateTime.Now;
-                customer.UpdatedBy = GetLoggedUserId();
+                if (ModelState.IsValid)
+                {
+                    customer.CitizenshipNo = customers.CitizenshipNo;
+                    customer.Email = customers.Email;
+                    customer.Name = customers.Name.ToUpper();
+                    customer.Other = customers.Other;
+                    customer.Phone = customers.Phone;
+                    customer.Surname = customers.Surname.ToUpper();
+                    customer.UpdatedAt = DateTime.Now;
+                    customer.UpdatedBy = GetLoggedUserId();
 
-                _context.Update(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Update(customer);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Müşteri Başarıyla Güncellendi!" });
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Müşteri güncellenirken bir hata oluştu!");
+            return BadRequest("Müşteri Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -160,9 +165,9 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Update(customers);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Müşteri Silinmiştir!" });
             }
-            throw new TaskCanceledException("Bu müşteriye ait sigorta kayıtları bulunmaktadır.");
+            return BadRequest("Bu Müşteriye Ait Sigorta Kayıtları Bulunmaktadır!");
         }
 
         private bool CustomersExists(int id)

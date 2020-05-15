@@ -217,24 +217,23 @@ namespace SigortaTakipSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(string email, string password)
         {
-            var user = new AppIdentityUser
+            if (email != null && password != null)
             {
-                UserName = email,
-                Email = email,
-                IsActive = true
-            };
+                var user = new AppIdentityUser
+                {
+                    UserName = email,
+                    Email = email,
+                    IsActive = true
+                };
 
-            var result = await _userManager.CreateAsync(user, password);
-            if (!result.Succeeded)
-            {
-                foreach (var validateItem in result.Errors)
-                    ModelState.AddModelError("", validateItem.Description);
-
-                throw new TaskCanceledException("Kullanıcıyı oluştururken bir hata oluştu!"
-                    + " Code: " + result.Errors.FirstOrDefault().Code
-                    + " Description: " + result.Errors.FirstOrDefault().Description);
+                var result = await _userManager.CreateAsync(user, password);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors.FirstOrDefault().Description);
+                }
+                return Ok(new { Result = true, Message = "Kullanıcı Başarıyla Oluşturulmuştur!" });
             }
-            return View();
+            return BadRequest("Tüm Alanları Doldurunuz!");
         }
 
         [Authorize(Roles = "Admin")]
@@ -263,28 +262,27 @@ namespace SigortaTakipSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string email, string password)
         {
-            RegisterViewModel model = new RegisterViewModel()
+            if (email != null && password != null)
             {
-                Email = email,
-                Password = password
-            };
+                RegisterViewModel model = new RegisterViewModel()
+                {
+                    Email = email,
+                    Password = password
+                };
 
-            AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
+                AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
 
-            var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
+                var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
 
-            IdentityResult result = _userManager.ResetPasswordAsync(user, token, model.Password).Result;
+                IdentityResult result = _userManager.ResetPasswordAsync(user, token, model.Password).Result;
 
-            if (!result.Succeeded)
-            {
-                throw new TaskCanceledException("Şifreyi güncellerken bir hata oluştu!"
-                    + " Code: " + result.Errors.FirstOrDefault().Code
-                    + " Description: " + result.Errors.FirstOrDefault().Description);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors.FirstOrDefault().Description);
+                }
+                return Ok(new { Result = true, Message = "Kullanıcı Başarıyla Güncellendi!" });
             }
-            else
-            {
-                return View();
-            }
+            return BadRequest("Tüm Alanları Doldurunuz!");
         }
 
         [Authorize(Roles = "Admin")]
@@ -294,7 +292,7 @@ namespace SigortaTakipSistemi.Controllers
             var user = await _context.Users.FindAsync(passiveUserId);
             if (user == null)
             {
-                return View("Error");
+                return BadRequest("Kullanıcı Bulunamadı!");
             }
 
             user.IsActive = false;
@@ -302,7 +300,7 @@ namespace SigortaTakipSistemi.Controllers
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new { Result = true, Message = "Kullanıcı Pasif Olarak Ayarlanmıştır!" });
         }
 
         [Authorize(Roles = "Admin")]
@@ -312,7 +310,7 @@ namespace SigortaTakipSistemi.Controllers
             var user = await _context.Users.FindAsync(adminUserId);
             if (user == null)
             {
-                return View("Error");
+                return BadRequest("Kullanıcı Bulunamadı!");
             }
 
             var isUserAdmin = _context.UserRoles.Where(i => i.UserId == user.Id).ToList();
@@ -325,10 +323,10 @@ namespace SigortaTakipSistemi.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return View("Error");
+                    return BadRequest(result.Errors.FirstOrDefault().Description);
                 }
 
-                return Ok();
+                return Ok(new { Result = true, Message = "Kullanıcıdan Admin Rolü Alınmıştır!" });
             }
             else
             {
@@ -338,10 +336,10 @@ namespace SigortaTakipSistemi.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return View("Error");
+                    return BadRequest(result.Errors.FirstOrDefault().Description);
                 }
 
-                return Ok();
+                return Ok(new { Result = true, Message = "Kullanıcıya Admin Rolü Verilmiştir!" });
             }
         }
 

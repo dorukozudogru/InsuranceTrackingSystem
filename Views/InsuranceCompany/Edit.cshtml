@@ -49,15 +49,17 @@
         insuranceCompanyName = document.getElementById("insuranceCompanyName").value;
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/InsuranceCompany/Edit?insuranceCompanyName=' + insuranceCompanyName + "&id=" + id,
+            url: '/InsuranceCompany/Edit?insuranceCompanies.Name=' + insuranceCompanyName + "&id=" + id,
             type: 'POST',
             success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });

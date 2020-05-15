@@ -34,9 +34,9 @@ namespace SigortaTakipSistemi.Controllers
             {
                 _context.Add(insuranceCompany);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Şirket Başarıyla Oluşturulmuştur!" });
             }
-            throw new TaskCanceledException("Poliçe şirketi oluşturulurken bir hata oluştu!");
+            return BadRequest("Şirket Oluşturulurken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -55,19 +55,24 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string insuranceCompanyName)
+        public async Task<IActionResult> Edit(int id, InsuranceCompanies insuranceCompanies)
         {
             var insuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
 
             if (insuranceCompany != null)
             {
-                insuranceCompany.Name = insuranceCompanyName;
+                if (ModelState.IsValid)
+                {
+                    insuranceCompany.Name = insuranceCompanies.Name;
 
-                _context.Update(insuranceCompany);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Update(insuranceCompany);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Şirket Başarıyla Güncellendi!" });
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Poliçe şirketi güncellenirken bir hata oluştu!");
+            return BadRequest("Şirket Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -98,9 +103,9 @@ namespace SigortaTakipSistemi.Controllers
                 var insuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
                 _context.InsuranceCompanies.Remove(insuranceCompany);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Şirket Silinmiştir!" });
             }
-            throw new TaskCanceledException("Bu şirkete ait sigorta kayıtları bulunmaktadır.");
+            return BadRequest("Bu Şirkete Ait Sigorta Kayıtları Bulunmaktadır!");
         }
 
         private bool InsuranceCompanyExists(int id)

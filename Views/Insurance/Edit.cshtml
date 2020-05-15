@@ -178,6 +178,7 @@
                 document.getElementById("insurancePaymentType").value = returnvalue.insurancePaymentType;
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = "Poliçeye Getirilirken Bir Hata Oluştu!";
                 document.getElementById("swalDefaultError").click();
             }
         });
@@ -211,12 +212,15 @@
                 '&insurance.InsuranceBonus=' + InsuranceBonus + '&insurance.InsuranceType=' + InsuranceType + '&insurance.InsurancePaymentType=' + InsurancePaymentType + '&id=' + Id,
             type: 'POST',
             success: function (returnvalue) {
+                console.log(returnvalue);
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });
