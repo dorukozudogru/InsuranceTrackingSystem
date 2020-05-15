@@ -34,9 +34,9 @@ namespace SigortaTakipSistemi.Controllers
             {
                 _context.Add(insurancePolicy);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Poliçe Türü Başarıyla Oluşturulmuştur!" });
             }
-            throw new TaskCanceledException("Poliçe türü oluşturulurken bir hata oluştu!");
+            return BadRequest("Poliçe Türü Oluşturulurken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -55,19 +55,24 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string insurancePolicyName)
+        public async Task<IActionResult> Edit(int id, InsurancePolicies insurancePolicies)
         {
             var insurancePolicy = await _context.InsurancePolicies.FindAsync(id);
 
             if (insurancePolicy != null)
             {
-                insurancePolicy.Name = insurancePolicyName;
+                if (ModelState.IsValid)
+                {
+                    insurancePolicy.Name = insurancePolicies.Name;
 
-                _context.Update(insurancePolicy);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Update(insurancePolicy);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Poliçe Türü Başarıyla Güncellendi!" });
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Poliçe türü güncellenirken bir hata oluştu!");
+            return BadRequest("Poliçe Türü Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -98,9 +103,9 @@ namespace SigortaTakipSistemi.Controllers
                 var insurancePolicy = await _context.InsurancePolicies.FindAsync(id);
                 _context.InsurancePolicies.Remove(insurancePolicy);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Poliçe Türü Silinmiştir!" });
             }
-            throw new TaskCanceledException("Bu tipe ait sigorta kayıtları bulunmaktadır.");
+            return BadRequest("Bu Poliçe Türüne Ait Sigorta Kayıtları Bulunmaktadır!");
         }
 
         private bool InsurancePolicyExists(int id)

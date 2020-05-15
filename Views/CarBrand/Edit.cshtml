@@ -49,15 +49,17 @@
         carBrandName = document.getElementById("carBrandName").value;
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/CarBrand/Edit?carBrandName=' + carBrandName + "&id=" + id,
+            url: '/CarBrand/Edit?carBrands.Name=' + carBrandName + "&id=" + id,
             type: 'POST',
             success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });

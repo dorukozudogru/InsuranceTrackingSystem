@@ -56,15 +56,17 @@
         carBrandId = document.getElementById("carBrandId").value;
         id = document.getElementById("id").value;
         $.ajax({
-            url: '/CarModel/Edit?carModelName=' + carModelName + '&carBrandId=' + carBrandId + '&id=' + id,
+            url: '/CarModel/Edit?carModels.Name=' + carModelName + '&carModels.carBrandId=' + carBrandId + '&id=' + id,
             type: 'POST',
             success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });

@@ -37,9 +37,9 @@ namespace SigortaTakipSistemi.Controllers
             {
                 _context.Add(carModels);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Model Başarıyla Oluşturulmuştur!" });
             }
-            throw new TaskCanceledException("Model oluşturulurken bir hata oluştu!");
+            return BadRequest("Model Oluşturulurken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -59,20 +59,25 @@ namespace SigortaTakipSistemi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string carModelName, int carBrandId)
+        public async Task<IActionResult> Edit(int id, CarModels carModels)
         {
             var carModel = await _context.CarModels.FindAsync(id);
 
             if (carModel != null)
             {
-                carModel.Name = carModelName;
-                carModel.CarBrandId = carBrandId;
+                if (ModelState.IsValid)
+                {
+                    carModel.Name = carModels.Name;
+                    carModel.CarBrandId = carModels.CarBrandId;
 
-                _context.Update(carModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Update(carModel);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { Result = true, Message = "Model Başarıyla Güncellendi!" });
+                }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Model güncellenirken bir hata oluştu!");
+            return BadRequest("Model Güncellenirken Bir Hata Oluştu!");
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -104,9 +109,9 @@ namespace SigortaTakipSistemi.Controllers
                 var carModels = await _context.CarModels.FindAsync(id);
                 _context.Remove(carModels);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Model Silinmiştir!" });
             }
-            throw new TaskCanceledException("Bu modele ait sigorta kayıtları bulunmaktadır.");
+            return BadRequest("Bu Modele Ait Sigorta Kayıtları Bulunmaktadır!");
         }
 
         private bool CarModelsExists(int id)

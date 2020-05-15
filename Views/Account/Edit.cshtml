@@ -21,7 +21,7 @@
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <div class="form-group">
                                         <label asp-for="Email" class="control-label"></label>
-                                        <input asp-for="Email" class="form-control" autocomplete="off" placeholder="E-Posta" id="email" />
+                                        <input asp-for="Email" class="form-control" autocomplete="off" disabled placeholder="E-Posta" id="email" />
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
@@ -58,12 +58,14 @@
             url: '/Account/Edit?email=' + email + '&password=' + password,
             type: 'POST',
             success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });

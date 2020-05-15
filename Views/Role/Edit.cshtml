@@ -49,15 +49,17 @@
         roleName = document.getElementById("roleName").value;
         id = document.getElementById("Id").value;
         $.ajax({
-            url: '/Role/Edit?roleName=' + roleName + "&id=" + id,
+            url: '/Role/Edit?roles.Name=' + roleName + "&id=" + id,
             type: 'POST',
             success: function (returnvalue) {
+                document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {
                     window.history.back();
                 }, 2000);
             },
             error: function (error) {
+                document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
             }
         });

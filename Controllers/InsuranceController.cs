@@ -290,10 +290,12 @@ namespace SigortaTakipSistemi.Controllers
 
                     _context.Update(oldInsurance);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return Ok(new { Result = true, Message = "Poliçe Başarıyla Güncellendi!" });
                 }
+                else
+                    return BadRequest("Tüm Alanları Doldurunuz!");
             }
-            throw new TaskCanceledException("Müşteri güncellenirken bir hata oluştu!");
+            return BadRequest("Poliçe Güncellenirken Bir Hata Oluştu!");
         }
 
         [Authorize]
@@ -364,9 +366,9 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Update(insurance);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Poliçe Pasif Olarak Ayarlanmıştır!" });
             }
-            throw new TaskCanceledException("Poliçe pasif edilirken bir hata oluştu!");
+            return BadRequest("Poliçe Pasif Olarak Ayarlanırken Bir Hata Oluştu!");
         }
 
         [Authorize]
@@ -434,9 +436,9 @@ namespace SigortaTakipSistemi.Controllers
                 _context.Insurances.Remove(insurance);
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Poliçe Silinmiştir!" });
             }
-            throw new TaskCanceledException("Poliçe silinirken bir hata oluştu!");
+            return BadRequest("Poliçe Silinirken Bir Hata Oluştu!");
         }
 
         [Authorize]
@@ -513,9 +515,9 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Update(insurance);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Poliçe Aktif Olarak Ayarlanmıştır!" });
             }
-            throw new TaskCanceledException("Poliçe aktif edilirken bir hata oluştu!");
+            return BadRequest("Poliçe Aktif Olarak Ayarlanırken Bir Hata Oluştu!");
         }
 
         [Authorize]
@@ -594,11 +596,13 @@ namespace SigortaTakipSistemi.Controllers
 
                         _context.Update(insurance);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
+                        return Ok(new { Result = true, Message = "Poliçe İptal Edilmiştir!" });
                     }
                 }
+                else
+                    return BadRequest("İptal Poliçe Tutarı Normal Tutardan Fazla Olamaz!");
             }
-            throw new TaskCanceledException("Poliçe iptal edilirken bir hata oluştu!");
+            return BadRequest("Poliçe İptal Edilirken Bir Hata Oluştu!");
         }
 
         [Authorize]
