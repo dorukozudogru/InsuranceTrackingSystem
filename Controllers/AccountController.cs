@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using static SigortaTakipSistemi.Helpers.ProcessCollectionHelper;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace SigortaTakipSistemi.Controllers
 {
@@ -46,16 +47,24 @@ namespace SigortaTakipSistemi.Controllers
                 IsActive = true
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            try
             {
-                foreach (var validateItem in result.Errors)
-                    ModelState.AddModelError("", validateItem.Description);
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                {
+                    foreach (var validateItem in result.Errors)
+                        ModelState.AddModelError("", validateItem.Description);
 
+                    return View(model);
+                }
+
+                return Redirect("~/account/login");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
                 return View(model);
             }
-
-            return Redirect("~/account/login");
         }
 
         [Route("account/login")]
@@ -77,23 +86,31 @@ namespace SigortaTakipSistemi.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = _userManager.FindByEmailAsync(model.Email).Result;
-
-                if (user.IsActive != false)
+                try
                 {
-                    result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-                    if (!result.Succeeded)
+                    var user = _userManager.FindByEmailAsync(model.Email).Result;
+
+                    if (user.IsActive != false)
                     {
-                        ViewBag.LoginError = "E-Posta veya Şifre hatalı girildi. Lütfen tekrar deneyiniz.";
+                        result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+                        if (!result.Succeeded)
+                        {
+                            ViewBag.LoginError = "E-Posta veya Şifre Hatalı Girildi! Lütfen Tekrar Deneyiniz!";
+                        }
+                        else
+                        {
+                            return Redirect("~/Home");
+                        }
                     }
                     else
                     {
-                        return Redirect("~/Home");
+                        ViewBag.LoginError = "Hesabınız Pasif Durumdadır! Lütfen Yöneticiniz ile İletişime Geçiniz!";
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ViewBag.LoginError = "Hesabınız pasif durumdadır. Lütfen yöneticiniz ile iletişime geçiniz.";
+                    ViewBag.LoginError = ex.Message;
+                    return View(model);
                 }
             }
             return View(model);
@@ -116,15 +133,26 @@ namespace SigortaTakipSistemi.Controllers
         [Route("account/forget-password")]
         public async Task<IActionResult> ForgetPassword(string email)
         {
-            AppIdentityUser user = await _userManager.FindByEmailAsync(email);
+            if (!string.IsNullOrEmpty(email))
+            {
+                AppIdentityUser user = await _userManager.FindByEmailAsync(email);
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                if (user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var resetLink = Url.Action("ResetPassword", "Account", new { token }, protocol: HttpContext.Request.Scheme);
+                    var resetLink = Url.Action("ResetPassword", "Account", new { token }, protocol: HttpContext.Request.Scheme);
 
-            SendEmail(user.Email, resetLink);
+                    SendEmail(user.Email, resetLink);
 
-            ViewBag.Message = "Şifre sıfırlama linki e-postanıza gönderilmiştir!";
+                    ViewBag.Message = "Şifre Sıfırlama Linki E-Postanıza Gönderilmiştir!";
+
+                    return View();
+                }
+                ViewBag.Message = "E-Posta Hatalı Girildi! Lütfen Tekrar Deneyiniz!";
+                return View();
+            }
+            ViewBag.Message = "Lütfen E-Posta Alanını Doldurunuz!";
             return View();
         }
 
@@ -161,20 +189,27 @@ namespace SigortaTakipSistemi.Controllers
         [Route("account/reset-password")]
         public async Task<IActionResult> ResetPassword(RegisterViewModel model)
         {
-            AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
-
-            IdentityResult result = _userManager.ResetPasswordAsync(user, model.Token, model.Password).Result;
-
-            if (!result.Succeeded)
+            try
             {
-                throw new TaskCanceledException("Şifrenizi sıfırlarken bir hata oluştu!"
-                    + " Code: " + result.Errors.FirstOrDefault().Code
-                    + " Description: " + result.Errors.FirstOrDefault().Description);
-            }
-            else
-            {
-                ViewBag.Message = "Şifreniz başarıyla yenilenmiştir!";
+                AppIdentityUser user = await _userManager.FindByEmailAsync(model.Email);
+
+                IdentityResult result = _userManager.ResetPasswordAsync(user, model.Token, model.Password).Result;
+
+                if (!result.Succeeded)
+                {
+                    foreach (var validateItem in result.Errors)
+                        ModelState.AddModelError("", validateItem.Description);
+
+                    return View(model);
+                }
+
+                ViewBag.Message = "Şifreniz Başarıyla Yenilenmiştir!";
                 return View();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
             }
         }
 
