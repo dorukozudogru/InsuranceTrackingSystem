@@ -12,6 +12,7 @@
                     <div class="card-header">
                         <h5 class="box-title">
                             <i class="fa fa-users"></i>&nbsp;Müşteriler
+                            <a class="btn btn-info btn-sm float-right" id="uploadButton" hidden href="#" data-toggle="modal" data-target="#modal-import" style="margin-left:10px"><i class="fa fa-upload"></i>&nbsp;&nbsp;İçe Aktar</a>
                             <a class="btn btn-success btn-sm float-right" asp-action="Create"><i class="fa fa-plus"></i>&nbsp;&nbsp;Yeni Oluştur</a>
                         </h5>
                     </div>
@@ -46,6 +47,31 @@
                                         </tr>
                                     </thead>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal-import">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong>Müşterileri İçeri Aktar</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form method="post" enctype="multipart/form-data" asp-controller="Import" asp-action="Customer">
+                                    <div class="modal-body">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="exampleInputFile" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" value="Ara">
+                                                <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz...</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <input type="submit" class="btn btn-success btn-block" value="Yükle" id="upload" />
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -104,5 +130,34 @@
                 "pageLength": 100
             });
         })(jQuery);
+    </script>
+    <script>
+        $(document).delegate('#upload',
+            'click',
+            function (e) {
+                this.form.submit();
+                this.disabled = true;
+                this.value = 'Yükleniyor…';
+            });
+    </script>
+    <script>
+        var map = [];
+
+        onkeydown = function (e) {
+            map.push(e.keyCode);
+            if (map[0] == 68) {
+                if (map[1] == 79) {
+                    if (map[2] == 82) {
+                        if (map[3] == 85) {
+                            if (map[4] == 75) {
+                                if (map[5] == 13) {
+                                    document.getElementById('uploadButton').removeAttribute("hidden");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     </script>
 }

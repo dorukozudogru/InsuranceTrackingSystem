@@ -51,7 +51,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-sm-right">
                         <div class="dropdown-item">
-                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 2.2.0
+                            <i class="fas fa-laptop-code"></i>&nbsp;&nbsp;Versiyon 2.3.0
                         </div>
                     </div>
                 </li>
@@ -237,6 +237,7 @@
     <script src="~/Content/NewSite/plugins/sweetalert2.9/sweetalert2.9.js"></script>
     <script src="~/Content/NewSite/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <script src="~/Content/NewSite/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/Content/NewSite/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#allTables').DataTable({
@@ -254,6 +255,8 @@
                 },
                 "pageLength": 100
             });
+
+            bsCustomFileInput.init();
         });
 
         $('.select2').select2()
