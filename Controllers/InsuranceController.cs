@@ -199,7 +199,6 @@ namespace SigortaTakipSistemi.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Insurances insurance)
         {
             if (ModelState.IsValid)
@@ -211,13 +210,12 @@ namespace SigortaTakipSistemi.Controllers
                 insurance.InsuranceLastMailDate = DateTime.MinValue;
 
                 insurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
-                insurance.CarModel.CarBrandId = _context.CarBrands.FirstOrDefault(x => x.Name == insurance.CarModel.CarBrand.Name).Id;
 
                 _context.Add(insurance);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(new { Result = true, Message = "Poliçe Başarıyla Oluşturulmuştur!" });
             }
-            return View(insurance);
+            return BadRequest("Poliçe Oluşturulurken Bir Hata Oluştu!");
         }
 
         [Authorize]
