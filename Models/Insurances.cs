@@ -106,6 +106,11 @@ namespace SigortaTakipSistemi.Models
             UNPAID = 2
         }
 
+        [DisplayName("Doküman")]
+        public byte[] Document { get; set; }
+        [DisplayName("Doküman Formatı")]
+        public string DocumentFormat { get; set; }
+
         [DisplayName("Aktif mi?")]
         public bool IsActive { get; set; }
 

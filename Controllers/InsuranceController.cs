@@ -203,6 +203,25 @@ namespace SigortaTakipSistemi.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (Request.Form.Files.Count != 0)
+                {
+                    if (Request.Form.Files.First().ContentType.Contains("pdf"))
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        Request.Form.Files.First().CopyTo(ms);
+
+                        ms.Close();
+                        ms.Dispose();
+
+                        insurance.Document = ms.ToArray();
+                        insurance.DocumentFormat = Request.Form.Files.First().ContentType;
+                    }
+                    else
+                    {
+                        return BadRequest("PDF Dosyası Ekleyin!");
+                    }
+                }
+
                 //insurance.InsuranceBonus = InsuranceBonusCalculation(insurance.InsuranceAmount, _context.InsurancePolicies.FirstOrDefault(pn => pn.Id == insurance.InsurancePolicyId).Name);
                 insurance.CreatedBy = GetLoggedUserId();
                 insurance.CreatedAt = DateTime.Now;
@@ -271,6 +290,25 @@ namespace SigortaTakipSistemi.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (Request.Form.Files.Count != 0)
+                    {
+                        if (Request.Form.Files.First().ContentType.Contains("pdf"))
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            Request.Form.Files.First().CopyTo(ms);
+
+                            ms.Close();
+                            ms.Dispose();
+
+                            oldInsurance.Document = ms.ToArray();
+                            oldInsurance.DocumentFormat = Request.Form.Files.First().ContentType;
+                        }
+                        else
+                        {
+                            return BadRequest("PDF Dosyası Ekleyin!");
+                        }
+                    }
+
                     oldInsurance.CarModelId = _context.CarModels.FirstOrDefault(x => x.Name == insurance.CarModel.Name).Id;
                     oldInsurance.CustomerId = insurance.CustomerId;
                     oldInsurance.InsuranceAmount = insurance.InsuranceAmount;

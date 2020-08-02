@@ -70,6 +70,13 @@
                             </div>
                         </div>
                     }
+                    @if (Model.Document != null)
+                    {
+                        <hr />
+                        var base64 = Convert.ToBase64String((Byte[])Model.Document);
+                        var imgsrc = string.Format("data:application/pdf;base64,{0}", base64);
+                        <iframe src="@imgsrc" style="width:100%;height:800px" webkitallowfullscreen allowfullscreen></iframe>
+                    }
                     <hr />
                     <div class="row no-print">
                         <div class="col-12">

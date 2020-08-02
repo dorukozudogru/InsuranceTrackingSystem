@@ -95,7 +95,7 @@
                                     <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için nokta (.) kullanınız.)</strong></label>
+                                    <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-try"></i></span>
                                         <input asp-for="InsuranceAmount" class="form-control" autocomplete="off" id="insuranceAmount" />
@@ -103,7 +103,7 @@
                                     <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için nokta (.) kullanınız.)</strong></label>
+                                    <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-try"></i></span>
                                         <input asp-for="InsuranceBonus" class="form-control" autocomplete="off" id="insuranceBonus" />
@@ -120,6 +120,20 @@
                                     <select asp-for="InsurancePaymentType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()" id="insurancePaymentType"></select>
                                     <span asp-validation-for="InsurancePaymentType" class="text-danger"></span>
                                 </div>
+                                <label asp-for="Document" class="control-label"></label>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <a class="btn btn-secondary btn-block float-right" id="openDocument" href="#" data-toggle="modal" data-target="#modal-document" style="margin-left:10px"><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Dokümanı Görüntüle</a>
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" asp-for="Document" accept="application/pdf" id="imageFile" name="imageFile">
+                                                <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,6 +143,21 @@
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal-document">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content" style="height:800px">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><strong><i class="fa fa-file-pdf"></i>&nbsp;&nbsp;Doküman</strong></h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <iframe id="document" style="width:100%;height:100%" webkitallowfullscreen allowfullscreen></iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,12 +205,18 @@
                 document.getElementById("insuranceBonus").value = returnvalue.insuranceBonus;
                 document.getElementById("insuranceType").value = returnvalue.insuranceType;
                 document.getElementById("insurancePaymentType").value = returnvalue.insurancePaymentType;
+
+                document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.document;
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Poliçeye Getirilirken Bir Hata Oluştu!";
                 document.getElementById("swalDefaultError").click();
             }
         });
+
+        $("#openDocument").on("click",function() {
+        document.getElementById('uploadButton').removeAttribute("hidden");
+    });
     }
 </script>
 
@@ -205,12 +240,32 @@
         var InsuranceType = document.getElementById("insuranceType").value;
         var InsurancePaymentType = document.getElementById("insurancePaymentType").value;
 
+        var fileupload = $("#imageFile").get(0);
+        var files = fileupload.files;
+        var data = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+
+        data.append('CustomerId', CustomerId);
+        data.append('CarModel.Name', Model);
+        data.append('LicencePlate', LicencePlate);
+        data.append('InsurancePolicyId', InsurancePolicyId);
+        data.append('InsurancePolicyNumber', InsurancePolicyNumber);
+        data.append('InsuranceCompanyId', InsuranceCompanyId);
+        data.append('InsuranceStartDate', InsuranceStartDate);
+        data.append('InsuranceFinishDate', InsuranceFinishDate);
+        data.append('InsuranceAmount', InsuranceAmount);
+        data.append('InsuranceBonus', InsuranceBonus);
+        data.append('InsuranceType', InsuranceType);
+        data.append('InsurancePaymentType', InsurancePaymentType);
+
         $.ajax({
-            url: '/Insurance/Edit?insurance.CustomerId=' + CustomerId + '&insurance.CarModel.Name=' + Model + '&insurance.LicencePlate=' + LicencePlate +
-                '&insurance.InsurancePolicyId=' + InsurancePolicyId + '&insurance.InsurancePolicyNumber=' + InsurancePolicyNumber + '&insurance.InsuranceCompanyId=' + InsuranceCompanyId +
-                '&insurance.InsuranceStartDate=' + InsuranceStartDate + '&insurance.InsuranceFinishDate=' + InsuranceFinishDate + '&insurance.InsuranceAmount=' + InsuranceAmount +
-                '&insurance.InsuranceBonus=' + InsuranceBonus + '&insurance.InsuranceType=' + InsuranceType + '&insurance.InsurancePaymentType=' + InsurancePaymentType + '&id=' + Id,
+            url: '/Insurance/Edit?id=' + Id,
             type: 'POST',
+            contentType: false,
+            processData: false,
+            data: data,
             success: function (returnvalue) {
                 console.log(returnvalue);
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;
