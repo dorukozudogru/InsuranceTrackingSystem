@@ -86,7 +86,7 @@
                                     <span asp-validation-for="InsuranceFinishDate" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için nokta (.) kullanınız.)</strong></label>
+                                    <label asp-for="InsuranceAmount" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-try"></i></span>
                                         <input asp-for="InsuranceAmount" class="form-control" autocomplete="off" id="insuranceAmount" />
@@ -94,7 +94,7 @@
                                     <span asp-validation-for="InsuranceAmount" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için nokta (.) kullanınız.)</strong></label>
+                                    <label asp-for="InsuranceBonus" class="control-label"></label><label class="text-danger small"><strong>&nbsp;(Lütfen kuruş için virgül (,) kullanınız.)</strong></label>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-try"></i></span>
                                         <input asp-for="InsuranceBonus" class="form-control" autocomplete="off" id="insuranceBonus" />
@@ -110,6 +110,13 @@
                                     <label asp-for="InsurancePaymentType" class="control-label"></label>
                                     <select asp-for="InsurancePaymentType" class="form-control" asp-items="@Html.GetEnumSelectList<Insurances.InsurancePaymentTypeEnum>()" id="insurancePaymentType"></select>
                                     <span asp-validation-for="InsurancePaymentType" class="text-danger"></span>
+                                </div>
+                                <label asp-for="Document" class="control-label"></label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" asp-for="Document" accept="application/pdf" id="imageFile" name="imageFile">
+                                        <label class="custom-file-label" for="exampleInputFile">Dosya Seçiniz</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,12 +179,32 @@
                 var InsuranceType = document.getElementById("insuranceType").value;
                 var InsurancePaymentType = document.getElementById("insurancePaymentType").value;
 
+                var fileupload = $("#imageFile").get(0);
+                var files = fileupload.files;
+                var data = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    data.append(files[i].name, files[i]);
+                }
+
+                data.append('CustomerId', CustomerId);
+                data.append('CarModel.Name', Model);
+                data.append('LicencePlate', LicencePlate);
+                data.append('InsurancePolicyId', InsurancePolicyId);
+                data.append('InsurancePolicyNumber', InsurancePolicyNumber);
+                data.append('InsuranceCompanyId', InsuranceCompanyId);
+                data.append('InsuranceStartDate', InsuranceStartDate);
+                data.append('InsuranceFinishDate', InsuranceFinishDate);
+                data.append('InsuranceAmount', InsuranceAmount);
+                data.append('InsuranceBonus', InsuranceBonus);
+                data.append('InsuranceType', InsuranceType);
+                data.append('InsurancePaymentType', InsurancePaymentType);
+
                 $.ajax({
-                    url: '/Insurance/Create?insurance.CustomerId=' + CustomerId + '&insurance.CarModel.Name=' + Model + '&insurance.LicencePlate=' + LicencePlate +
-                        '&insurance.InsurancePolicyId=' + InsurancePolicyId + '&insurance.InsurancePolicyNumber=' + InsurancePolicyNumber + '&insurance.InsuranceCompanyId=' + InsuranceCompanyId +
-                        '&insurance.InsuranceStartDate=' + InsuranceStartDate + '&insurance.InsuranceFinishDate=' + InsuranceFinishDate + '&insurance.InsuranceAmount=' + InsuranceAmount +
-                        '&insurance.InsuranceBonus=' + InsuranceBonus + '&insurance.InsuranceType=' + InsuranceType + '&insurance.InsurancePaymentType=' + InsurancePaymentType,
+                    url: '/Insurance/Create',
                     type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: data,
                     success: function (returnvalue) {
                         console.log(returnvalue);
                         document.getElementById("swalDefaultSuccess").value = returnvalue.message;
