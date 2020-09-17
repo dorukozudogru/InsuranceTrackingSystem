@@ -22,6 +22,9 @@ namespace SigortaTakipSistemi.Models
         [ForeignKey(nameof(CarModel))]
         public int CarModelId { get; set; }
         public virtual CarModels CarModel { get; set; }
+        [NotMapped]
+        [DisplayName("Marka")]
+        public string CarBrandName { get; set; }
 
         [Required]
         [DisplayName("Plaka")]

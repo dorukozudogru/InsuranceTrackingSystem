@@ -53,7 +53,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Ekle" class="btn btn-success" onclick="addCustomer()" />
+                            <input type="submit" value="Ekle" class="btn btn-success" onclick="addCustomer()" id="createButton" />
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -74,9 +74,11 @@
         var Phone = document.getElementById("phone").value;
         var Other = document.getElementById("other").value;
 
+        $("#createButton").attr("disabled", true);
+
         $.ajax({
             url: '/Customer/Create?customers.Name=' + Name + '&customers.Surname=' + Surname + '&customers.CitizenshipNo=' + CitizenshipNo +
-                                 '&customers.Email=' + Email + '&customers.Phone=' + Phone + '&customers.Other=' + Other,
+                '&customers.Email=' + Email + '&customers.Phone=' + Phone + '&customers.Other=' + Other,
             type: 'POST',
             success: function (returnvalue) {
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;
@@ -88,6 +90,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#createButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }

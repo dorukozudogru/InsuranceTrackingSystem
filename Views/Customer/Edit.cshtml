@@ -54,7 +54,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateCustomer()" />
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateCustomer()" id="updateButton" />
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -76,6 +76,8 @@
         var Other = document.getElementById("other").value;
         var Id = document.getElementById("id").value;
 
+        $("#updateButton").attr("disabled", true);
+
         $.ajax({
             url: '/Customer/Edit?customers.Name=' + Name + '&customers.Surname=' + Surname + '&customers.CitizenshipNo=' + CitizenshipNo +
                 '&customers.Email=' + Email + '&customers.Phone=' + Phone + '&customers.Other=' + Other + '&id=' + Id,
@@ -90,6 +92,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }

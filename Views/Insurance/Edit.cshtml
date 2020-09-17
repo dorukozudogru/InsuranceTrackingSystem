@@ -139,7 +139,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateInsurance()" />
+                            <input type="submit" value="Kaydet" class="btn btn-success" onclick="updateInsurance()" id="updateButton" />
                             <a class="btn btn-primary pull-right" asp-action="Index" style="margin-right: 5px;">
                                 <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;Listeye Geri Dön
                             </a>
@@ -260,6 +260,8 @@
         data.append('InsuranceType', InsuranceType);
         data.append('InsurancePaymentType', InsurancePaymentType);
 
+        $("#updateButton").attr("disabled", true);
+
         $.ajax({
             url: '/Insurance/Edit?id=' + Id,
             type: 'POST',
@@ -277,6 +279,9 @@
             error: function (error) {
                 document.getElementById("swalDefaultError").value = error.responseText;
                 document.getElementById("swalDefaultError").click();
+                window.setTimeout(function () {
+                    $("#updateButton").attr("disabled", false);
+                }, 1600);
             }
         });
     }
