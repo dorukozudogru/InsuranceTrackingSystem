@@ -201,8 +201,8 @@
                 document.getElementById("insuranceCompanyId").value = returnvalue.insuranceCompanyId;
                 document.getElementById("datepicker").value = yearS + "/" + monthS + "/" + dayS;
                 document.getElementById("datepicker2").value = yearF + "/" + monthF + "/" + dayF;
-                document.getElementById("insuranceAmount").value = returnvalue.insuranceAmount;
-                document.getElementById("insuranceBonus").value = returnvalue.insuranceBonus;
+                document.getElementById("insuranceAmount").value = returnvalue.insuranceAmount.toLocaleString("tr-TR");
+                document.getElementById("insuranceBonus").value = returnvalue.insuranceBonus.toLocaleString("tr-TR");
                 document.getElementById("insuranceType").value = returnvalue.insuranceType;
                 document.getElementById("insurancePaymentType").value = returnvalue.insurancePaymentType;
 
