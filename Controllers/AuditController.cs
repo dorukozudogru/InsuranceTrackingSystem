@@ -136,6 +136,21 @@ namespace SigortaTakipSistemi.Controllers
                             }
                         }
                     }
+                    else if (audit.Action == "LoggedIn" || audit.Action == "LoggedOut")
+                    {
+                        lastAuditList.Add(new Audit
+                        {
+                            Action = audit.Action,
+                            DateTime = audit.DateTime,
+                            EntityName = "-",
+                            Id = audit.Id,
+                            KeyValues = "-",
+                            NewValues = "-",
+                            OldValues = "-",
+                            TableName = audit.TableName,
+                            Username = username
+                        });
+                    }
                 }
                 catch (Exception ex)
                 {
