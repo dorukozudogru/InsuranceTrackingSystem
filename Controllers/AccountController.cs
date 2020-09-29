@@ -99,17 +99,17 @@ namespace SigortaTakipSistemi.Controllers
                         }
                         else
                         {
-                            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-                            Audit audit = new Audit()
-                            {
-                                TableName = "AspNetUsers",
-                                Action = "LoggedIn",
-                                DateTime = DateTime.Now,
-                                Username = user.Email,
-                                KeyValues = "{\"Id\":0}"
-                            };
-                            _context.Add(audit);
-                            await _context.SaveChangesAsync();
+                            //_context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                            //Audit audit = new Audit()
+                            //{
+                            //    TableName = "AspNetUsers",
+                            //    Action = "LoggedIn",
+                            //    DateTime = DateTime.Now,
+                            //    Username = user.Email,
+                            //    KeyValues = "{\"Id\":0}"
+                            //};
+                            //_context.Add(audit);
+                            //await _context.SaveChangesAsync();
                             return Redirect("~/Home");
                         }
                     }
@@ -132,17 +132,17 @@ namespace SigortaTakipSistemi.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            Audit audit = new Audit()
-            {
-                TableName = "AspNetUsers",
-                Action = "LoggedOut",
-                DateTime = DateTime.Now,
-                Username = this.Request.HttpContext?.User?.Identity?.Name,
-                KeyValues = "{\"Id\":0}"
-            };
-            _context.Add(audit);
-            await _context.SaveChangesAsync();
+            //_context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //Audit audit = new Audit()
+            //{
+            //    TableName = "AspNetUsers",
+            //    Action = "LoggedOut",
+            //    DateTime = DateTime.Now,
+            //    Username = this.Request.HttpContext?.User?.Identity?.Name,
+            //    KeyValues = "{\"Id\":0}"
+            //};
+            //_context.Add(audit);
+            //await _context.SaveChangesAsync();
 
             return Redirect("~/account/login");
         }

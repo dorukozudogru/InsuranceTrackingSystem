@@ -116,14 +116,14 @@
                 },
                 "columns": [
                     { "data": "id" },
-                    { "data": "customer.fullName" },
-                    { "data": "carBrandName" },
-                    { "data": "carModel.name" },
+                    { "data": "customer.fullName", "orderable": false },
+                    { "data": "carModel.carBrand.name", "orderable": false },
+                    { "data": "carModel.name", "orderable": false },
                     { "data": "licencePlate" },
-                    { "data": "insurancePolicy.name" },
+                    { "data": "insurancePolicy.name", "orderable": false },
                     { "data": "insurancePolicyNumber" },
                     {
-                        "data": "insuranceCompany.logoPath", render: function (data, type, row) {
+                        "data": "insuranceCompany.logoPath", "orderable": false, render: function (data, type, row) {
                             return '<img src="' + row.insuranceCompany.logoPath + '" style="max-height:50px; max-width:75px" />'
                         }
                     },
@@ -171,7 +171,7 @@
                     { "data": "insuranceTypeName" },
                     { "data": "insurancePaymentTypeName" },
                     {
-                        "data": "actionId", render: function (data, type, row) {
+                        "data": "actionId", "orderable": false, render: function (data, type, row) {
                             if (row.cancelledAt != null) {
                                 return '<div class="btn-group"><button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-h"></span></button><ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid #00c0ef"> <a class="dropdown-item" href="Details/' + row.id + '" class="btn-link">Detaylar</a> <a class="dropdown-item" href="Delete/' + row.id + '" class="btn-link">Sil</a> </div>'
                             }

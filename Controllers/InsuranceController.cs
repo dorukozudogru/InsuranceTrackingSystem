@@ -57,38 +57,49 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
                 .Where(i => i.IsActive == isActive)
-                .Select(ins => new Insurances
-                {
-                    Id = ins.Id,
-                    Customer = ins.Customer,
-                    CustomerId = ins.CustomerId,
-                    CarModel = ins.CarModel,
-                    CarModelId = ins.CarModelId,
-                    CarBrandName = ins.CarModel.CarBrand.Name,
-                    LicencePlate = ins.LicencePlate,
-                    InsuranceType = ins.InsuranceType,
-                    InsuranceTypeName = ins.InsuranceTypeName,
-                    InsurancePolicyNumber = ins.InsurancePolicyNumber,
-                    InsuranceCompany = ins.InsuranceCompany,
-                    InsuranceCompanyId = ins.InsuranceCompanyId,
-                    InsuranceCompanyName = ins.InsuranceCompanyName,
-                    InsuranceStartDate = ins.InsuranceStartDate,
-                    InsuranceFinishDate = ins.InsuranceFinishDate,
-                    InsuranceAmount = ins.InsuranceAmount,
-                    InsuranceAmountTotal = ins.InsuranceAmountTotal,
-                    InsuranceBonus = ins.InsuranceBonus,
-                    InsuranceBonusTotal = ins.InsuranceBonusTotal,
-                    InsurancePolicy = ins.InsurancePolicy,
-                    InsurancePolicyId = ins.InsurancePolicyId,
-                    InsurancePolicyName = ins.InsurancePolicyName,
-                    InsurancePaymentType = ins.InsurancePaymentType,
-                    InsurancePaymentTypeName = ins.InsurancePaymentTypeName,
-                    CancelledAt = ins.CancelledAt,
-                    CancelledInsuranceAmount = ins.CancelledInsuranceAmount,
-                    CancelledInsuranceBonus = ins.CancelledInsuranceBonus
-                })
                 .AsNoTracking()
                 .ToListAsync();
+
+            //WITHOUT PDF
+            //List<Insurances> insurances = await _context.Insurances
+            //    .Include(cu => cu.Customer)
+            //    .Include(c => c.CarModel)
+            //    .Include(cb => cb.CarModel.CarBrand)
+            //    .Include(pn => pn.InsurancePolicy)
+            //    .Include(pc => pc.InsuranceCompany)
+            //    .Where(i => i.IsActive == isActive)
+            //    .Select(ins => new Insurances
+            //    {
+            //        Id = ins.Id,
+            //        Customer = ins.Customer,
+            //        CustomerId = ins.CustomerId,
+            //        CarModel = ins.CarModel,
+            //        CarModelId = ins.CarModelId,
+            //        CarBrandName = ins.CarModel.CarBrand.Name,
+            //        LicencePlate = ins.LicencePlate,
+            //        InsuranceType = ins.InsuranceType,
+            //        InsuranceTypeName = ins.InsuranceTypeName,
+            //        InsurancePolicyNumber = ins.InsurancePolicyNumber,
+            //        InsuranceCompany = ins.InsuranceCompany,
+            //        InsuranceCompanyId = ins.InsuranceCompanyId,
+            //        InsuranceCompanyName = ins.InsuranceCompanyName,
+            //        InsuranceStartDate = ins.InsuranceStartDate,
+            //        InsuranceFinishDate = ins.InsuranceFinishDate,
+            //        InsuranceAmount = ins.InsuranceAmount,
+            //        InsuranceAmountTotal = ins.InsuranceAmountTotal,
+            //        InsuranceBonus = ins.InsuranceBonus,
+            //        InsuranceBonusTotal = ins.InsuranceBonusTotal,
+            //        InsurancePolicy = ins.InsurancePolicy,
+            //        InsurancePolicyId = ins.InsurancePolicyId,
+            //        InsurancePolicyName = ins.InsurancePolicyName,
+            //        InsurancePaymentType = ins.InsurancePaymentType,
+            //        InsurancePaymentTypeName = ins.InsurancePaymentTypeName,
+            //        CancelledAt = ins.CancelledAt,
+            //        CancelledInsuranceAmount = ins.CancelledInsuranceAmount,
+            //        CancelledInsuranceBonus = ins.CancelledInsuranceBonus
+            //    })
+            //    .AsNoTracking()
+            //    .ToListAsync();
 
             insurances = GetAllEnumNamesHelper.GetEnumName(insurances);
 
