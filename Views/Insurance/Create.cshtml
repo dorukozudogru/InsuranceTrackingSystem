@@ -208,7 +208,6 @@
                     processData: false,
                     data: data,
                     success: function (returnvalue) {
-                        console.log(returnvalue);
                         document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                         document.getElementById("swalDefaultSuccess").click();
                         window.setTimeout(function () {
