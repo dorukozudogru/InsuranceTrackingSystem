@@ -205,8 +205,6 @@
                 document.getElementById("insuranceBonus").value = returnvalue.insuranceBonus.toLocaleString("tr-TR");
                 document.getElementById("insuranceType").value = returnvalue.insuranceType;
                 document.getElementById("insurancePaymentType").value = returnvalue.insurancePaymentType;
-
-                document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.document;
             },
             error: function (error) {
                 document.getElementById("swalDefaultError").value = "Poliçeye Getirilirken Bir Hata Oluştu!";
@@ -214,14 +212,28 @@
             }
         });
 
-        $("#openDocument").on("click",function() {
-        document.getElementById('uploadButton').removeAttribute("hidden");
-    });
+        $("#openDocument").on("click", function () {
+            $.ajax({
+                url: '/Insurance/GetDocument?&id=' + id,
+                type: 'POST',
+                success: function (returnvalue) {
+                    document.getElementById("document").src = 'data:application/pdf;base64,' + returnvalue.document;
+                },
+                error: function (error) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Doküman Bulunmamaktadır!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }),
+                    window.setTimeout(function () {
+                        $("#modal-document").modal('hide');
+                    }, 2000);
+                }
+            });
+        });
     }
-</script>
-
-<script>
-
 </script>
 
 <script>
@@ -269,7 +281,6 @@
             processData: false,
             data: data,
             success: function (returnvalue) {
-                console.log(returnvalue);
                 document.getElementById("swalDefaultSuccess").value = returnvalue.message;
                 document.getElementById("swalDefaultSuccess").click();
                 window.setTimeout(function () {

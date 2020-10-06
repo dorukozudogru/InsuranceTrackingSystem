@@ -57,36 +57,6 @@ namespace SigortaTakipSistemi.Controllers
                 .Include(pn => pn.InsurancePolicy)
                 .Include(pc => pc.InsuranceCompany)
                 .Where(i => i.IsActive == isActive)
-                .Select(ins => new Insurances
-                {
-                    Id = ins.Id,
-                    Customer = ins.Customer,
-                    CustomerId = ins.CustomerId,
-                    CarModel = ins.CarModel,
-                    CarModelId = ins.CarModelId,
-                    CarBrandName = ins.CarModel.CarBrand.Name,
-                    LicencePlate = ins.LicencePlate,
-                    InsuranceType = ins.InsuranceType,
-                    InsuranceTypeName = ins.InsuranceTypeName,
-                    InsurancePolicyNumber = ins.InsurancePolicyNumber,
-                    InsuranceCompany = ins.InsuranceCompany,
-                    InsuranceCompanyId = ins.InsuranceCompanyId,
-                    InsuranceCompanyName = ins.InsuranceCompanyName,
-                    InsuranceStartDate = ins.InsuranceStartDate,
-                    InsuranceFinishDate = ins.InsuranceFinishDate,
-                    InsuranceAmount = ins.InsuranceAmount,
-                    InsuranceAmountTotal = ins.InsuranceAmountTotal,
-                    InsuranceBonus = ins.InsuranceBonus,
-                    InsuranceBonusTotal = ins.InsuranceBonusTotal,
-                    InsurancePolicy = ins.InsurancePolicy,
-                    InsurancePolicyId = ins.InsurancePolicyId,
-                    InsurancePolicyName = ins.InsurancePolicyName,
-                    InsurancePaymentType = ins.InsurancePaymentType,
-                    InsurancePaymentTypeName = ins.InsurancePaymentTypeName,
-                    CancelledAt = ins.CancelledAt,
-                    CancelledInsuranceAmount = ins.CancelledInsuranceAmount,
-                    CancelledInsuranceBonus = ins.CancelledInsuranceBonus
-                })
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -103,6 +73,26 @@ namespace SigortaTakipSistemi.Controllers
             };
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetDocument(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+
+            var document = await _context.InsuranceDocuments
+                .FirstOrDefaultAsync(m => m.InsuranceId == id);
+
+            if (document == null)
+            {
+                return View("Error");
+            }
+
+            return Ok(document);
         }
 
         [Authorize]
@@ -231,27 +221,10 @@ namespace SigortaTakipSistemi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Insurances insurance)
         {
+            InsuranceDocument document = new InsuranceDocument();
+
             if (ModelState.IsValid)
             {
-                if (Request.Form.Files.Count != 0)
-                {
-                    if (Request.Form.Files.First().ContentType.Contains("pdf"))
-                    {
-                        MemoryStream ms = new MemoryStream();
-                        Request.Form.Files.First().CopyTo(ms);
-
-                        ms.Close();
-                        ms.Dispose();
-
-                        insurance.Document = ms.ToArray();
-                        insurance.DocumentFormat = Request.Form.Files.First().ContentType;
-                    }
-                    else
-                    {
-                        return BadRequest("PDF Dosyası Ekleyin!");
-                    }
-                }
-
                 //insurance.InsuranceBonus = InsuranceBonusCalculation(insurance.InsuranceAmount, _context.InsurancePolicies.FirstOrDefault(pn => pn.Id == insurance.InsurancePolicyId).Name);
                 insurance.CreatedBy = GetLoggedUserId();
                 insurance.CreatedAt = DateTime.Now;
@@ -262,6 +235,31 @@ namespace SigortaTakipSistemi.Controllers
 
                 _context.Add(insurance);
                 await _context.SaveChangesAsync();
+
+                if (Request.Form.Files.Count != 0)
+                {
+                    if (Request.Form.Files.First().ContentType.Contains("pdf"))
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        Request.Form.Files.First().CopyTo(ms);
+
+                        ms.Close();
+                        ms.Dispose();
+
+                        document.InsuranceId = insurance.Id;
+                        document.Document = ms.ToArray();
+                        document.DocumentName = Request.Form.Files.First().FileName;
+                        document.DocumentFormat = Request.Form.Files.First().ContentType;
+
+                        _context.Add(document);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        return BadRequest("PDF Dosyası Ekleyin!");
+                    }
+                }
+
                 return Ok(new { Result = true, Message = "Poliçe Başarıyla Oluşturulmuştur!" });
             }
             return BadRequest("Poliçe Oluşturulurken Bir Hata Oluştu!");
@@ -316,6 +314,11 @@ namespace SigortaTakipSistemi.Controllers
                    .Include(pc => pc.InsuranceCompany)
                    .FirstOrDefaultAsync(m => m.Id == id);
 
+            var oldDocument = await _context.InsuranceDocuments
+                .FirstOrDefaultAsync(i => i.InsuranceId == id);
+
+            InsuranceDocument newDocument = new InsuranceDocument();
+
             if (oldInsurance != null)
             {
                 if (ModelState.IsValid)
@@ -329,9 +332,28 @@ namespace SigortaTakipSistemi.Controllers
 
                             ms.Close();
                             ms.Dispose();
+                            
+                            if (oldDocument == null)
+                            {
+                                newDocument.InsuranceId = oldInsurance.Id;
+                                newDocument.Document = ms.ToArray();
+                                newDocument.DocumentName = Request.Form.Files.First().FileName;
+                                newDocument.DocumentFormat = Request.Form.Files.First().ContentType;
 
-                            oldInsurance.Document = ms.ToArray();
-                            oldInsurance.DocumentFormat = Request.Form.Files.First().ContentType;
+                                _context.Add(newDocument);
+                                await _context.SaveChangesAsync();
+                            }
+
+                            if (oldDocument != null)
+                            {
+                                oldDocument.InsuranceId = oldInsurance.Id;
+                                oldDocument.Document = ms.ToArray();
+                                oldDocument.DocumentName = Request.Form.Files.First().FileName;
+                                oldDocument.DocumentFormat = Request.Form.Files.First().ContentType;
+
+                                _context.Update(oldDocument);
+                                await _context.SaveChangesAsync();
+                            }
                         }
                         else
                         {

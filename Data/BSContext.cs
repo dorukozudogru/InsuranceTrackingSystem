@@ -86,6 +86,8 @@ namespace SigortaTakipSistemi.Models
 
         public DbSet<Insurances> Insurances { get; set; }
 
+        public DbSet<InsuranceDocument> InsuranceDocuments { get; set; }
+
         public DbSet<InsurancePolicies> InsurancePolicies { get; set; }
 
         public DbSet<InsuranceCompanies> InsuranceCompanies { get; set; }
