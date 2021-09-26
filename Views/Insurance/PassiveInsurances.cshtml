@@ -148,24 +148,40 @@
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }
                     },
-                    { "data": "insuranceAmount" },
                     {
-                        "data": "cancelledInsuranceAmount",
-                        render: function (data, type, row) {
-                            if (data == 0) {
-                                return "-";
+                        "data": "insuranceAmount",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.insuranceAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
-                            return data;
+                            return "-";
                         }
                     },
-                    { "data": "insuranceBonus" },
+                    {
+                        "data": "cancelledInsuranceAmount",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.cancelledInsuranceAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "insuranceBonus",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.insuranceBonus, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
                     {
                         "data": "cancelledInsuranceBonus",
-                        render: function (data, type, row) {
-                            if (data == 0) {
-                                return "-";
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.cancelledInsuranceBonus, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
                             }
-                            return data;
+                            return "-";
                         }
                     },
                     { "data": "insuranceTypeName" },

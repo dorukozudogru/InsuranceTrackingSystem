@@ -158,8 +158,24 @@
                             return window.moment(data).format("DD-MMMM-YYYY");
                         }
                     },
-                    { "data": "insuranceAmount" },
-                    { "data": "insuranceBonus" },
+                    {
+                        "data": "insuranceAmount",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.insuranceAmount, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
+                    {
+                        "data": "insuranceBonus",
+                        "render": function (data, type, full, meta) {
+                            if (data != null) {
+                                return currency(full.insuranceBonus, { decimal: ',', separator: '.', symbol: '' }).format() + " ₺";
+                            }
+                            return "-";
+                        }
+                    },
                     { "data": "insuranceTypeName" },
                     { "data": "insurancePaymentTypeName" },
                     {

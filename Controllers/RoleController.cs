@@ -52,7 +52,6 @@ namespace SigortaTakipSistemi.Controllers
             return BadRequest("Rol Oluşturulurken Bir Hata Oluştu!");
         }
 
-        //SHOULD SHOW WHO HAS ROLES
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)

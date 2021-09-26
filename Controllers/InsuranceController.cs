@@ -146,7 +146,7 @@ namespace SigortaTakipSistemi.Controllers
                     Month = i.Key.Month,
                     InsuranceCount = i.Count()
                 })
-                .OrderBy(i => i.Month)
+                .OrderByDescending(i => i.Month)
                 .ThenBy(i => i.Year)
                 .Skip(2)
                 .ToListAsync();
